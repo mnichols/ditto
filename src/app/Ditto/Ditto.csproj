@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4DACB973-A159-43F6-ACA1-A2C2029A6DB6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ditto</RootNamespace>
+    <AssemblyName>Ditto</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\..\lib\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.Logging">
+      <HintPath>..\..\..\lib\Castle.Facilities.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Services.Logging.Log4netIntegration">
+      <HintPath>..\..\..\lib\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\..\..\lib\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="Fasterflect">
+      <HintPath>..\..\..\lib\Fasterflect.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AbstractGlobalConventionConfiguration.cs" />
+    <Compile Include="AbstractMappingConfiguration.cs" />
+    <Compile Include="Converters\DateTimeUtcConverter.cs" />
+    <Compile Include="Converters\NonNullableToNullableConverter.cs" />
+    <Compile Include="Converters\NullableToNonNullableConverter.cs" />
+    <Compile Include="Converters\NullConverter.cs" />
+    <Compile Include="Converters\SystemConverter.cs" />
+    <Compile Include="Converters\ValueMustMatchDestinationTypeConverter.cs" />
+    <Compile Include="Criteria\PrefixPropertyCriterion.cs" />
+    <Compile Include="Criteria\PropertyNameCriterion.cs" />
+    <Compile Include="Criteria\TypePropertyCriterion.cs" />
+    <Compile Include="IConfigureDestination.cs" />
+    <Compile Include="IConfigureGlobalConventions.cs" />
+    <Compile Include="IConfigureMapping.cs" />
+    <Compile Include="IContainDestinationConfiguration.cs" />
+    <Compile Include="IConvertValue.cs" />
+    <Compile Include="ICreateLogger.cs" />
+    <Compile Include="IExtendDestinationConfiguration.cs" />
+    <Compile Include="IGlobalConventionContainer.cs" />
+    <Compile Include="IInitializeMappingEngine.cs" />
+    <Compile Include="ILog.cs" />
+    <Compile Include="IMap.cs" />
+    <Compile Include="InternalCollectionExtensions.cs" />
+    <Compile Include="InternalTypeExtensions.cs" />
+    <Compile Include="Internal\AssignableValue.cs" />
+    <Compile Include="Internal\BindableConfiguration.cs" />
+    <Compile Include="Internal\BinderFactory.cs" />
+    <Compile Include="Internal\BindingDestinationConfigurationContainer.cs" />
+    <Compile Include="Internal\CacheInitializer.cs" />
+    <Compile Include="Internal\CacheKey.cs" />
+    <Compile Include="Internal\CachingPropertyNameResolver.cs" />
+    <Compile Include="Internal\CloningMapCommand.cs" />
+    <Compile Include="Internal\ConfigurationPropertyCriterion.cs" />
+    <Compile Include="Internal\ConfigurationValidator.cs" />
+    <Compile Include="Internal\Convention.cs" />
+    <Compile Include="Internal\ConversionContext.cs" />
+    <Compile Include="Internal\ConversionResult.cs" />
+    <Compile Include="Internal\DefaultContextualizer.cs" />
+    <Compile Include="Internal\DefaultDestinationConfigurationContainer.cs" />
+    <Compile Include="Internal\DefaultMapCommand.cs" />
+    <Compile Include="Internal\DefaultMappingEngine.cs" />
+    <Compile Include="Internal\DefaultReflection.cs" />
+    <Compile Include="Internal\DefaultResolutionContext.cs" />
+    <Compile Include="Internal\DefaultValueConverterContainer.cs" />
+    <Compile Include="Internal\DestinationConfiguration.cs" />
+    <Compile Include="Internal\DestinationPropertyTypeBinder.cs" />
+    <Compile Include="Internal\ExecutableMapping.cs" />
+    <Compile Include="Internal\Fasterflection.cs" />
+    <Compile Include="Internal\GlobalConventions.cs" />
+    <Compile Include="Internal\IActivator.cs" />
+    <Compile Include="Internal\IApplyConventions.cs" />
+    <Compile Include="Internal\IAssignValue.cs" />
+    <Compile Include="Internal\IBindable.cs" />
+    <Compile Include="Internal\IBindConfigurations.cs" />
+    <Compile Include="Internal\IBinder.cs" />
+    <Compile Include="Internal\ICacheable.cs" />
+    <Compile Include="Internal\ICacheInvocation.cs" />
+    <Compile Include="Internal\IContextualizeResolution.cs" />
+    <Compile Include="Internal\ICreateBindableConfiguration.cs" />
+    <Compile Include="Internal\ICreateDestinationConfiguration.cs" />
+    <Compile Include="Internal\ICreateExecutableMapping.cs" />
+    <Compile Include="Internal\ICreateMappingCommand.cs" />
+    <Compile Include="Internal\ICreateValueAssignment.cs" />
+    <Compile Include="Internal\IDescribeMappableProperty.cs" />
+    <Compile Include="Internal\IDescribePropertyElement.cs" />
+    <Compile Include="Internal\IExecuteMapping.cs" />
+    <Compile Include="Internal\ILogFactory.cs" />
+    <Compile Include="Internal\IMapCommand.cs" />
+    <Compile Include="Internal\IMapCommandFactory.cs" />
+    <Compile Include="Internal\IProvideBinders.cs" />
+    <Compile Include="Internal\IProvideConventions.cs" />
+    <Compile Include="Internal\IRedirected.cs" />
+    <Compile Include="Internal\IReflection.cs" />
+    <Compile Include="Internal\IResolutionContext.cs" />
+    <Compile Include="Internal\IResolverContainer.cs" />
+    <Compile Include="Internal\IToggle.cs" />
+    <Compile Include="Internal\IValidatable.cs" />
+    <Compile Include="Internal\IValueConverterContainer.cs" />
+    <Compile Include="Internal\IVisitCacheable.cs" />
+    <Compile Include="Internal\ListPropertyBinder.cs" />
+    <Compile Include="Internal\ListPropertyCriterion.cs" />
+    <Compile Include="Internal\MappableProperty.cs" />
+    <Compile Include="Internal\GetValue.cs" />
+    <Compile Include="Internal\NativeActivator.cs" />
+    <Compile Include="Internal\NativeConverters.cs" />
+    <Compile Include="Internal\NullLogFactory.cs" />
+    <Compile Include="Internal\NullLogger.cs" />
+    <Compile Include="Internal\NullResolver.cs" />
+    <Compile Include="Internal\NullResolverContainer.cs" />
+    <Compile Include="Internal\NullValueConverterContainer.cs" />
+    <Compile Include="Internal\PrioritizedComposedFirstMatchingResolverContainer.cs" />
+    <Compile Include="Internal\ResolverContext.cs" />
+    <Compile Include="Internal\Result.cs" />
+    <Compile Include="Internal\SelfBinder.cs" />
+    <Compile Include="Internal\SetValue.cs" />
+    <Compile Include="Internal\SourceContext.cs" />
+    <Compile Include="Internal\SourcedConvention.cs" />
+    <Compile Include="Internal\SourcedPropertyNameResolver.cs" />
+    <Compile Include="Internal\SupportedCollectionTypeSpecification.cs" />
+    <Compile Include="Internal\Toggler.cs" />
+    <Compile Include="Internal\Unconverted.cs" />
+    <Compile Include="Internal\ValueAssignment.cs" />
+    <Compile Include="Internal\ValueAssignments.cs" />
+    <Compile Include="Internal\WindsorLogger.cs" />
+    <Compile Include="Internal\WindsorLoggerFactory.cs" />
+    <Compile Include="Internal\WindsorMappingInitializer.cs" />
+    <Compile Include="IPropertyCriterion.cs" />
+    <Compile Include="IResolveValue.cs" />
+    <Compile Include="ISourcedDestinationConfiguration.cs" />
+    <Compile Include="MappingConfigurationException.cs" />
+    <Compile Include="MappingExecutionException.cs" />
+    <Compile Include="MappingExtensions.cs" />
+    <Compile Include="MappingFacility.cs" />
+    <Compile Include="MissingProperties.cs" />
+    <Compile Include="Reflect.cs" />
+    <Compile Include="Resolvers\DefaultResolverFactory.cs" />
+    <Compile Include="Resolvers\DefaultValueResolver.cs" />
+    <Compile Include="Resolvers\ICreateResolver.cs" />
+    <Compile Include="Resolvers\IDependOnDestinationPropertyState.cs" />
+    <Compile Include="Resolvers\IgnoreResolver.cs" />
+    <Compile Include="Resolvers\ImmutableDestinationResolver.cs" />
+    <Compile Include="Resolvers\IOverrideable.cs" />
+    <Compile Include="Resolvers\LambdaResolver.cs" />
+    <Compile Include="Resolvers\ListResolver.cs" />
+    <Compile Include="Resolvers\NestingConfigurationResolver.cs" />
+    <Compile Include="Resolvers\OverrideablePropertyNameResolver.cs" />
+    <Compile Include="Resolvers\PropertyNameResolver.cs" />
+    <Compile Include="Resolvers\RedirectingConfigurationResolver.cs" />
+    <Compile Include="Resolvers\StaticValueResolver.cs" />
+    <Compile Include="WindsorMappingExtensions.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
