@@ -1,0 +1,11 @@
+{''} is a small framework for mapping objects to objects (aka 'Object-Object Mapper').
+
+Primary design goals in no particular order:
+1. Convention-based asuumptions to minimize configuration as much as possible
+2. Aggregation of source objects into their destinations
+3. Deep validation checking
+4. Garrulous by design
+5. Fluent configuration without typedsturbating generic parameters
+6. Fast enough
+7. IoC, container-based
+
