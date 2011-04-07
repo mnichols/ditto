@@ -27,7 +27,7 @@ namespace Ditto.Internal
             ICreateBindableConfiguration cfg;
             if (registeredConfigurations.TryGetValue(destinationType, out cfg) == false)
             {
-                registeredConfigurations.Add(destinationType, cfg = (ICreateBindableConfiguration)configurations.Create(destinationType));
+                registeredConfigurations.Add(destinationType, cfg = configurations.Create(destinationType));
                 TryApplyGlobalConventions(cfg as IApplyConventions);    
             }
             return (DestinationConfiguration)cfg;
@@ -38,7 +38,7 @@ namespace Ditto.Internal
             ICreateBindableConfiguration cfg;
             if (registeredConfigurations.TryGetValue(typeof(TDest), out cfg) == false)
             {
-                registeredConfigurations.Add(typeof(TDest), cfg = (ICreateBindableConfiguration)configurations.Create<TDest>());
+                registeredConfigurations.Add(typeof(TDest), cfg = configurations.Create<TDest>());
                 TryApplyGlobalConventions(cfg as IApplyConventions);
             }
             return (DestinationConfiguration<TDest>)cfg;
@@ -51,7 +51,7 @@ namespace Ditto.Internal
 
         public ICollection<BindableConfiguration> CreateBindableConfigurations()
         {
-            return registeredConfigurations.Values.OfType<ICreateBindableConfiguration>().Select(into=>into.CreateBindableConfiguration()).ToArray();
+            return registeredConfigurations.Values.Select(into=>into.CreateBindableConfiguration()).ToArray();
         }
 
 
