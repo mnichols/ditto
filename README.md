@@ -1,11 +1,16 @@
-## {''} is a small framework for mapping objects to objects (aka 'Object-Object Mapper') in dot net.
+## {''} - a small framework for mapping objects to objects (aka 'Object-Object Mapper') in .NET.
 
-Primary design goals in no particular order:
-1. Convention-based assumptions to minimize configuration as much as possible
-2. Easily supports aggregation of source objects into destination
-3. Deep validation checking
-4. Garrulous
-5. Fluent configuration without typedsturbating generic parameters
-6. Fast enough
-7. IoC, container-based
+### Why?
+Ditto was conceived to address a specific need for aggregating multiple source objects into a single instance. This is common for event handlers which all contribute their data to a single view model (ie, an event Denormalizer).
 
+### Goals (in no particular order):
+* Convention-based assumptions to minimize configuration as much as possible
+* Aggregation of source objects into single destination
+* Deep validation checking
+* Garrulous
+* Fluent configuration without typedsturbating generic parameters
+* Fast enough
+* IoC, container-based
+
+### Examples
+    //TODO : check tests for now
