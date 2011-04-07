@@ -49,15 +49,12 @@ namespace Ditto.Internal
             return registeredConfigurations.ContainsKey(destinationType);
         }
 
-        public ICollection<ICreateBindableConfiguration> GetBindableConfigurationCreators()
+        public ICollection<BindableConfiguration> CreateBindableConfigurations()
         {
-            return registeredConfigurations.Values.OfType<ICreateBindableConfiguration>().ToArray();
+            return registeredConfigurations.Values.OfType<ICreateBindableConfiguration>().Select(into=>into.CreateBindableConfiguration()).ToArray();
         }
 
 
-        public BindingDestinationConfigurationContainer ToBinding(IProvideBinders binders,IMapCommandFactory mapCommands)
-        {
-            return new BindingDestinationConfigurationContainer(binders, mapCommands,this){Logger = Logger};
-        }
+        
     }
 }

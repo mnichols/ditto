@@ -6,53 +6,49 @@ namespace Ditto.Tests
 {
     public class collection_mapping_tests:WithDebugging
     {
-        private TestContextualizer contextualizer;
+        private DefaultDestinationConfigurationContainer container;
 
         public collection_mapping_tests()
         {
-            contextualizer = new TestContextualizer();
+            container = new DefaultDestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
         }
         
         [Fact]
         public void collections_of_components_are_mapped()
         {
-            var componentConfig = new DestinationConfiguration(typeof (IntegerDest));
-            componentConfig.From(typeof (IntegerSource));
-            componentConfig.Bind();
-            
-            var modelConfig = new DestinationConfiguration(typeof (DestinationWithComponentArray));
-            modelConfig.From(typeof (SourceWithComponentArray));
-            modelConfig.Bind((ICreateExecutableMapping) componentConfig);
-            modelConfig.Assert();
+            container.Map(typeof (IntegerDest)).From(typeof (IntegerSource));
+            container.Map(typeof (DestinationWithComponentArray)).From(typeof (SourceWithComponentArray));
+            var bindable=container.ToBindable();
+            bindable.Bind();
+            bindable.Assert();
             var source = new SourceWithComponentArray()
                              {
                                  IntegerComponents =
                                      new[] {new IntegerSource() {AnInt = 1}, new IntegerSource() {AnInt = 3},}
                              };
             var dest = new DestinationWithComponentArray();
-            var executable = modelConfig.CreateExecutableMapping(typeof (SourceWithComponentArray));
-            executable.Execute(contextualizer.CreateContext(source,dest));
+            var executable = bindable.CreateCommand(typeof (DestinationWithComponentArray),
+                                                    typeof (SourceWithComponentArray));
+            executable.Map(source, dest);
             dest.IntegerComponents.Length.should_be_equal_to(2);
         }
         [Fact]
         public void collections_of_components_are_mapped_with_list()
         {
-            var componentConfig = new DestinationConfiguration(typeof(IntegerDest));
-            componentConfig.From(typeof(IntegerSource));
-            componentConfig.Bind();
-
-            var modelConfig = new DestinationConfiguration(typeof(DestWithCollections));
-            modelConfig.From(typeof(SourceWithCollections));
-            modelConfig.Bind(componentConfig,modelConfig);
-            modelConfig.Assert();
+            container.Map(typeof (IntegerDest)).From(typeof (IntegerSource));
+            container.Map(typeof (DestWithCollections)).From(typeof (SourceWithCollections));
+            var bindable = container.ToBindable();
+            bindable.Bind();
+            bindable.Assert();
             var source = new SourceWithCollections()
             {
                 ArrayOfIntegerComponents = new IntegerSource[0],
                 ListOfIntegerComponents = new List<IntegerSource>{new IntegerSource() { AnInt = 1 }, new IntegerSource() { AnInt = 3 }, }
             };
             var dest = new DestWithCollections();
-            var executable = modelConfig.CreateExecutableMapping(typeof(SourceWithCollections));
-            executable.Execute(contextualizer.CreateContext(source, dest));
+
+            var executable = bindable.CreateCommand(typeof (DestWithCollections), typeof (SourceWithCollections));
+            executable.Map(source, dest);
             dest.ListOfIntegerComponents.Count.should_be_equal_to(2);
         }
     }

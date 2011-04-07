@@ -8,20 +8,20 @@ namespace Ditto.Internal
     {
         private IProvideBinders binders;
         private IMapCommandFactory mapCommands;
-        private ICollection<ICreateBindableConfiguration> configurations;
+        private ICollection<BindableConfiguration> configurations;
         private Dictionary<Type,BindableConfiguration> bindableConfigurations=new Dictionary<Type, BindableConfiguration>();
         public BindingDestinationConfigurationContainer(IProvideBinders binders, IMapCommandFactory mapCommands, IContainDestinationConfiguration destinationConfigurationContainer)
         {
             this.binders = binders;
             this.mapCommands = mapCommands;
-            this.configurations = destinationConfigurationContainer.GetBindableConfigurationCreators();
+            this.configurations = destinationConfigurationContainer.CreateBindableConfigurations();
             Logger = new NullLogFactory();
         }
         public ILogFactory Logger { get; set; }
         public void Bind()
         {
             var allBinders = binders.Create();
-            bindableConfigurations = configurations.ToDictionary(k => k.DestinationType,v => v.CreateBindableConfiguration());
+            bindableConfigurations = configurations.ToDictionary(k => k.DestinationType,v => v);
             var executable = bindableConfigurations.Values.OfType<ICreateExecutableMapping>().ToArray();
             Logger.Create(this).Debug("Binding {0} destination configurations to {1} extending configurations", bindableConfigurations.Count, executable.Length);
             foreach (var binder in allBinders)

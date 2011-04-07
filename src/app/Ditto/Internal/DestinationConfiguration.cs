@@ -298,10 +298,10 @@ namespace Ditto.Internal
         }
         private void AssertExecutable()
         {
-            if(bindableConfiguration==null)
-            {
-                throw new MappingExecutionException("Configuration for destination type '{0}' is not executable. This probably means 'Bind' was not called on the configuration.",destinationType);
-            }
+//            if(bindableConfiguration==null)
+//            {
+//                throw new MappingExecutionException("Configuration for destination type '{0}' is not executable. This probably means 'Bind' was not called on the configuration.",destinationType);
+//            }
         }
     }
 }
