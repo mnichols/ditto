@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Ditto.Internal
 {
-    public class GlobalConventions : IGlobalConventionContainer,IProvideConventions
+    public class GlobalConventions : IContainGlobalConventions,IProvideConventions
     {
         private readonly IValueConverterContainer converters;
         private List<GlobalResolvers> resolvers = new List<GlobalResolvers>();

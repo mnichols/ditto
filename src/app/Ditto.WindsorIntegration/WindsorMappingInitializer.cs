@@ -7,7 +7,7 @@ using Ditto.Internal;
 namespace Ditto.WindsorIntegration
 {
 // ReSharper disable ClassNeverInstantiated.Global
-    public class WindsorMappingInitializer:IInitializeMappingEngine
+    public class WindsorMappingInitializer:IInitializeDitto
 // ReSharper restore ClassNeverInstantiated.Global
     {
         private readonly IKernel kernel;

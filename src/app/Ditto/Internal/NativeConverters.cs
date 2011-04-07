@@ -4,9 +4,9 @@ namespace Ditto.Internal
 {
     public class NativeConverters:IConfigureGlobalConventions
     {
-        private IGlobalConventionContainer conventions;
+        private IContainGlobalConventions conventions;
 
-        public NativeConverters(IGlobalConventionContainer conventions)
+        public NativeConverters(IContainGlobalConventions conventions)
         {
             this.conventions = conventions;
         }

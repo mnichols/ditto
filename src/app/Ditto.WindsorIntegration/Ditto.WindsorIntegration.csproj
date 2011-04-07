@@ -56,7 +56,7 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="MappingFacility.cs" />
+    <Compile Include="DittoFacility.cs" />
     <Compile Include="WindsorLogger.cs" />
     <Compile Include="WindsorLoggerFactory.cs" />
     <Compile Include="WindsorMappingExtensions.cs" />

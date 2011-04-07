@@ -7,7 +7,7 @@ namespace Ditto
         /// </summary>
         /// <value>The conventions.</value>
 // ReSharper disable VirtualMemberNeverOverriden.Global
-        public virtual IGlobalConventionContainer Conventions { get; set; }
+        public virtual IContainGlobalConventions Conventions { get; set; }
 // ReSharper restore VirtualMemberNeverOverriden.Global
         public abstract void Configure();
     }

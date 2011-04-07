@@ -12,7 +12,7 @@ using Ditto.Internal;
 
 namespace Ditto.WindsorIntegration
 {
-    public class MappingFacility : AbstractFacility
+    public class DittoFacility : AbstractFacility
     {
         private const string GlobalConventionsKey = "global.conventions";
         private const string DefaultMapCommandKey = "default.map.command";
@@ -46,8 +46,8 @@ namespace Ditto.WindsorIntegration
                                 .ImplementedBy<DestinationConfigurationContainer>()
                                 .ServiceOverrides(new {conventions = GlobalConventionsKey})
                                 .LifeStyle.Singleton);
-            Kernel.Register(Component.For<IMap>().ImplementedBy<DefaultMappingEngine>().LifeStyle.Singleton);
-            Kernel.Register(Component.For<IInitializeMappingEngine>().ImplementedBy<WindsorMappingInitializer>().LifeStyle.Transient);
+            Kernel.Register(Component.For<IMap>().ImplementedBy<DittoDoer>().LifeStyle.Singleton);
+            Kernel.Register(Component.For<IInitializeDitto>().ImplementedBy<WindsorMappingInitializer>().LifeStyle.Transient);
             Kernel.Register(Component.For<IBindConfigurations, ICreateMappingCommand>().ImplementedBy<BindingDestinationConfigurationContainer>().LifeStyle.Singleton);
         }
 
@@ -74,7 +74,7 @@ namespace Ditto.WindsorIntegration
                 Component.For<IMapCommand>().ImplementedBy<DefaultMapCommand>().Named(DefaultMapCommandKey).LifeStyle.
                     Transient);
             Kernel.Register(
-                Component.For<IGlobalConventionContainer>().ImplementedBy<GlobalConventions>().Named(
+                Component.For<IContainGlobalConventions>().ImplementedBy<GlobalConventions>().Named(
                     GlobalConventionsKey).LifeStyle.Singleton);
             Kernel.Register(Component.For<IMapCommandFactory>().AsFactory()); /*typedfactory*/
             Kernel.Register(Component.For<ICreateDestinationConfiguration>().AsFactory()); /*typedfactory*/

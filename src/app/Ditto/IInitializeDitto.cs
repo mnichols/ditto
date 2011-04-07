@@ -1,6 +1,6 @@
 namespace Ditto
 {
-    public interface IInitializeMappingEngine
+    public interface IInitializeDitto
     {
         void Initialize();
     }

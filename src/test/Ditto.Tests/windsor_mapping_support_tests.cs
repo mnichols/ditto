@@ -24,14 +24,14 @@ namespace Ditto.Tests
         
         private void WithConfiguration<T>() where T : IConfigureMapping
         {
-            container.AddFacility("mapping", new MappingFacility());
+            container.AddFacility("mapping", new DittoFacility());
             container.Register(Component.For<IConfigureMapping>().ImplementedBy<T>().LifeStyle.Transient);
         }
         
         [Fact]
         public void configuration_registration_of_mappings_is_okay()
         {
-            container.AddFacility("mapping", new MappingFacility());
+            container.AddFacility("mapping", new DittoFacility());
             container.RegisterAllConfigurationsIn(new[] { GetType().Assembly });
             var configurations = container.Kernel.GetHandlers(typeof (IConfigureMapping));
             configurations.Length.should_not_be_equal_to(0);
@@ -40,7 +40,7 @@ namespace Ditto.Tests
         [Fact]
         public void configuration_execution_works()
         {
-            container.AddFacility("mapping", new MappingFacility());
+            container.AddFacility("mapping", new DittoFacility());
             container.RegisterAllConfigurationsIn(new[] {GetType().Assembly});
             var configurations=container.ResolveAll<IConfigureMapping>();
             foreach (var configureMapping in configurations)
@@ -55,7 +55,7 @@ namespace Ditto.Tests
         public void mapping_execution_works()
         {
             WithConfiguration<PeopleConfiguration>();
-            var configurations = container.Resolve<IInitializeMappingEngine>();
+            var configurations = container.Resolve<IInitializeDitto>();
             configurations.Initialize();
             
             var mapper = container.Resolve<IMap>();
@@ -71,7 +71,7 @@ namespace Ditto.Tests
         public void global_converters_are_applied()
         {
             WithConfiguration<PeopleConfiguration>();
-            var configurations = container.Resolve<IInitializeMappingEngine>();
+            var configurations = container.Resolve<IInitializeDitto>();
             var testGlobals = new TestGlobals(container,new List<IConvertValue>{new DateTimeUtcConverter()},null);
             container.Register(Component.For<IConfigureGlobalConventions>().Instance(testGlobals));
             configurations.Initialize();
@@ -93,7 +93,7 @@ namespace Ditto.Tests
         public void global_ignore_resolvers_are_applied()
         {
             WithConfiguration<SystemPersonConfiguration>();
-            var configurations = container.Resolve<IInitializeMappingEngine>();
+            var configurations = container.Resolve<IInitializeDitto>();
             var testGlobals = new TestGlobals(container,null, new Dictionary<IPropertyCriterion, IResolveValue>
                                                  {
                                                      {PropertyNameCriterion.From<SystemPerson>(p=>p.SystemId), new IgnoreResolver()}
@@ -117,7 +117,7 @@ namespace Ditto.Tests
         {
             WithConfiguration<SystemPersonConfiguration>();
             
-            var configurations = container.Resolve<IInitializeMappingEngine>();
+            var configurations = container.Resolve<IInitializeDitto>();
             Guid id = Guid.Empty;
             var testGlobals = new TestGlobals(container, null, new Dictionary<IPropertyCriterion, IResolveValue>
                                                  {
@@ -162,7 +162,7 @@ namespace Ditto.Tests
             
             public override void Configure()
             {
-                Conventions = container.Resolve<IGlobalConventionContainer>();
+                Conventions = container.Resolve<IContainGlobalConventions>();
                 foreach (var converter in converters)
                 {
                     Conventions.AddConverter(converter);

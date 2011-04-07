@@ -1,10 +1,10 @@
 ﻿namespace Ditto.Internal
 {
-    public class DefaultMappingEngine : IMap
+    public class DittoDoer : IMap
     {
         private ICreateMappingCommand commands;
 
-        public DefaultMappingEngine(ICreateMappingCommand commands)
+        public DittoDoer(ICreateMappingCommand commands)
         {
             this.commands = commands;
         }
@@ -20,13 +20,6 @@
         {
             var destination = commands.CreateCommand(typeof (TDest), source.GetType());
             return destination.Map(source, dest);
-        }
-
-        public void Assert()
-        {
-            var validatable = commands as IValidatable;
-            if (validatable != null)
-                validatable.Assert();
         }
     }
 }
