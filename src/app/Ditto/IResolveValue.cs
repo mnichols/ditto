@@ -4,6 +4,6 @@ namespace Ditto
 {
     public interface IResolveValue
     {
-        Result TryResolve(IResolutionContext context);
+        Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty);
     }
 }

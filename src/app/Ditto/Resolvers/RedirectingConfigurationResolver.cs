@@ -20,7 +20,7 @@ namespace Ditto.Resolvers
             get { return sourceProperty; }
         }
 
-        public Result TryResolve(IResolutionContext context)
+        public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
         {
             var nested = context.Nested(destinationProperty,SourceProperty);
             var executable = executor.CreateExecutableMapping(nested.SourceType);

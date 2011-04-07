@@ -18,7 +18,7 @@ namespace Ditto.Tests
         {
             var resolver = new PropertyNameResolver("Name");
             var src = new TestClass() {Name = "mikey"};
-            var result = resolver.TryResolve(contextualizer.CreateContext(src, typeof(object)));
+            var result = resolver.TryResolve(contextualizer.CreateContext(src, typeof(object)), null);
             result.IsResolved.should_be_true();
             result.Value.should_be_equal_to("mikey");
         }
@@ -27,7 +27,7 @@ namespace Ditto.Tests
         {
             var resolver = new StaticValueResolver("monkey");
             var src = new TestClass() { Name = "mikey" };
-            var result = resolver.TryResolve(contextualizer.CreateContext(src, typeof(object)));
+            var result = resolver.TryResolve(contextualizer.CreateContext(src, typeof(object)), null);
             result.IsResolved.should_be_true();
             result.Value.should_be_equal_to("monkey");
         }
@@ -62,7 +62,7 @@ namespace Ditto.Tests
         }
         private class ThrowingResolver : IResolveValue
         {
-            public Result TryResolve(IResolutionContext context)
+            public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
             {
                 throw new InvalidOperationException("Should not resolve");
             }

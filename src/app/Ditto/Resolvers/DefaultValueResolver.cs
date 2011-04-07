@@ -3,16 +3,12 @@ using Ditto.Internal;
 
 namespace Ditto.Resolvers
 {
-    public class DefaultValueResolver:IResolveValue,IDependOnDestinationPropertyState
+    public class DefaultValueResolver:IResolveValue
     {
-        public Result TryResolve(IResolutionContext context)
+        public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
         {
-            throw new NotImplementedException("Use ResolveBasedOn instead");
+            return new Result(true, destinationProperty.PropertyType.DefaultValue());
         }
 
-        public Result ResolveBasedOn(IResolutionContext context, IDescribeMappableProperty destinationProperty)
-        {
-            return new Result(true,destinationProperty.PropertyType.DefaultValue());
-        }
     }
 }

@@ -1,13 +1,14 @@
 using System;
 using Ditto.Internal;
-
+using Ditto.Tests;
+using AutoMapper;
 namespace Ditto.Benchmarking.Tests
 {
     public class benchmarking_tests
     {
         private static BenchSourceProps propsSource;
         private static BenchDestinationProps propsDest;
-        private static DefaultMapCommand dittoMapCommand;
+        private static IMapCommand dittoMapCommand;
 
 // ReSharper disable UnusedMember.Global
         public static void Init(string[] args)
@@ -17,6 +18,7 @@ namespace Ditto.Benchmarking.Tests
             propsSource = new BenchSourceProps();
             propsDest = new BenchDestinationProps();
             ConfigureDitto();
+            ConfigureAutoMapper();
         }
 
         
@@ -103,25 +105,22 @@ namespace Ditto.Benchmarking.Tests
         {
             try
             {
-                var int1 = new DestinationConfiguration(typeof (BenchDestinationProps.Int1));
-                int1.From(typeof (BenchSourceProps.Int1));
-                var int2 = new DestinationConfiguration(typeof (BenchDestinationProps.Int2));
-                int2.From(typeof (BenchSourceProps.Int2));
-                
-                var cfg = new DestinationConfiguration(typeof (BenchDestinationProps));
-                cfg.From(typeof (BenchSourceProps));
 
-                var bindable = cfg.CreateBindableConfiguration();
-                bindable.Bind(bindable,int1.CreateBindableConfiguration(),int2.CreateBindableConfiguration());
+                var container = new DestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
+
+
+                container.Map<BenchDestinationProps.Int1>().From<BenchSourceProps.Int1>();
+                container.Map<BenchDestinationProps.Int2>().From<BenchSourceProps.Int2>();
+                container.Map<BenchDestinationProps>().From<BenchSourceProps>();
+
+
+                var bindable = container.ToBindable();
+                bindable.Bind();
                 bindable.Assert();
                 var contextualizer = new TestContextualizer();
                 var cacher = new CacheInitializer(contextualizer);
                 bindable.Accept(cacher);
-                
-                
-
-                var executableMapping = bindable.CreateExecutableMapping(typeof (BenchSourceProps));
-                dittoMapCommand = new DefaultMapCommand(executableMapping, new TestContextualizer());
+                dittoMapCommand = bindable.CreateCommand(typeof (BenchDestinationProps), typeof (BenchSourceProps));
             }
             catch (Exception ex)
             {
@@ -130,6 +129,22 @@ namespace Ditto.Benchmarking.Tests
             }
         }
 
+        private static void ConfigureAutoMapper()
+        {
+            try
+            {
+                
+                Mapper.CreateMap<BenchSourceProps.Int1, BenchDestinationProps.Int1>();
+                Mapper.CreateMap<BenchSourceProps.Int2, BenchDestinationProps.Int2>();
+                Mapper.CreateMap< BenchSourceProps,BenchDestinationProps>();
+                Mapper.AssertConfigurationIsValid();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+        }
         [Benchmark]
         public static void handwritten_benchmark()
         {
@@ -138,10 +153,19 @@ namespace Ditto.Benchmarking.Tests
         }
 
         [Benchmark]
-        public static void props_mapper_benchmark()
+        public static void ditto_benchmark()
         {
             for (var i = 0; i < 10000; i++)
                 dittoMapCommand.Map(propsSource, propsDest);
+        }
+
+        [Benchmark]
+        public static void automapper_benchmark()
+        {
+            for (int i = 0; i < 10000; i++)
+            {
+                Mapper.Map(propsSource, propsDest);
+            }
         }
 
         public class BenchDestinationProps

@@ -185,7 +185,6 @@
     <Compile Include="Resolvers\DefaultResolverFactory.cs" />
     <Compile Include="Resolvers\DefaultValueResolver.cs" />
     <Compile Include="Resolvers\ICreateResolver.cs" />
-    <Compile Include="Resolvers\IDependOnDestinationPropertyState.cs" />
     <Compile Include="Resolvers\IgnoreResolver.cs" />
     <Compile Include="Resolvers\ImmutableDestinationResolver.cs" />
     <Compile Include="Resolvers\IOverrideable.cs" />

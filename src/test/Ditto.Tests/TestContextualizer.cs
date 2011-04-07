@@ -3,7 +3,7 @@ using Ditto.Internal;
 
 namespace Ditto.Tests
 {
-    public class TestContextualizer : IContextualizeResolution,IMapCommandFactory
+    public class TestContextualizer : IContextualizeResolution,IMapCommandFactory,ICacheInvocation
     {
         private Fasterflection reflection;
 
@@ -28,6 +28,16 @@ namespace Ditto.Tests
         public IMapCommand Create(IExecuteMapping executableMapping)
         {
             return new DefaultMapCommand(executableMapping, this);
+        }
+
+        public GetValue CacheGet(Type targetType, string propertyName)
+        {
+            return reflection.CacheGet(targetType, propertyName);
+        }
+
+        public SetValue CacheSet(Type targetType, string propertyName)
+        {
+            return reflection.CacheSet(targetType, propertyName);
         }
     }
 }

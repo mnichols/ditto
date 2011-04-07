@@ -34,7 +34,7 @@ namespace Ditto.Tests
 
 
             var destination = new DestWithCollections();
-            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination));
+            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), null);
             result.Value.should_be_a_type_of<List<IntegerDest>>();
             ((List<IntegerDest>)result.Value)[0].AnInt.should_be_equal_to(1);
             ((List<IntegerDest>)result.Value)[1].AnInt.should_be_equal_to(4);
@@ -54,7 +54,7 @@ namespace Ditto.Tests
 
 
             var destination = new DestWithCollections();
-            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination));
+            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), null);
             result.Value.should_be_a_type_of<IntegerDest[]>();
             ((IntegerDest[])result.Value)[0].AnInt.should_be_equal_to(1);
             ((IntegerDest[])result.Value)[1].AnInt.should_be_equal_to(4);
@@ -73,7 +73,7 @@ namespace Ditto.Tests
 
 
             var destination = new DestWithCollections();
-            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination));
+            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), null);
             result.Value.should_be_a_type_of<List<IntegerDest>>();
             ((List<IntegerDest>)result.Value)[0].AnInt.should_be_equal_to(1);
             ((List<IntegerDest>)result.Value)[1].AnInt.should_be_equal_to(4);
@@ -92,7 +92,7 @@ namespace Ditto.Tests
 
 
             var destination = new DestWithCollections();
-            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination));
+            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), null);
             result.Value.should_be_a_type_of<IntegerDest[]>();
             ((IntegerDest[])result.Value)[0].AnInt.should_be_equal_to(1);
             ((IntegerDest[])result.Value)[1].AnInt.should_be_equal_to(4);
