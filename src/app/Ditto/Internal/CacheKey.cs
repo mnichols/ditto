@@ -4,8 +4,8 @@ namespace Ditto.Internal
 {
     internal class CacheKey
     {
-        private Type type;
-        private string name;
+        private readonly Type type;
+        private readonly string name;
 
         public CacheKey(Type type, string name)
         {

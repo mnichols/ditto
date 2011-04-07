@@ -5,7 +5,7 @@ namespace Ditto.Criteria
 {
     public class TypePropertyCriterion:IPropertyCriterion
     {
-        private Type targetType;
+        private readonly Type targetType;
 
         public TypePropertyCriterion(Type targetType)
         {

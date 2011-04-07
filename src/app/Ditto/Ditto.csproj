@@ -33,24 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core">
-      <HintPath>..\..\..\lib\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Facilities.Logging">
-      <HintPath>..\..\..\lib\Castle.Facilities.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Services.Logging.Log4netIntegration">
-      <HintPath>..\..\..\lib\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Windsor">
-      <HintPath>..\..\..\lib\Castle.Windsor.dll</HintPath>
-    </Reference>
     <Reference Include="Fasterflect">
       <HintPath>..\..\..\lib\Fasterflect.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -85,7 +69,6 @@
     <Compile Include="IContainDestinationConfiguration.cs" />
     <Compile Include="IConvertValue.cs" />
     <Compile Include="ICreateLogger.cs" />
-    <Compile Include="IExtendDestinationConfiguration.cs" />
     <Compile Include="IGlobalConventionContainer.cs" />
     <Compile Include="IInitializeMappingEngine.cs" />
     <Compile Include="ILog.cs" />

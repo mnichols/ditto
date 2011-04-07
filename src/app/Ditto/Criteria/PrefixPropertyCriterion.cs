@@ -4,7 +4,7 @@ namespace Ditto.Criteria
 {
     public class PrefixPropertyCriterion:IPropertyCriterion
     {
-        private string prefix;
+        private readonly string prefix;
 
         public PrefixPropertyCriterion(string prefix)
         {

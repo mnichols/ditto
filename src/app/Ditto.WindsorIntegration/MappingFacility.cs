@@ -15,7 +15,7 @@ namespace Ditto.WindsorIntegration
     public class MappingFacility : AbstractFacility
     {
         private const string GlobalConventionsKey = "global.conventions";
-        public const string DefaultMapCommandKey = "default.map.command";
+        private const string DefaultMapCommandKey = "default.map.command";
 
         public void AssertFacility<T>() where T : IFacility, new()
         {
@@ -24,7 +24,7 @@ namespace Ditto.WindsorIntegration
             Kernel.AddFacility<T>();
         }
 
-        public void AssertFacility<T>(Func<IFacility> createFacility) where T : IFacility
+        private void AssertFacility<T>(Func<IFacility> createFacility) where T : IFacility
         {
             if (Kernel.GetFacilities().Any(fac => fac.GetType() == typeof (T)))
                 return;
@@ -99,7 +99,7 @@ namespace Ditto.WindsorIntegration
         /// </summary>
         public class MapCommandResolver : ISubDependencyResolver
         {
-            private IKernel kernel;
+            private readonly IKernel kernel;
 
             public MapCommandResolver(IKernel kernel)
             {

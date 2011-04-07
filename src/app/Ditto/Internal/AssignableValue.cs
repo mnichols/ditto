@@ -8,7 +8,7 @@ namespace Ditto.Internal
         private readonly IDescribeMappableProperty destinationProperty;
         private readonly IValueConverterContainer valueConverters;
         private object destinationValue;
-        private object originalValue;
+        private readonly object originalValue;
 
         public AssignableValue(object value, IDescribeMappableProperty destinationProperty, IValueConverterContainer valueConverters)
         {

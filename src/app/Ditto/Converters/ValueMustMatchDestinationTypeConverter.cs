@@ -31,13 +31,13 @@ namespace Ditto.Converters
             }
             return context.Result(destColl);
         }
-        private ConversionResult TryNullableConversion(ConversionContext context)
+        private static ConversionResult TryNullableConversion(ConversionContext context)
         {
             if (context.HasValue== false|| context.ValueType.IsNullableType() == false)
                 return context.Unconverted();
             return  new NullableToNonNullableConverter().Convert(context);
         }
-        private ConversionResult TrySystemConversion(ConversionContext context)
+        private static ConversionResult TrySystemConversion(ConversionContext context)
         {
             return new SystemConverter().Convert(context);
         }

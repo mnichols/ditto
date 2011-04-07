@@ -4,9 +4,9 @@ namespace Ditto.Internal
 {
     public class DefaultContextualizer:IContextualizeResolution
     {
-        private IActivator activator;
-        private ICreateValueAssignment valueAssignments;
-        private IReflection reflection;
+        private readonly IActivator activator;
+        private readonly ICreateValueAssignment valueAssignments;
+        private readonly IReflection reflection;
 
         public DefaultContextualizer(IActivator activator, ICreateValueAssignment valueAssignments, IReflection reflection)
         {
