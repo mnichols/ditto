@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Ditto.Internal
 {
-    public class BindingDestinationConfigurationContainer:IBindConfigurations,ICreateMappingCommand,IValidatable
+    public class BindingDestinationConfigurationContainer:IBindConfigurations,ICreateMappingCommand,IValidatable,ICacheable
     {
         private IProvideBinders binders;
         private IMapCommandFactory mapCommands;
@@ -68,6 +68,17 @@ namespace Ditto.Internal
         {
             var missing = Validate();
             missing.TryThrow();
+        }
+
+        public void Accept(IVisitCacheable visitor)
+        {
+            foreach (var config in configurations)
+            {
+                var cacheable = config as ICacheable;
+                if (cacheable == null)
+                    continue;
+                cacheable.Accept(visitor);
+            }
         }
     }
 }

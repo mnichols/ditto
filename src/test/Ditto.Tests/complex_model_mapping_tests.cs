@@ -38,20 +38,22 @@ namespace Ditto.Tests
         {
             var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent));
             componentConfig.From(typeof(EventComponent));
-            componentConfig.Bind();
-            componentConfig.Assert();
+            
 
             var modelConfig = new DestinationConfiguration(typeof(ComplexViewModel));
             modelConfig.From(typeof (ComplexEventWithDifferentNamedComponent));
             modelConfig.SetPropertyResolver(
                 PropertyNameCriterion.From<ComplexViewModel>(m=>m.Component), typeof(ComplexEventWithDifferentNamedComponent),
-                new RedirectingConfigurationResolver(MappableProperty.For<ComplexEventWithDifferentNamedComponent>(s => s.DifferentName), MappableProperty.For<ComplexViewModel>(m => m.Component), componentConfig));
-            modelConfig.Bind();
-            modelConfig.Assert();
+                new RedirectingConfigurationResolver(MappableProperty.For<ComplexEventWithDifferentNamedComponent>(s => s.DifferentName), MappableProperty.For<ComplexViewModel>(m => m.Component), componentConfig.CreateBindableConfiguration()));
+
+            var bindable = modelConfig.CreateBindableConfiguration();
+            bindable.Bind();
+            bindable.Assert();
+            
 
             var source = new ComplexEventWithDifferentNamedComponent() { Name = "RootName", DifferentName= new EventComponent() { Name = "ComponentName" } };
             var dest = new ComplexViewModel();
-            var executable = modelConfig.CreateExecutableMapping(typeof(ComplexEventWithDifferentNamedComponent));
+            var executable = bindable.CreateExecutableMapping(typeof(ComplexEventWithDifferentNamedComponent));
             executable.Execute(contextualizer.CreateContext(source, dest));
             dest.Name.should_be_equal_to("RootName");
             dest.Component.should_not_be_null();

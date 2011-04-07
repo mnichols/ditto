@@ -21,7 +21,8 @@ namespace Ditto.Tests
             var cfg = new DestinationConfiguration(typeof (SystemPerson));
             cfg.From(typeof (PersonalInfo), typeof (Parents))
                 .ApplyingConvention(new PropertyNameCriterion("SystemId"), new IgnoreResolver());
-            Action validation = cfg.Assert;
+            var bindable = cfg.CreateBindableConfiguration();
+            Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
         [Fact]
@@ -32,10 +33,11 @@ namespace Ditto.Tests
             Guid systemId=Guid.NewGuid();
             var cfg = new DestinationConfiguration<SystemPerson>(new TestDestinationConfigurationFactory());
             cfg.From(typeof(PersonalInfo), typeof(Parents)).ApplyingConvention(new StaticValueResolver(systemId), m=>m.SystemId);
-            cfg.Bind();
-            Action validation = cfg.Assert;
+            var bindable = cfg.CreateBindableConfiguration();
+            bindable.Bind();
+            Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
-            var executable = cfg.CreateExecutableMapping(typeof (PersonalInfo));
+            var executable = bindable.CreateExecutableMapping(typeof (PersonalInfo));
             
             executable.Execute(contextualizer.CreateContext(src1,destination));
             destination.Age.should_be_equal_to(3);
@@ -54,10 +56,11 @@ namespace Ditto.Tests
             cfg.From(typeof(PersonalInfo), typeof(Parents));
             cfg.ApplyingConvention(new StaticValueResolver(systemId), m => m.SystemId);
             cfg.UsingValue<PersonalInfo>(myManualSystemId, on => on.SystemId);
-            cfg.Bind();
-            Action validation = cfg.Assert;
+            var bindable = cfg.CreateBindableConfiguration();
+            bindable.Bind();
+            Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
-            var executable = cfg.CreateExecutableMapping(typeof(PersonalInfo));
+            var executable = bindable.CreateExecutableMapping(typeof(PersonalInfo));
 
             executable.Execute(contextualizer.CreateContext(src1, destination));
             destination.SystemId.should_be_equal_to(myManualSystemId);
@@ -68,7 +71,8 @@ namespace Ditto.Tests
             var cfg = new DestinationConfiguration(typeof(SystemPerson));
             cfg.From(typeof(PersonalInfo), typeof(Parents))
                 .ApplyingConvention(new PrefixPropertyCriterion("System"), new IgnoreResolver());
-            Action validation = cfg.Assert;
+            var bindable = cfg.CreateBindableConfiguration();
+            Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
         [Fact]
@@ -80,10 +84,11 @@ namespace Ditto.Tests
             var cfg = new DestinationConfiguration(typeof(ManyDates));
             cfg.From(typeof (PersonalInfo), typeof (Parents))
                 .ApplyingConvention(new TypePropertyCriterion(typeof (DateTime)), new StaticValueResolver(dateTime));
-            cfg.Bind();
-            Action validation = cfg.Assert;
+            var bindable = cfg.CreateBindableConfiguration();
+            bindable.Bind();
+            Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
-            var executable = cfg.CreateExecutableMapping(typeof (PersonalInfo));
+            var executable = bindable.CreateExecutableMapping(typeof (PersonalInfo));
             executable.Execute(contextualizer.CreateContext(src1, destination));
             destination.DateTime1.should_be_equal_to(dateTime);
             destination.DateTime2.should_be_equal_to(dateTime);

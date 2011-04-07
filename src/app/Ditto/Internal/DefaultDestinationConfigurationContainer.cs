@@ -6,7 +6,7 @@ namespace Ditto.Internal
 {
     public class DefaultDestinationConfigurationContainer : IContainDestinationConfiguration
     {
-        private readonly Dictionary<Type, IValidatable> registeredConfigurations = new Dictionary<Type, IValidatable>();
+        private readonly Dictionary<Type, ICreateBindableConfiguration> registeredConfigurations = new Dictionary<Type, ICreateBindableConfiguration>();
         private readonly IProvideConventions conventions;
         private readonly ICreateDestinationConfiguration configurations;
         public ILogFactory Logger { get; set; }
@@ -24,10 +24,10 @@ namespace Ditto.Internal
         }
         public IConfigureDestination Map(Type destinationType)
         {
-            IValidatable cfg;
+            ICreateBindableConfiguration cfg;
             if (registeredConfigurations.TryGetValue(destinationType, out cfg) == false)
             {
-                registeredConfigurations.Add(destinationType, cfg = (IValidatable)configurations.Create(destinationType));
+                registeredConfigurations.Add(destinationType, cfg = (ICreateBindableConfiguration)configurations.Create(destinationType));
                 TryApplyGlobalConventions(cfg as IApplyConventions);    
             }
             return (DestinationConfiguration)cfg;
@@ -35,10 +35,10 @@ namespace Ditto.Internal
 
         public IConfigureDestination<TDest> Map<TDest>()
         {
-            IValidatable cfg;
+            ICreateBindableConfiguration cfg;
             if (registeredConfigurations.TryGetValue(typeof(TDest), out cfg) == false)
             {
-                registeredConfigurations.Add(typeof(TDest), cfg = (IValidatable)configurations.Create<TDest>());
+                registeredConfigurations.Add(typeof(TDest), cfg = (ICreateBindableConfiguration)configurations.Create<TDest>());
                 TryApplyGlobalConventions(cfg as IApplyConventions);
             }
             return (DestinationConfiguration<TDest>)cfg;
@@ -55,6 +55,5 @@ namespace Ditto.Internal
         }
 
 
-        
     }
 }

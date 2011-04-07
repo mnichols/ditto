@@ -107,20 +107,21 @@ namespace Ditto.Benchmarking.Tests
                 int1.From(typeof (BenchSourceProps.Int1));
                 var int2 = new DestinationConfiguration(typeof (BenchDestinationProps.Int2));
                 int2.From(typeof (BenchSourceProps.Int2));
-                int2.Bind(int1);
+                
                 var cfg = new DestinationConfiguration(typeof (BenchDestinationProps));
                 cfg.From(typeof (BenchSourceProps));
-                cfg.Bind(int2);
 
+                var bindable = cfg.CreateBindableConfiguration();
+                bindable.Bind(int1.CreateBindableConfiguration(),int2.CreateBindableConfiguration());
                 var contextualizer = new TestContextualizer();
                 var cacher = new CacheInitializer(contextualizer);
                 foreach (var configuration in new[] {int1, int2, cfg})
                 {
                     ((ICacheable) configuration).Accept(cacher);
                 }
-                cfg.Assert();
+                bindable.Assert();
 
-                var executableMapping = cfg.CreateExecutableMapping(typeof (BenchSourceProps));
+                var executableMapping = bindable.CreateExecutableMapping(typeof (BenchSourceProps));
                 dittoMapCommand = new DefaultMapCommand(executableMapping, new TestContextualizer());
             }
             catch (Exception ex)

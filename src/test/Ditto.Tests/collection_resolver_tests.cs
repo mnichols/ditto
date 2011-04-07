@@ -8,14 +8,15 @@ namespace Ditto.Tests
     public class collection_resolver_tests
     {
         private TestContextualizer contextualizer;
-        private DestinationConfiguration integerComponentElementConfig;
+        private ICreateExecutableMapping integerComponentElementConfig;
 
         public collection_resolver_tests()
         {
-            integerComponentElementConfig = new DestinationConfiguration(typeof (IntegerDest));
-            integerComponentElementConfig.From(typeof (IntegerSource));
-            integerComponentElementConfig.Bind();
-            
+            var cfg = new DestinationConfiguration(typeof (IntegerDest));
+            cfg.From(typeof (IntegerSource));
+            var bindable=cfg.CreateBindableConfiguration();
+            bindable.Bind();
+            integerComponentElementConfig = bindable;
             contextualizer = new TestContextualizer();
         }
        
@@ -23,8 +24,8 @@ namespace Ditto.Tests
         public void it_should_resolve_to_list_from_list()
         {
             var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ListOfIntegerComponents),
-                                        MappableProperty.For<DestWithCollections>(d => d.ListOfIntegerComponents),
-                                        integerComponentElementConfig, new Fasterflection());
+                MappableProperty.For<DestWithCollections>(d => d.ListOfIntegerComponents),
+                integerComponentElementConfig, new Fasterflection());
             var source = new SourceWithCollections()
             {
                 ListOfIntegerComponents =
