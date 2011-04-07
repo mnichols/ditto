@@ -70,15 +70,14 @@ task Release  -depends Test{
 		$build_dir\Castle.Facilities.Logging.dll `
     	$build_dir\Castle.Facilities.Logging.xml `
     	$build_dir\Castle.Services.Logging.Log4netIntegration.dll `
-    	$build_dir\Castle.Services.Logging.Log4netIntegration.xml `    	
+    	$build_dir\Castle.Services.Logging.Log4netIntegration.xml `
     	$build_dir\Castle.Windsor.dll `
-    	$build_dir\Castle.Windsor.xml `    	
+    	$build_dir\Castle.Windsor.xml `
 		$build_dir\Fasterflect.dll `
-    	$build_dir\Fasterflect.xml `    	    	
-    	$build_dir\log4net.dll `
-    	$build_dir\log4net.xml `    	
-    	license.txt `
-		acknowledgements.txt
+		$build_dir\Fasterflect.xml `
+		$build_dir\log4net.dll `
+		$build_dir\log4net.xml `
+		$base_dir\license.txt
 	if ($lastExitCode -ne 0) {
         throw "Error: Failed to execute ZIP command"
     }
