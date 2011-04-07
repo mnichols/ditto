@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ditto.Tests", "src\test\Dit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ditto.Benchmarking.Tests", "src\test\Ditto.Benchmarking.Tests\Ditto.Benchmarking.Tests.csproj", "{7CD87A04-56E4-4A4C-AB86-4BC2DD59F07E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ditto.WindsorIntegration", "src\app\Ditto.WindsorIntegration\Ditto.WindsorIntegration.csproj", "{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,16 @@ Global
 		{7CD87A04-56E4-4A4C-AB86-4BC2DD59F07E}.Release|Mixed Platforms.Build.0 = Release|x86
 		{7CD87A04-56E4-4A4C-AB86-4BC2DD59F07E}.Release|x86.ActiveCfg = Release|x86
 		{7CD87A04-56E4-4A4C-AB86-4BC2DD59F07E}.Release|x86.Build.0 = Release|x86
+		{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
