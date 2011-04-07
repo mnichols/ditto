@@ -10,7 +10,7 @@ namespace Ditto.Resolvers
         {
             Value = value;
         }
-        public Result TryResolve(IResolutionContext context)
+        public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
         {
             return new Result(true, Value);
         }

@@ -9,7 +9,7 @@ namespace Ditto.Internal
             instance = new NullResolver();
         }
 
-        public Result TryResolve(IResolutionContext context)
+        public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
         {
             return Result.Unresolved;
         }

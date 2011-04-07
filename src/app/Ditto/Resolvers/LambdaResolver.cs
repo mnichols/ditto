@@ -12,7 +12,7 @@ namespace Ditto.Resolvers
             this.lambda = lambda;
         }
 
-        public Result TryResolve(IResolutionContext context)
+        public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
         {
             if (typeof(TSource).IsAssignableFrom(context.SourceType) == false)
                 return Result.Unresolved;

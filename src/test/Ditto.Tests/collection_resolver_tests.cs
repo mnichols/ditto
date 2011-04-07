@@ -8,14 +8,15 @@ namespace Ditto.Tests
     public class collection_resolver_tests
     {
         private TestContextualizer contextualizer;
-        private DestinationConfiguration integerComponentElementConfig;
+        private ICreateExecutableMapping integerComponentElementConfig;
 
         public collection_resolver_tests()
         {
-            integerComponentElementConfig = new DestinationConfiguration(typeof (IntegerDest));
-            integerComponentElementConfig.From(typeof (IntegerSource));
-            integerComponentElementConfig.Bind();
-            
+            var cfg = new DestinationConfiguration(typeof (IntegerDest));
+            cfg.From(typeof (IntegerSource));
+            var bindable=cfg.CreateBindableConfiguration();
+            bindable.Bind();
+            integerComponentElementConfig = bindable;
             contextualizer = new TestContextualizer();
         }
        
@@ -23,8 +24,8 @@ namespace Ditto.Tests
         public void it_should_resolve_to_list_from_list()
         {
             var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ListOfIntegerComponents),
-                                        MappableProperty.For<DestWithCollections>(d => d.ListOfIntegerComponents),
-                                        integerComponentElementConfig, new Fasterflection());
+                MappableProperty.For<DestWithCollections>(d => d.ListOfIntegerComponents),
+                integerComponentElementConfig, new Fasterflection());
             var source = new SourceWithCollections()
             {
                 ListOfIntegerComponents =
@@ -33,7 +34,7 @@ namespace Ditto.Tests
 
 
             var destination = new DestWithCollections();
-            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination));
+            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), null);
             result.Value.should_be_a_type_of<List<IntegerDest>>();
             ((List<IntegerDest>)result.Value)[0].AnInt.should_be_equal_to(1);
             ((List<IntegerDest>)result.Value)[1].AnInt.should_be_equal_to(4);
@@ -53,7 +54,7 @@ namespace Ditto.Tests
 
 
             var destination = new DestWithCollections();
-            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination));
+            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), null);
             result.Value.should_be_a_type_of<IntegerDest[]>();
             ((IntegerDest[])result.Value)[0].AnInt.should_be_equal_to(1);
             ((IntegerDest[])result.Value)[1].AnInt.should_be_equal_to(4);
@@ -72,7 +73,7 @@ namespace Ditto.Tests
 
 
             var destination = new DestWithCollections();
-            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination));
+            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), null);
             result.Value.should_be_a_type_of<List<IntegerDest>>();
             ((List<IntegerDest>)result.Value)[0].AnInt.should_be_equal_to(1);
             ((List<IntegerDest>)result.Value)[1].AnInt.should_be_equal_to(4);
@@ -91,7 +92,7 @@ namespace Ditto.Tests
 
 
             var destination = new DestWithCollections();
-            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination));
+            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), null);
             result.Value.should_be_a_type_of<IntegerDest[]>();
             ((IntegerDest[])result.Value)[0].AnInt.should_be_equal_to(1);
             ((IntegerDest[])result.Value)[1].AnInt.should_be_equal_to(4);

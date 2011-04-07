@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Ditto.Internal
 {
-    public class BindableConfiguration : ICreateExecutableMapping, IBindable, IValidatable
+    public class BindableConfiguration : ICreateExecutableMapping, IBindable, IValidatable,ICacheable
     {
         public BindableConfiguration(Type destinationType, IDescribeMappableProperty[] destinationProperties,
                                      SourceContext[] sourceContext, Convention[] conventions)
@@ -71,6 +71,18 @@ namespace Ditto.Internal
         public override string ToString()
         {
             return GetType() + " for '" + DestinationType+"'";
+        }
+
+        public void Accept(IVisitCacheable visitor)
+        {
+            foreach (var sourceContext in SourceContexts)
+            {
+                sourceContext.Accept(visitor);
+            }
+            foreach (var cachedDestinationProp in DestinationProperties.OfType<ICacheable>())
+            {
+                cachedDestinationProp.Accept(visitor);
+            }
         }
     }
 }

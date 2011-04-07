@@ -14,7 +14,8 @@ namespace Ditto.Tests
         {
             var cfg = new DestinationConfiguration(typeof (Person));
             cfg.From(typeof (PersonalInfo), typeof (Parents));
-            Action validation = cfg.Assert;
+            var bindable = cfg.CreateBindableConfiguration();
+            Action validation = bindable.Assert;
             validation.should_throw_an<MappingConfigurationException>();
             validation.should_throw_because<MappingConfigurationException>("The following properties are not mapped for '" + typeof(Person) + "':" + Environment.NewLine + "FathersName" + Environment.NewLine);
         }
@@ -24,7 +25,8 @@ namespace Ditto.Tests
         {
             var cfg = new DestinationConfiguration<TypicalViewModel>(new TestDestinationConfigurationFactory());
             cfg.From(typeof (TypicalEvent)).Redirecting<TypicalEvent>(its => its.Id, its => its.SomeId);
-            Action validation = cfg.Assert;
+            var bindable = cfg.CreateBindableConfiguration();
+            Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
 
@@ -32,9 +34,9 @@ namespace Ditto.Tests
         public void can_map_static_value_to_property()
         {
             var cfg = new DestinationConfiguration<TypicalViewModel>(new TestDestinationConfigurationFactory());
-            cfg.From(typeof (TypicalEvent))
-                .UsingValue<TypicalEvent>(Guid.NewGuid(), its => its.SomeId);
-            Action validation = cfg.Assert;
+            cfg.From(typeof (TypicalEvent)).UsingValue<TypicalEvent>(Guid.NewGuid(), its => its.SomeId);
+            var bindable = cfg.CreateBindableConfiguration();
+            Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
         [Fact]
@@ -42,27 +44,30 @@ namespace Ditto.Tests
         {
             var componentConfig = new DestinationConfiguration(typeof (ViewModelComponent));
             componentConfig.From(typeof (EventComponent));
-            componentConfig.Assert();
+            
 
             var modelConfig = new DestinationConfiguration(typeof (ComplexViewModel));
             modelConfig.From(typeof (ComplexEvent));
-            modelConfig.Bind(componentConfig);
-            modelConfig.Assert();
+
+            var bindable = modelConfig.CreateBindableConfiguration();
+            bindable.Bind(componentConfig.CreateBindableConfiguration());
+            bindable.Assert();
 
         }
 
         [Fact]
         public void configurations_can_be_bound_to_one_another()
         {
-            var cfg = new DefaultDestinationConfigurationContainer(new TestContextualizer(), null, new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
             cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
             cfg.Map(typeof (ComplexViewModel)).From(typeof (ComplexEvent));
-            cfg.Bind();
-            cfg.Assert();
+            var bindable = cfg.ToBindable();
+            bindable.Bind();
+            bindable.Assert();
 
             var source = new ComplexEvent() { Name = "RootName", Component = new EventComponent() { Name = "ComponentName" } };
             var dest = new ComplexViewModel();
-            var command = cfg.CreateCommand(typeof (ComplexViewModel), typeof (ComplexEvent));
+            var command = bindable.CreateCommand(typeof (ComplexViewModel), typeof (ComplexEvent));
             command.Map(source, dest);
             dest.Name.should_be_equal_to("RootName");
             dest.Component.should_not_be_null();
@@ -72,16 +77,16 @@ namespace Ditto.Tests
         [Fact]
         public void configurations_can_be_bound_to_one_another_using_binding_container()
         {
-            var cfg = new DefaultDestinationConfigurationContainer(new TestContextualizer(), null, new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
             cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
             cfg.Map(typeof(ComplexViewModel)).From(typeof(ComplexEvent));
-            var binding = cfg.ToBinding(new BinderFactory(new Fasterflection()), new TestContextualizer());
-            binding.Bind();
-            binding.Assert();
+            var bindable = cfg.ToBindable();
+            bindable.Bind();
+            bindable.Assert();
             
             var source = new ComplexEvent() { Name = "RootName", Component = new EventComponent() { Name = "ComponentName" } };
             var dest = new ComplexViewModel();
-            var command = binding.CreateCommand(typeof(ComplexViewModel), typeof(ComplexEvent));
+            var command = bindable.CreateCommand(typeof(ComplexViewModel), typeof(ComplexEvent));
             command.Map(source, dest);
             dest.Name.should_be_equal_to("RootName");
             dest.Component.should_not_be_null();

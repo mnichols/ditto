@@ -15,10 +15,10 @@ namespace Ditto.Resolvers
             this.sourcePropertyName = sourcePropertyName;
         }
 
-        public Result TryResolve(IResolutionContext context)
+        public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
         {
             if (sourced != null)
-                return sourced.TryResolve(context);
+                return sourced.TryResolve(context, destinationProperty);
             return UsingReflection(context.SourceType, context.Source);
         }
 

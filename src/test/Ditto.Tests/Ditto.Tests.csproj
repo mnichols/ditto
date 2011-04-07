@@ -79,6 +79,7 @@
     <Compile Include="spec_extensions.cs" />
     <Compile Include="TestContextualizer.cs" />
     <Compile Include="TestDestinationConfigurationFactory.cs" />
+    <Compile Include="TestExtensions.cs" />
     <Compile Include="value_converter_tests.cs" />
     <Compile Include="value_resolver_tests.cs" />
     <Compile Include="ViewModel.cs" />

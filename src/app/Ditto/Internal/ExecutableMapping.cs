@@ -24,18 +24,7 @@ namespace Ditto.Internal
             {
                 var assignment = context.Scope(prop);
                 var resolver = resolverContainer.GetResolver(prop);
-                Result result;
-                var dependOnDestinationPropertyState = resolver as IDependOnDestinationPropertyState;
-
-                if(dependOnDestinationPropertyState==null)
-                {
-                    result = resolver.TryResolve(context);
-                }
-                else
-                {
-                    result = dependOnDestinationPropertyState.ResolveBasedOn(context, prop);
-                }
-                
+                Result result= resolver.TryResolve(context, prop);
                 assignment.SetValue(result);
             }
         }

@@ -20,7 +20,7 @@ namespace Ditto.Resolvers
         }
 
 
-        public Result TryResolve(IResolutionContext context)
+        public Result TryResolve(IResolutionContext context, IDescribeMappableProperty ignore)
         {
             var collectionContext = context.Nested(destinationProperty, sourceProperty);
             var src = (IList) context.GetSourcePropertyValue(sourceProperty.Name);

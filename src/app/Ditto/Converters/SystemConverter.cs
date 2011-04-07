@@ -18,7 +18,7 @@ namespace Ditto.Converters
             {
                 return conversion.Result(System.Convert.ChangeType(conversion.Value, conversion.DestinationPropertyType));
             }
-            catch(InvalidCastException ex)
+            catch(InvalidCastException)
             {
                 //gulp
                 return conversion.Unconverted();

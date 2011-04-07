@@ -7,16 +7,15 @@ namespace Ditto.Tests
 {
     public class simple_mapping_tests
     {
+    
         [Fact]
         public void it_should_map_props_of_same_name()
         {
             var src = new SimpleSource() {Name = "mikey"};
             var cfg = new DestinationConfiguration(typeof (SimpleDestination));
             cfg.From(typeof (SimpleSource));
-            cfg.Bind();
-            cfg.Assert();
 
-            var executable = cfg.CreateExecutableMapping(src.GetType());
+            var executable = cfg.ToExecutable(src.GetType());
             var mapper = new DefaultMapCommand(executable,new TestContextualizer());
             var output = (SimpleDestination) mapper.From(src);
             output.Name.should_be_equal_to("mikey");
@@ -28,8 +27,7 @@ namespace Ditto.Tests
             var src = new CollectionSource {Name = "mikey", List = new List<string> {"one", "two"}};
             var cfg = new DestinationConfiguration(typeof (CollectionDestination));
             cfg.From(typeof (CollectionSource));
-            cfg.Bind();
-            var executable = cfg.CreateExecutableMapping(src.GetType());
+            var executable = cfg.ToExecutable(src.GetType());
             var mapper = new DefaultMapCommand(executable, new TestContextualizer());
             var dest = (CollectionDestination)mapper.From(src);
             dest.Name.should_be_equal_to("mikey");
@@ -45,8 +43,7 @@ namespace Ditto.Tests
             var src = new IntegerSource() {AnInt = 3};
             var cfg = new DestinationConfiguration(typeof (IntegerDest));
             cfg.From(typeof (IntegerSource));
-            cfg.Bind();
-            var executable = cfg.CreateExecutableMapping(src.GetType());
+            var executable = cfg.ToExecutable(src.GetType());
             var mapper = new DefaultMapCommand(executable, new TestContextualizer());
             var dest = (IntegerDest)mapper.From(src);
             dest.AnInt.should_be_equal_to(3);
@@ -58,8 +55,7 @@ namespace Ditto.Tests
             var src = new OnlyCollectionSource() { List = new List<string> { "blah", "goo" } };
             var cfg = new DestinationConfiguration(typeof (MultiDestination));
             cfg.From(typeof (OnlyCollectionSource));
-            cfg.Bind();
-            var executable = cfg.CreateExecutableMapping(src.GetType());
+            var executable = cfg.ToExecutable(src.GetType());
             var mapper = new DefaultMapCommand(executable, new TestContextualizer());
             var dest = new MultiDestination(){Name = "ignore"};
 
@@ -76,14 +72,13 @@ namespace Ditto.Tests
             var cfg = new DestinationConfiguration<TypicalViewModel>(new TestDestinationConfigurationFactory());
             cfg.From(typeof (TypicalEvent))
                 .Redirecting<TypicalEvent>(its => its.Id, m => m.SomeId);
-            cfg.Bind();
             Guid eventId=Guid.NewGuid();
             var src = new TypicalEvent()
                              {
                                  Id = eventId,
                                  Name = "bob"
                              };
-            var executable = cfg.CreateExecutableMapping(src.GetType());
+            var executable = cfg.ToExecutable(src.GetType());
             var mapper = new DefaultMapCommand(executable, new TestContextualizer());
             var output = (TypicalViewModel) mapper.From(src);
             output.Name.should_be_equal_to("bob");
@@ -96,9 +91,8 @@ namespace Ditto.Tests
         {
             var cfg = new DestinationConfiguration(typeof (CollectionDestination));
             cfg.From(typeof (CollectionSource));
-            cfg.Bind();
             var src = new CollectionSource() {MyDoubles = new List<double?> {2.1, null, 3.2}};
-            var executable = cfg.CreateExecutableMapping(src.GetType());
+            var executable = cfg.ToExecutable(src.GetType());
             var mapper = new DefaultMapCommand(executable, new TestContextualizer());
             var output = (CollectionDestination) mapper.From(src);
             output.MyDoubles.Count.should_be_equal_to(3);

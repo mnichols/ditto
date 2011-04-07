@@ -18,7 +18,7 @@ namespace Ditto.Resolvers
 
         public RedirectingConfigurationResolver CreateRedirectingConfigurationResolver(ResolverContext resolverContext)
         {
-            return new RedirectingConfigurationResolver(resolverContext.SourceProperty,resolverContext.DestinationProperty,resolverContext.Configuration);
+            return new RedirectingConfigurationResolver(resolverContext.SourceProperty,resolverContext.Configuration);
         }
     }
 }

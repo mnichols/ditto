@@ -25,7 +25,7 @@ namespace Ditto.Internal
             return SourceType.FullName + "|" + PropertyName;
         }
 
-        public Result TryResolve(IResolutionContext context)
+        public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
         {
             if(GetValue==null)
                 throw new InvalidOperationException("GetValue was not assigned to this resolver.");

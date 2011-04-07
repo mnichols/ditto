@@ -34,6 +34,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\..\..\lib\tools\AutoMapper\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,7 +58,6 @@
   <ItemGroup>
     <Compile Include="Benchmark.cs" />
     <Compile Include="mapping_benchmarking_tests.cs" />
-    <Compile Include="TestContextualizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -56,6 +66,10 @@
     <ProjectReference Include="..\..\app\Ditto\Ditto.csproj">
       <Project>{4DACB973-A159-43F6-ACA1-A2C2029A6DB6}</Project>
       <Name>Ditto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ditto.Tests\Ditto.Tests.csproj">
+      <Project>{3E32919B-D2AB-4B7D-8698-59068AA7A350}</Project>
+      <Name>Ditto.Tests</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

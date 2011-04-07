@@ -7,7 +7,7 @@ using Ditto.Resolvers;
 
 namespace Ditto.Internal
 {
-    public class DestinationConfiguration<TDest> : IValidatable, IConfigureDestination<TDest>,ICreateExecutableMapping,ICacheable,IApplyConventions,IBindable,ISourcedDestinationConfiguration<TDest>,ICreateBindableConfiguration
+    public class DestinationConfiguration<TDest> : IConfigureDestination<TDest>,IApplyConventions,ISourcedDestinationConfiguration<TDest>,ICreateBindableConfiguration
     {
         private readonly ICreateDestinationConfiguration configurations;
         private readonly IConfigureDestination inner;
@@ -43,7 +43,7 @@ namespace Ditto.Internal
             nestedCfg(newNestedConfig);
             inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty),
                                       typeof(TSource),
-                                      new RedirectingConfigurationResolver(MappableProperty.For(sourceProperty), MappableProperty.For(destinationProperty), (ICreateExecutableMapping)newNestedConfig));
+                                      new RedirectingConfigurationResolver(MappableProperty.For(sourceProperty), (ICreateExecutableMapping)newNestedConfig));
             return this;
         }
 
@@ -88,11 +88,12 @@ namespace Ditto.Internal
 
         public ISourcedDestinationConfiguration<TDest> Nesting<TSource,TNest>(Expression<Func<TDest, object>> destinationProperty, Action<ISourcedDestinationConfiguration<TNest>> sourceConfig)
         {
-            var nestedConfig = configurations.Create<TNest>().From<TSource>();
-            sourceConfig(nestedConfig);
+            var nestedConfig = configurations.Create<TNest>();
+            var sourced=nestedConfig.From<TSource>();
+            sourceConfig(sourced);
             inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty),
                 typeof (TSource),
-                new NestingConfigurationResolver(MappableProperty.For(destinationProperty),(ICreateExecutableMapping)nestedConfig));
+                new NestingConfigurationResolver(MappableProperty.For(destinationProperty),nestedConfig.CreateBindableConfiguration()));
             return this;
         }
 
@@ -105,28 +106,6 @@ namespace Ditto.Internal
             }
             
             return this;
-        }
-
-        public MissingProperties Validate()
-        {
-            var validatable = inner as IValidatable;
-            if(validatable==null)
-                return new MissingProperties();
-            return validatable.Validate();
-        }
-
-        
-        public IExecuteMapping CreateExecutableMapping(Type sourceType)
-        {
-            return ((ICreateExecutableMapping)inner).CreateExecutableMapping(sourceType);
-        }
-
-        public void Assert()
-        {
-            var validatable = inner as IValidatable;
-            if (validatable == null)
-                return;
-            validatable.Assert();
         }
 
         public ISourcedDestinationConfiguration<TDest> ApplyingConvention(IResolveValue resolver, params Expression<Func<TDest, object>>[] destinationProperties)
@@ -142,27 +121,12 @@ namespace Ditto.Internal
         }
 
 
-        public void Accept(IVisitCacheable visitor)
-        {
-            var cacheable = inner as ICacheable;
-            if(cacheable==null)
-                return;
-            cacheable.Accept(visitor);
-        }
-
         public void Apply(IPropertyCriterion propertyCriterion, IResolveValue resolver)
         {
             inner.ApplyingConvention(propertyCriterion, resolver);
         }
 
-        public void Bind(params ICreateExecutableMapping[] configurations)
-        {
-            var bindable = inner as IBindable;
-            if (bindable == null)
-                return;
-           
-            bindable.Bind(configurations);
-        }
+        
 
         public BindableConfiguration CreateBindableConfiguration()
         {
@@ -173,19 +137,16 @@ namespace Ditto.Internal
         }
     }
 
-    public class DestinationConfiguration : IValidatable, IConfigureDestination,ICreateExecutableMapping,ICacheable,IBindable,IApplyConventions,ISourcedDestinationConfiguration,ICreateBindableConfiguration
+    public class DestinationConfiguration : IConfigureDestination,IApplyConventions,ISourcedDestinationConfiguration
     {
         private readonly IDescribeMappableProperty[] cachedDestinationProps;
         private readonly List<Convention> conventions = new List<Convention>();
         private readonly Type destinationType;
-        private readonly IMapCommandFactory mapCommands;
         private readonly List<SourceContext> sourceContexts = new List<SourceContext>();
-        private BindableConfiguration bindableConfiguration;
 
         public DestinationConfiguration(Type destinationType)
         {
             this.destinationType = destinationType;
-            this.mapCommands = mapCommands;
             cachedDestinationProps = destinationType.GetProperties().Select(into => new MappableProperty(into)).ToArray();
             Logger = new NullLogFactory();
         }
@@ -211,28 +172,10 @@ namespace Ditto.Internal
         
         
         
-        public IExecuteMapping CreateExecutableMapping(Type sourceType)
-        {
-            AssertExecutable();
-            return bindableConfiguration.CreateExecutableMapping(sourceType);
-        }
-        public MissingProperties Validate()
-        {
-            var validator = new ConfigurationValidator(destinationType,
-                cachedDestinationProps,
-                sourceContexts.Concat<IResolverContainer>(conventions).ToArray());
-            return validator.Validate();
-        }
-
-        public void Assert()
-        {
-            var missing = Validate();
-            missing.TryThrow();
-        }
-
         public void ApplyingConvention(IPropertyCriterion destinationPropertyCriterion, IResolveValue resolver)
         {
-            var convention = new Convention(Match(destinationPropertyCriterion), resolver);
+            var matches = cachedDestinationProps.Where(destinationPropertyCriterion.IsSatisfiedBy).ToArray();
+            var convention = new Convention(matches,resolver);
             conventions.Add(convention);
         }
 
@@ -241,11 +184,6 @@ namespace Ditto.Internal
         public Type DestinationType
         {
             get { return destinationType; }
-        }
-
-        private IDescribeMappableProperty[] Match(IPropertyCriterion propertyCriterion)
-        {
-            return cachedDestinationProps.Where(propertyCriterion.IsSatisfiedBy).ToArray();
         }
 
         private IDescribeMappableProperty DemandDestinationProperty(IPropertyCriterion propertyCriterion)
@@ -274,34 +212,12 @@ namespace Ditto.Internal
                 return ctx;
             throw new MappingConfigurationException("'{0}' has not been setup as a source for '{1}'.", sourceType, destinationType);
         }
-        public void Accept(IVisitCacheable visitor)
-        {
-            foreach (var sourceContext in sourceContexts)
-            {
-                sourceContext.Accept(visitor);
-            }
-            foreach (var cachedDestinationProp in cachedDestinationProps.OfType<ICacheable>())
-            {
-                cachedDestinationProp.Accept(visitor);
-            }
-        }
-
-        public void Bind(params ICreateExecutableMapping[] configurations)
-        {
-            bindableConfiguration = CreateBindableConfiguration();
-            bindableConfiguration.Bind(configurations);
-        }
+        
         
         public void Apply(IPropertyCriterion propertyCriterion, IResolveValue resolver)
         {
             ApplyingConvention(propertyCriterion, resolver);
         }
-        private void AssertExecutable()
-        {
-            if(bindableConfiguration==null)
-            {
-                throw new MappingExecutionException("Configuration for destination type '{0}' is not executable. This probably means 'Bind' was not called on the configuration.",destinationType);
-            }
-        }
+        
     }
 }

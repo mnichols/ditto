@@ -4,24 +4,24 @@ using System.Linq;
 
 namespace Ditto.Internal
 {
-    public class BindingDestinationConfigurationContainer:IBindConfigurations,ICreateMappingCommand,IValidatable
+    public class BindingDestinationConfigurationContainer:IBindConfigurations,ICreateMappingCommand,IValidatable,ICacheable
     {
         private IProvideBinders binders;
         private IMapCommandFactory mapCommands;
-        private ICollection<ICreateBindableConfiguration> configurations;
+        private ICollection<BindableConfiguration> configurations;
         private Dictionary<Type,BindableConfiguration> bindableConfigurations=new Dictionary<Type, BindableConfiguration>();
         public BindingDestinationConfigurationContainer(IProvideBinders binders, IMapCommandFactory mapCommands, IContainDestinationConfiguration destinationConfigurationContainer)
         {
             this.binders = binders;
             this.mapCommands = mapCommands;
-            this.configurations = destinationConfigurationContainer.GetBindableConfigurationCreators();
+            this.configurations = destinationConfigurationContainer.CreateBindableConfigurations();
             Logger = new NullLogFactory();
         }
         public ILogFactory Logger { get; set; }
         public void Bind()
         {
             var allBinders = binders.Create();
-            bindableConfigurations = configurations.ToDictionary(k => k.DestinationType,v => v.CreateBindableConfiguration());
+            bindableConfigurations = configurations.ToDictionary(k => k.DestinationType,v => v);
             var executable = bindableConfigurations.Values.OfType<ICreateExecutableMapping>().ToArray();
             Logger.Create(this).Debug("Binding {0} destination configurations to {1} extending configurations", bindableConfigurations.Count, executable.Length);
             foreach (var binder in allBinders)
@@ -68,6 +68,17 @@ namespace Ditto.Internal
         {
             var missing = Validate();
             missing.TryThrow();
+        }
+
+        public void Accept(IVisitCacheable visitor)
+        {
+            foreach (var config in configurations)
+            {
+                var cacheable = config as ICacheable;
+                if (cacheable == null)
+                    continue;
+                cacheable.Accept(visitor);
+            }
         }
     }
 }

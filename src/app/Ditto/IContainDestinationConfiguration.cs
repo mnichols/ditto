@@ -9,6 +9,6 @@ namespace Ditto
         IConfigureDestination Map(Type destinationType);
         IConfigureDestination<TDest> Map<TDest>();
         bool HasConfigurationFor(Type destinationType);
-        ICollection<ICreateBindableConfiguration> GetBindableConfigurationCreators();
+        ICollection<BindableConfiguration> CreateBindableConfigurations();
     }
 }

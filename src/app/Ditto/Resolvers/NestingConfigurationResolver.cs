@@ -13,7 +13,7 @@ namespace Ditto.Resolvers
             this.executor = executor;
         }
 
-        public Result TryResolve(IResolutionContext context)
+        public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
         {
             //we need to keep the SOURCE the same, but change the destination
             var nested = context.Nested(destinationProperty);
