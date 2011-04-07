@@ -20,7 +20,7 @@ namespace Ditto
 
         ISourcedDestinationConfiguration<TDest> Toggling(Expression<Func<TDest, object>> destinationProperty, Action<IToggle<TDest>> toggle);
 
-        ISourcedDestinationConfiguration<TDest> Transforming<TSource>(Func<TSource, object> source, Expression<Func<TDest, object>> destinationProperty);
+        ISourcedDestinationConfiguration<TDest> Transforming<TSource>(Func<TSource, object> source, params Expression<Func<TDest, object>>[] destinationProperties);
 
         ISourcedDestinationConfiguration<TDest> Resolving<TSource>(IResolveValue resolver, params Expression<Func<TDest, object>>[] destinationProperties);
 

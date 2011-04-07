@@ -25,9 +25,14 @@ namespace Ditto.Internal
             return this;
         }
 
-        public ISourcedDestinationConfiguration<TDest> Transforming<TSource>(Func<TSource, object> source, Expression<Func<TDest, object>> destinationProperty)
+        public ISourcedDestinationConfiguration<TDest> Transforming<TSource>(Func<TSource, object> source, params Expression<Func<TDest, object>>[] destinationProperties)
         {
-            inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty),typeof(TSource),new LambdaResolver<TSource>(source));
+            AssertPropertiesProvided(destinationProperties);
+            foreach (var destinationProperty in destinationProperties)
+            {
+                inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty), typeof(TSource), new LambdaResolver<TSource>(source));    
+            }
+            
             return this;
         }
 
