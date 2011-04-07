@@ -7,6 +7,7 @@ using Castle.Windsor.Configuration.Interpreters;
 using Ditto.Converters;
 using Ditto.Criteria;
 using Ditto.Resolvers;
+using Ditto.WindsorIntegration;
 using Xunit;
 
 namespace Ditto.Tests

@@ -10,7 +10,7 @@ using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
 using Ditto.Internal;
 
-namespace Ditto
+namespace Ditto.WindsorIntegration
 {
     public class MappingFacility : AbstractFacility
     {

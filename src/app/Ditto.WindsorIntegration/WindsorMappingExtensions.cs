@@ -3,7 +3,7 @@ using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 
-namespace Ditto
+namespace Ditto.WindsorIntegration
 {
     public static class WindsorMappingExtensions
     {

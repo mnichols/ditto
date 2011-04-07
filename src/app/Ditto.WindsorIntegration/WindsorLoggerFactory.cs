@@ -1,7 +1,8 @@
 ﻿using System;
 using Castle.Core.Logging;
+using Ditto.Internal;
 
-namespace Ditto.Internal
+namespace Ditto.WindsorIntegration
 {
     public class WindsorLoggerFactory : ILogFactory
     {

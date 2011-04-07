@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Context;
+using Ditto.Internal;
 
-namespace Ditto.Internal
+namespace Ditto.WindsorIntegration
 {
     public class WindsorMappingInitializer:IInitializeMappingEngine
     {

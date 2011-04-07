@@ -171,16 +171,12 @@
     <Compile Include="Internal\Unconverted.cs" />
     <Compile Include="Internal\ValueAssignment.cs" />
     <Compile Include="Internal\ValueAssignments.cs" />
-    <Compile Include="Internal\WindsorLogger.cs" />
-    <Compile Include="Internal\WindsorLoggerFactory.cs" />
-    <Compile Include="Internal\WindsorMappingInitializer.cs" />
     <Compile Include="IPropertyCriterion.cs" />
     <Compile Include="IResolveValue.cs" />
     <Compile Include="ISourcedDestinationConfiguration.cs" />
     <Compile Include="MappingConfigurationException.cs" />
     <Compile Include="MappingExecutionException.cs" />
     <Compile Include="MappingExtensions.cs" />
-    <Compile Include="MappingFacility.cs" />
     <Compile Include="MissingProperties.cs" />
     <Compile Include="Reflect.cs" />
     <Compile Include="Resolvers\DefaultResolverFactory.cs" />
@@ -196,7 +192,6 @@
     <Compile Include="Resolvers\PropertyNameResolver.cs" />
     <Compile Include="Resolvers\RedirectingConfigurationResolver.cs" />
     <Compile Include="Resolvers\StaticValueResolver.cs" />
-    <Compile Include="WindsorMappingExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

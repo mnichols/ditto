@@ -87,6 +87,10 @@
     <Compile Include="WithDebugging.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\app\Ditto.WindsorIntegration\Ditto.WindsorIntegration.csproj">
+      <Project>{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}</Project>
+      <Name>Ditto.WindsorIntegration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\app\Ditto\Ditto.csproj">
       <Project>{4DACB973-A159-43F6-ACA1-A2C2029A6DB6}</Project>
       <Name>Ditto</Name>

@@ -1,6 +1,6 @@
 using Castle.Core.Logging;
 
-namespace Ditto.Internal
+namespace Ditto.WindsorIntegration
 {
     public class WindsorLogger:ILog
     {
