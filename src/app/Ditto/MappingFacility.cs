@@ -43,7 +43,7 @@ namespace Ditto
         private void RegisterApi()
         {
             Kernel.Register(Component.For<IContainDestinationConfiguration>()
-                                .ImplementedBy<DefaultDestinationConfigurationContainer>()
+                                .ImplementedBy<DestinationConfigurationContainer>()
                                 .ServiceOverrides(new {conventions = GlobalConventionsKey})
                                 .LifeStyle.Singleton);
             Kernel.Register(Component.For<IMap>().ImplementedBy<DefaultMappingEngine>().LifeStyle.Singleton);

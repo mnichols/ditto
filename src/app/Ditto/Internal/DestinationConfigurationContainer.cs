@@ -4,13 +4,13 @@ using System.Linq;
 
 namespace Ditto.Internal
 {
-    public class DefaultDestinationConfigurationContainer : IContainDestinationConfiguration
+    public class DestinationConfigurationContainer : IContainDestinationConfiguration
     {
         private readonly Dictionary<Type, ICreateBindableConfiguration> registeredConfigurations = new Dictionary<Type, ICreateBindableConfiguration>();
         private readonly IProvideConventions conventions;
         private readonly ICreateDestinationConfiguration configurations;
         public ILogFactory Logger { get; set; }
-        public DefaultDestinationConfigurationContainer(IProvideConventions conventions, ICreateDestinationConfiguration configurations)
+        public DestinationConfigurationContainer(IProvideConventions conventions, ICreateDestinationConfiguration configurations)
         {
             this.conventions = conventions;
             this.configurations = configurations;

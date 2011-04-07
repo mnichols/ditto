@@ -6,11 +6,11 @@ namespace Ditto.Tests
 {
     public class collection_mapping_tests:WithDebugging
     {
-        private DefaultDestinationConfigurationContainer container;
+        private DestinationConfigurationContainer container;
 
         public collection_mapping_tests()
         {
-            container = new DefaultDestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
+            container = new DestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
         }
         
         [Fact]

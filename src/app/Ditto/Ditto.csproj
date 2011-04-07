@@ -105,7 +105,7 @@
     <Compile Include="Internal\ConversionContext.cs" />
     <Compile Include="Internal\ConversionResult.cs" />
     <Compile Include="Internal\DefaultContextualizer.cs" />
-    <Compile Include="Internal\DefaultDestinationConfigurationContainer.cs" />
+    <Compile Include="Internal\DestinationConfigurationContainer.cs" />
     <Compile Include="Internal\DefaultMapCommand.cs" />
     <Compile Include="Internal\DefaultMappingEngine.cs" />
     <Compile Include="Internal\DefaultReflection.cs" />

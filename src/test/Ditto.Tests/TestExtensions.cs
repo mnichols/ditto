@@ -11,7 +11,7 @@ namespace Ditto.Tests
             var bindable= cfg.CreateBindableConfiguration();
             return bindable.CreateExecutableMapping(sourceType);    
         }
-        public static BindingDestinationConfigurationContainer ToBindable(this DefaultDestinationConfigurationContainer cfg)
+        public static BindingDestinationConfigurationContainer ToBindable(this DestinationConfigurationContainer cfg)
         {
             return new BindingDestinationConfigurationContainer(new BinderFactory(new Fasterflection()),new TestContextualizer(),cfg);
         }

@@ -112,14 +112,13 @@ namespace Ditto.Benchmarking.Tests
                 cfg.From(typeof (BenchSourceProps));
 
                 var bindable = cfg.CreateBindableConfiguration();
-                bindable.Bind(int1.CreateBindableConfiguration(),int2.CreateBindableConfiguration());
+                bindable.Bind(bindable,int1.CreateBindableConfiguration(),int2.CreateBindableConfiguration());
+                bindable.Assert();
                 var contextualizer = new TestContextualizer();
                 var cacher = new CacheInitializer(contextualizer);
-                foreach (var configuration in new[] {int1, int2, cfg})
-                {
-                    ((ICacheable) configuration).Accept(cacher);
-                }
-                bindable.Assert();
+                bindable.Accept(cacher);
+                
+                
 
                 var executableMapping = bindable.CreateExecutableMapping(typeof (BenchSourceProps));
                 dittoMapCommand = new DefaultMapCommand(executableMapping, new TestContextualizer());

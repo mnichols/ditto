@@ -9,12 +9,12 @@ namespace Ditto.Tests
     public class complex_model_mapping_tests
     {
         private TestContextualizer contextualizer;
-        private DefaultDestinationConfigurationContainer container;
+        private DestinationConfigurationContainer container;
 
         public complex_model_mapping_tests()
         {
             contextualizer = new TestContextualizer();
-            container = new DefaultDestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
+            container = new DestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
         }
         [Fact]
         public void it_should_map_nested_components()

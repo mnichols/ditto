@@ -58,7 +58,7 @@ namespace Ditto.Tests
         [Fact]
         public void configurations_can_be_bound_to_one_another()
         {
-            var cfg = new DefaultDestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
             cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
             cfg.Map(typeof (ComplexViewModel)).From(typeof (ComplexEvent));
             var bindable = cfg.ToBindable();
@@ -77,7 +77,7 @@ namespace Ditto.Tests
         [Fact]
         public void configurations_can_be_bound_to_one_another_using_binding_container()
         {
-            var cfg = new DefaultDestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
             cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
             cfg.Map(typeof(ComplexViewModel)).From(typeof(ComplexEvent));
             var bindable = cfg.ToBindable();
