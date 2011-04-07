@@ -117,7 +117,7 @@ namespace Ditto.Internal
 
         public BindingDestinationConfigurationContainer ToBinding(IProvideBinders binders,IMapCommandFactory mapCommands)
         {
-            return new BindingDestinationConfigurationContainer(binders, mapCommands,registeredConfigurations.Values.OfType<ICreateBindableConfiguration>().ToArray()){Logger = Logger};
+            return new BindingDestinationConfigurationContainer(binders, mapCommands,this){Logger = Logger};
         }
     }
 }

@@ -18,11 +18,11 @@ namespace Ditto.Internal
         {
             ConfigureConventions();
             ConfigureDestinations();
-            IContainDestinationConfiguration configurationContainer = null;
+            IBindConfigurations configurationContainer = null;
             try
             {
-                configurationContainer = kernel.Resolve<IContainDestinationConfiguration>();
-                TryBind(configurationContainer as IBindConfigurations);
+                configurationContainer = kernel.Resolve<IBindConfigurations>();
+                TryBind(configurationContainer);
                 TryCache(configurationContainer as ICacheable);
                 Assert(configurationContainer as IValidatable);
             }

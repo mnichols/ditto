@@ -57,12 +57,13 @@ namespace Ditto.Tests
             var cfg = new DefaultDestinationConfigurationContainer(new TestContextualizer(), null, new TestDestinationConfigurationFactory());
             cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
             cfg.Map(typeof (ComplexViewModel)).From(typeof (ComplexEvent));
-            cfg.Bind();
-            cfg.Assert();
+            var binding = cfg.ToBinding(new BinderFactory(new Fasterflection()), new TestContextualizer());
+            binding.Bind();
+            binding.Assert();
 
             var source = new ComplexEvent() { Name = "RootName", Component = new EventComponent() { Name = "ComponentName" } };
             var dest = new ComplexViewModel();
-            var command = cfg.CreateCommand(typeof (ComplexViewModel), typeof (ComplexEvent));
+            var command = binding.CreateCommand(typeof (ComplexViewModel), typeof (ComplexEvent));
             command.Map(source, dest);
             dest.Name.should_be_equal_to("RootName");
             dest.Component.should_not_be_null();

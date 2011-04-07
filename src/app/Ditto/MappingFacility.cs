@@ -42,13 +42,13 @@ namespace Ditto
 
         private void RegisterApi()
         {
-            Kernel.Register(Component.For<IContainDestinationConfiguration, ICreateMappingCommand>()
+            Kernel.Register(Component.For<IContainDestinationConfiguration>()
                                 .ImplementedBy<DefaultDestinationConfigurationContainer>()
                                 .ServiceOverrides(new {conventions = GlobalConventionsKey})
                                 .LifeStyle.Singleton);
             Kernel.Register(Component.For<IMap>().ImplementedBy<DefaultMappingEngine>().LifeStyle.Singleton);
-            Kernel.Register(
-                Component.For<IInitializeMappingEngine>().ImplementedBy<WindsorMappingInitializer>().LifeStyle.Transient);
+            Kernel.Register(Component.For<IInitializeMappingEngine>().ImplementedBy<WindsorMappingInitializer>().LifeStyle.Transient);
+            Kernel.Register(Component.For<IBindConfigurations, ICreateMappingCommand>().ImplementedBy<BindingDestinationConfigurationContainer>().LifeStyle.Singleton);
         }
 
         private void RegisterInternalServices()
@@ -84,6 +84,7 @@ namespace Ditto
             Kernel.Register(
                 Component.For(typeof (IConfigureDestination<>), typeof (ISourcedDestinationConfiguration<>)).
                     ImplementedBy(typeof (DestinationConfiguration<>)).LifeStyle.Transient);
+            Kernel.Register(Component.For<IProvideBinders>().ImplementedBy<BinderFactory>().LifeStyle.Singleton);
             Kernel.Register(Component.For<ILogFactory>().ImplementedBy<WindsorLoggerFactory>().LifeStyle.Singleton);
         }
 
