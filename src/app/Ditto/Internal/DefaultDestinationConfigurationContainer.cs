@@ -51,6 +51,11 @@ namespace Ditto.Internal
             return registeredConfigurations.ContainsKey(destinationType);
         }
 
+        public ICollection<ICreateBindableConfiguration> GetBindableConfigurationCreators()
+        {
+            return registeredConfigurations.Values.OfType<ICreateBindableConfiguration>().ToArray();
+        }
+
         public MissingProperties Validate()
         {
             var missing = new MissingProperties();

@@ -8,13 +8,13 @@ namespace Ditto.Internal
     {
         private IProvideBinders binders;
         private IMapCommandFactory mapCommands;
-        private ICreateBindableConfiguration[] configurations;
+        private ICollection<ICreateBindableConfiguration> configurations;
         private Dictionary<Type,BindableConfiguration> bindableConfigurations=new Dictionary<Type, BindableConfiguration>();
-        public BindingDestinationConfigurationContainer(IProvideBinders binders, IMapCommandFactory mapCommands, ICreateBindableConfiguration[] configurations)
+        public BindingDestinationConfigurationContainer(IProvideBinders binders, IMapCommandFactory mapCommands, IContainDestinationConfiguration destinationConfigurationContainer)
         {
             this.binders = binders;
             this.mapCommands = mapCommands;
-            this.configurations = configurations;
+            this.configurations = destinationConfigurationContainer.GetBindableConfigurationCreators();
             Logger = new NullLogFactory();
         }
         public ILogFactory Logger { get; set; }
