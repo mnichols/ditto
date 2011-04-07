@@ -1,0 +1,1 @@
+powershell -noexit .\build_release_4.ps1

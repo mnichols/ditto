@@ -1,4 +1,4 @@
-{''} is a small framework for mapping objects to objects (aka 'Object-Object Mapper') in dot net.
+## {''} is a small framework for mapping objects to objects (aka 'Object-Object Mapper') in dot net.
 
 Primary design goals in no particular order:
 1. Convention-based assumptions to minimize configuration as much as possible
