@@ -88,11 +88,12 @@ namespace Ditto.Internal
 
         public ISourcedDestinationConfiguration<TDest> Nesting<TSource,TNest>(Expression<Func<TDest, object>> destinationProperty, Action<ISourcedDestinationConfiguration<TNest>> sourceConfig)
         {
-            var nestedConfig = configurations.Create<TNest>().From<TSource>();
-            sourceConfig(nestedConfig);
+            var nestedConfig = configurations.Create<TNest>();
+            var sourced=nestedConfig.From<TSource>();
+            sourceConfig(sourced);
             inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty),
                 typeof (TSource),
-                new NestingConfigurationResolver(MappableProperty.For(destinationProperty),(ICreateExecutableMapping)nestedConfig));
+                new NestingConfigurationResolver(MappableProperty.For(destinationProperty),nestedConfig.CreateBindableConfiguration()));
             return this;
         }
 

@@ -1,8 +1,9 @@
 using System;
+using Ditto.Internal;
 
 namespace Ditto
 {
-    public interface IConfigureDestination
+    public interface IConfigureDestination:ICreateBindableConfiguration
     {
         Type DestinationType { get; }
         ISourcedDestinationConfiguration From(params Type[] sourceTypes);
@@ -13,7 +14,7 @@ namespace Ditto
         void ApplyingConvention(IPropertyCriterion propertyCriterion, IResolveValue resolver);
     }
 
-    public interface IConfigureDestination<TDest>
+    public interface IConfigureDestination<TDest>:ICreateBindableConfiguration
     {
         ISourcedDestinationConfiguration<TDest> From(params Type[] sourceTypes);
         ISourcedDestinationConfiguration<TDest> From<TSource>();
