@@ -5,12 +5,10 @@ namespace Ditto.Resolvers
     public class RedirectingConfigurationResolver : IResolveValue,IBindable,IValidatable,IRedirected
     {
         private readonly ICreateExecutableMapping executor;
-        private readonly IDescribeMappableProperty destinationProperty;
         private readonly IDescribeMappableProperty sourceProperty;
 
-        public RedirectingConfigurationResolver(IDescribeMappableProperty sourceProperty, IDescribeMappableProperty destinationProperty, ICreateExecutableMapping executor)
+        public RedirectingConfigurationResolver(IDescribeMappableProperty sourceProperty, ICreateExecutableMapping executor)
         {
-            this.destinationProperty = destinationProperty;
             this.sourceProperty = sourceProperty;
             this.executor = executor;
         }

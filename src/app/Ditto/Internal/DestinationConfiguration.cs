@@ -43,7 +43,7 @@ namespace Ditto.Internal
             nestedCfg(newNestedConfig);
             inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty),
                                       typeof(TSource),
-                                      new RedirectingConfigurationResolver(MappableProperty.For(sourceProperty), MappableProperty.For(destinationProperty), (ICreateExecutableMapping)newNestedConfig));
+                                      new RedirectingConfigurationResolver(MappableProperty.For(sourceProperty), (ICreateExecutableMapping)newNestedConfig));
             return this;
         }
 
@@ -137,19 +137,16 @@ namespace Ditto.Internal
         }
     }
 
-    public class DestinationConfiguration : IConfigureDestination,IApplyConventions,ISourcedDestinationConfiguration,ICreateBindableConfiguration
+    public class DestinationConfiguration : IConfigureDestination,IApplyConventions,ISourcedDestinationConfiguration
     {
         private readonly IDescribeMappableProperty[] cachedDestinationProps;
         private readonly List<Convention> conventions = new List<Convention>();
         private readonly Type destinationType;
-        private readonly IMapCommandFactory mapCommands;
         private readonly List<SourceContext> sourceContexts = new List<SourceContext>();
-        private BindableConfiguration bindableConfiguration;
 
         public DestinationConfiguration(Type destinationType)
         {
             this.destinationType = destinationType;
-            this.mapCommands = mapCommands;
             cachedDestinationProps = destinationType.GetProperties().Select(into => new MappableProperty(into)).ToArray();
             Logger = new NullLogFactory();
         }
@@ -221,12 +218,6 @@ namespace Ditto.Internal
         {
             ApplyingConvention(propertyCriterion, resolver);
         }
-        private void AssertExecutable()
-        {
-//            if(bindableConfiguration==null)
-//            {
-//                throw new MappingExecutionException("Configuration for destination type '{0}' is not executable. This probably means 'Bind' was not called on the configuration.",destinationType);
-//            }
-        }
+        
     }
 }

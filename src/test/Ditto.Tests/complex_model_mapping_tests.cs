@@ -44,7 +44,7 @@ namespace Ditto.Tests
             modelConfig.From(typeof (ComplexEventWithDifferentNamedComponent));
             modelConfig.SetPropertyResolver(
                 PropertyNameCriterion.From<ComplexViewModel>(m=>m.Component), typeof(ComplexEventWithDifferentNamedComponent),
-                new RedirectingConfigurationResolver(MappableProperty.For<ComplexEventWithDifferentNamedComponent>(s => s.DifferentName), MappableProperty.For<ComplexViewModel>(m => m.Component), componentConfig.CreateBindableConfiguration()));
+                new RedirectingConfigurationResolver(MappableProperty.For<ComplexEventWithDifferentNamedComponent>(s => s.DifferentName), componentConfig.CreateBindableConfiguration()));
 
             var bindable = modelConfig.CreateBindableConfiguration();
             bindable.Bind();

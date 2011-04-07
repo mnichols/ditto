@@ -56,7 +56,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Benchmark.cs" />
     <Compile Include="mapping_benchmarking_tests.cs" />
   </ItemGroup>

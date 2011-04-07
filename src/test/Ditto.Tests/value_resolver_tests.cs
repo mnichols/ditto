@@ -45,7 +45,7 @@ namespace Ditto.Tests
             
             var context = contextualizer.CreateContext(source, destination);
             var destProp= new MappableProperty(typeof (LotsOTypes).GetProperty(name));
-            var result = resolver.ResolveBasedOn(context,destProp);
+            var result = resolver.TryResolve(context,destProp);
             assert(result);
 
         }
