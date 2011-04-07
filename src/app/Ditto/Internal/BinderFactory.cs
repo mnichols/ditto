@@ -4,7 +4,7 @@ namespace Ditto.Internal
 {
     public class BinderFactory:IProvideBinders
     {
-        private IActivator activator;
+        private readonly IActivator activator;
 
         public BinderFactory(IActivator activator)
         {

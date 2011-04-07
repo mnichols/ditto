@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3E32919B-D2AB-4B7D-8698-59068AA7A350}</ProjectGuid>
+    <ProjectGuid>{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ditto.Tests</RootNamespace>
-    <AssemblyName>Ditto.Tests</AssemblyName>
+    <RootNamespace>Ditto.WindsorIntegration</RootNamespace>
+    <AssemblyName>Ditto.WindsorIntegration</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,8 +36,7 @@
     <Reference Include="Castle.Core">
       <HintPath>..\..\..\lib\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Facilities.Logging, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Castle.Facilities.Logging">
       <HintPath>..\..\..\lib\Castle.Facilities.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Services.Logging.Log4netIntegration">
@@ -45,62 +45,31 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\..\lib\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="Fasterflect">
-      <HintPath>..\..\..\lib\Fasterflect.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\..\..\lib\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xunit">
-      <HintPath>..\..\..\lib\tools\xunit\xunit.dll</HintPath>
-    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="MappingFacility.cs" />
+    <Compile Include="WindsorLogger.cs" />
+    <Compile Include="WindsorLoggerFactory.cs" />
+    <Compile Include="WindsorMappingExtensions.cs" />
+    <Compile Include="WindsorMappingInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="collection_mapping_tests.cs" />
-    <Compile Include="collection_resolver_tests.cs" />
-    <Compile Include="ComplexModels.cs" />
-    <Compile Include="complex_model_mapping_tests.cs" />
-    <Compile Include="conventional_mapping_tests.cs" />
-    <Compile Include="fasterflect_spike_tests.cs" />
-    <Compile Include="list_property_binder_tests.cs" />
-    <Compile Include="mapping_configuration_tests.cs" />
-    <Compile Include="PeopleModel.cs" />
-    <Compile Include="property_type_tests.cs" />
-    <Compile Include="simple_mapping_tests.cs" />
-    <Compile Include="spec_extensions.cs" />
-    <Compile Include="TestContextualizer.cs" />
-    <Compile Include="TestDestinationConfigurationFactory.cs" />
-    <Compile Include="TestExtensions.cs" />
-    <Compile Include="value_converter_tests.cs" />
-    <Compile Include="value_resolver_tests.cs" />
-    <Compile Include="ViewModel.cs" />
-    <Compile Include="windsor_mapping_support_tests.cs" />
-    <Compile Include="WithDebugging.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\app\Ditto.WindsorIntegration\Ditto.WindsorIntegration.csproj">
-      <Project>{03A837D9-15E4-42CB-AA9A-F7E46BB4CDD0}</Project>
-      <Name>Ditto.WindsorIntegration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\app\Ditto\Ditto.csproj">
+    <ProjectReference Include="..\Ditto\Ditto.csproj">
       <Project>{4DACB973-A159-43F6-ACA1-A2C2029A6DB6}</Project>
       <Name>Ditto</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

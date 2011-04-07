@@ -6,9 +6,9 @@ namespace Ditto.Internal
 {
     public class BindingDestinationConfigurationContainer:IBindConfigurations,ICreateMappingCommand,IValidatable,ICacheable
     {
-        private IProvideBinders binders;
-        private IMapCommandFactory mapCommands;
-        private ICollection<BindableConfiguration> configurations;
+        private readonly IProvideBinders binders;
+        private readonly IMapCommandFactory mapCommands;
+        private readonly ICollection<BindableConfiguration> configurations;
         private Dictionary<Type,BindableConfiguration> bindableConfigurations=new Dictionary<Type, BindableConfiguration>();
         public BindingDestinationConfigurationContainer(IProvideBinders binders, IMapCommandFactory mapCommands, IContainDestinationConfiguration destinationConfigurationContainer)
         {

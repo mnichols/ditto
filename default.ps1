@@ -65,6 +65,10 @@ task Release  -depends Test{
 
 	& $tools_dir\zip.exe -9 -A -j `
 		$release_dir\Ditto.zip `
+		$build_dir\Ditto.dll `
+    	$build_dir\Ditto.xml `
+		$build_dir\Ditto.WindsorIntegration.dll `
+    	$build_dir\Ditto.WindsorIntegration.xml `
 		$build_dir\Castle.Core.dll `
     	$build_dir\Castle.Core.xml `
 		$build_dir\Castle.Facilities.Logging.dll `

@@ -2,12 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Context;
+using Ditto.Internal;
 
-namespace Ditto.Internal
+namespace Ditto.WindsorIntegration
 {
+// ReSharper disable ClassNeverInstantiated.Global
     public class WindsorMappingInitializer:IInitializeMappingEngine
+// ReSharper restore ClassNeverInstantiated.Global
     {
-        private IKernel kernel;
+        private readonly IKernel kernel;
 
         public WindsorMappingInitializer(IKernel kernel)
         {

@@ -6,7 +6,7 @@ namespace Ditto.Criteria
 {
     public class PropertyNameCriterion : IPropertyCriterion
     {
-        private string name;
+        private readonly string name;
         
         public PropertyNameCriterion(string name)
         {
