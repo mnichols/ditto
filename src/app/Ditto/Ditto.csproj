@@ -94,8 +94,8 @@
     <Compile Include="Internal\ConfigurationPropertyCriterion.cs" />
     <Compile Include="Internal\ConfigurationValidator.cs" />
     <Compile Include="Internal\Convention.cs" />
-    <Compile Include="Internal\ConversionContext.cs" />
-    <Compile Include="Internal\ConversionResult.cs" />
+    <Compile Include="Converters\ConversionContext.cs" />
+    <Compile Include="Converters\ConversionResult.cs" />
     <Compile Include="Internal\DefaultContextualizer.cs" />
     <Compile Include="Internal\DestinationConfigurationContainer.cs" />
     <Compile Include="Internal\DefaultMapCommand.cs" />
@@ -160,7 +160,7 @@
     <Compile Include="Internal\SourcedPropertyNameResolver.cs" />
     <Compile Include="Internal\SupportedCollectionTypeSpecification.cs" />
     <Compile Include="Internal\Toggler.cs" />
-    <Compile Include="Internal\Unconverted.cs" />
+    <Compile Include="Converters\Unconverted.cs" />
     <Compile Include="Internal\ValueAssignment.cs" />
     <Compile Include="Internal\ValueAssignments.cs" />
     <Compile Include="IPropertyCriterion.cs" />

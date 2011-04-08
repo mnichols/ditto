@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ditto.Internal
+namespace Ditto.Converters
 {
     public class Unconverted : ConversionResult
     {

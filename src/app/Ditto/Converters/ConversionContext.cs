@@ -1,31 +1,23 @@
 using System;
 
-namespace Ditto.Internal
+namespace Ditto.Converters
 {
     public class ConversionContext
     {
-        public Type DestinationPropertyType { get; private set; }
-        public object Value { get; private set; }
-
         public ConversionContext(Type destinationPropertyType, object value)
         {
             DestinationPropertyType = destinationPropertyType;
             Value = value;
         }
 
-        public bool Is<T>()
-        {
-            return Value != null && typeof (T).IsInstanceOfType(Value);
-        }
-        public ConversionResult Result(object value)
-        {
-            return new ConversionResult(this.DestinationPropertyType, value);
-        }
+        public Type DestinationPropertyType { get; private set; }
 
         public bool HasValue
         {
             get { return Value != null; }
         }
+
+        public object Value { get; private set; }
 
         public Type ValueType
         {
@@ -36,9 +28,20 @@ namespace Ditto.Internal
                 return Value.GetType();
             }
         }
+
+        public bool Is<T>()
+        {
+            return Value != null && typeof (T).IsInstanceOfType(Value);
+        }
+
+        public ConversionResult Result(object value)
+        {
+            return new ConversionResult(DestinationPropertyType, value);
+        }
+
         public ConversionResult Unconverted()
         {
-            return new Unconverted(this.DestinationPropertyType,this.Value);
+            return new Unconverted(DestinationPropertyType, Value);
         }
     }
 }
