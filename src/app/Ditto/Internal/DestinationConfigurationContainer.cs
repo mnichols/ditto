@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Ditto.Internal
 {
-    public class DestinationConfigurationContainer : IContainDestinationConfiguration
+    public class DestinationConfigurationContainer : IContainDestinationConfiguration,IProvideBindableConfigurations
     {
         private readonly Dictionary<Type, ICreateBindableConfiguration> registeredConfigurations = new Dictionary<Type, ICreateBindableConfiguration>();
         private readonly IProvideConventions conventions;
@@ -49,7 +49,7 @@ namespace Ditto.Internal
             return registeredConfigurations.ContainsKey(destinationType);
         }
 
-        public ICollection<BindableConfiguration> CreateBindableConfigurations()
+        public ICollection<BindableConfiguration> GetBindableConfigurations()
         {
             return registeredConfigurations.Values.Select(into=>into.CreateBindableConfiguration()).ToArray();
         }

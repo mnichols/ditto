@@ -10,11 +10,11 @@ namespace Ditto.Internal
         private readonly IMapCommandFactory mapCommands;
         private readonly ICollection<BindableConfiguration> configurations;
         private Dictionary<Type,BindableConfiguration> bindableConfigurations=new Dictionary<Type, BindableConfiguration>();
-        public BindingDestinationConfigurationContainer(IProvideBinders binders, IMapCommandFactory mapCommands, IContainDestinationConfiguration destinationConfigurationContainer)
+        public BindingDestinationConfigurationContainer(IProvideBinders binders, IMapCommandFactory mapCommands, IProvideBindableConfigurations bindableConfigurations)
         {
             this.binders = binders;
             this.mapCommands = mapCommands;
-            this.configurations = destinationConfigurationContainer.CreateBindableConfigurations();
+            this.configurations = bindableConfigurations.GetBindableConfigurations();
             Logger = new NullLogFactory();
         }
         public ILogFactory Logger { get; set; }

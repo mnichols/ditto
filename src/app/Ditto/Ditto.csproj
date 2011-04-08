@@ -13,7 +13,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
-	<AssemblyOriginatorKeyFile>..\..\..\ditto.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\..\ditto.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -128,6 +128,7 @@
     <Compile Include="Internal\ILogFactory.cs" />
     <Compile Include="Internal\IMapCommand.cs" />
     <Compile Include="Internal\IMapCommandFactory.cs" />
+    <Compile Include="Internal\IProvideBindableConfigurations.cs" />
     <Compile Include="Internal\IProvideBinders.cs" />
     <Compile Include="Internal\IProvideConventions.cs" />
     <Compile Include="Internal\IRedirected.cs" />
