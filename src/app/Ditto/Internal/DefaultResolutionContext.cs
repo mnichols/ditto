@@ -55,7 +55,7 @@ namespace Ditto.Internal
             get { return destination; }
         }
 
-        public IAssignValue Scope(IDescribeMappableProperty destinationProperty)
+        public IAssignValue BuildValueAssignment(IDescribeMappableProperty destinationProperty)
         {
             if (destinationProperty == null)
                 throw new ArgumentNullException("destinationProperty");

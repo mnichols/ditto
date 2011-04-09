@@ -30,7 +30,7 @@ namespace Ditto.Tests
         public void it_can_map_numeric_to_string()
         {
             var context=Contextualize(new SimpleIntToStringConverter());
-            var assignment = context.Scope(MappableProperty.For<Destination>(d => d.AnInt));
+            var assignment = context.BuildValueAssignment(MappableProperty.For<Destination>(d => d.AnInt));
             assignment.SetValue(new Result(true,3));
             dest.AnInt.should_be_equal_to("3");
         }
@@ -39,7 +39,7 @@ namespace Ditto.Tests
         public void it_can_map_string_to_datetime()
         {
             var context = Contextualize(new StringToDateTimeConverter());
-            var assignment = context.Scope(MappableProperty.For<Destination>(d => d.AnDateTime));
+            var assignment = context.BuildValueAssignment(MappableProperty.For<Destination>(d => d.AnDateTime));
             assignment.SetValue(new Result(true,new DateTime(2009, 8, 1, 0, 0, 0).ToString()));
             dest.AnDateTime.should_be_equal_to(new DateTime(2009, 8, 1, 0, 0, 0));
         }
@@ -47,7 +47,7 @@ namespace Ditto.Tests
         public void it_can_map_nullable_to_nonnullable_types()
         {
             var context = Contextualize(new NullableToNonNullableConverter());
-            var assignment = context.Scope(MappableProperty.For<Destination>(d => d.Int));
+            var assignment = context.BuildValueAssignment(MappableProperty.For<Destination>(d => d.Int));
             int? nint = 4;
             assignment.SetValue(new Result(true,nint));
             dest.Int.should_be_equal_to(4);
@@ -57,7 +57,7 @@ namespace Ditto.Tests
         public void it_can_map_nullable_double_to_nonnullable_types_with_default_value()
         {
             var context = Contextualize(new NullableToNonNullableConverter());
-            var assignment = context.Scope(MappableProperty.For<Destination>(d => d.Double));
+            var assignment = context.BuildValueAssignment(MappableProperty.For<Destination>(d => d.Double));
             double? ndouble = null;
             assignment.SetValue(new Result(true, ndouble));
             dest.Double.should_be_equal_to(0);
@@ -67,7 +67,7 @@ namespace Ditto.Tests
         public void it_can_map_nonnullable_to_nullable_types()
         {
             var context = Contextualize(new NonNullableToNullableConverter());
-            var assignment = context.Scope(MappableProperty.For<Destination>(d => d.NInt));
+            var assignment = context.BuildValueAssignment(MappableProperty.For<Destination>(d => d.NInt));
             int iint = 4;
             assignment.SetValue(new Result(true, iint));
             dest.NInt.should_be_equal_to(4);
@@ -78,7 +78,7 @@ namespace Ditto.Tests
         {
 
             var context = Contextualize(new SystemConverter());
-            var assignment = context.Scope(MappableProperty.For<Destination>(d => d.Int));
+            var assignment = context.BuildValueAssignment(MappableProperty.For<Destination>(d => d.Int));
             uint unsigned = 42;
             assignment.SetValue(new Result(true,unsigned));
             dest.Int.should_be_equal_to(42);

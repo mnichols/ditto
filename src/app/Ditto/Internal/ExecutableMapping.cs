@@ -1,14 +1,14 @@
 using System;
 using System.Linq;
-using Ditto.Resolvers;
 
 namespace Ditto.Internal
 {
     public class ExecutableMapping : IExecuteMapping
     {
-        private readonly IContainResolvers resolverContainer;
         private readonly IDescribeMappableProperty[] destinationProperties;
-        public ExecutableMapping(Type destinationType, IContainResolvers resolverContainer, IDescribeMappableProperty[] destinationProperties)
+        private readonly IContainResolvers resolverContainer;
+
+        public ExecutableMapping(Type destinationType, IContainResolvers resolverContainer,IDescribeMappableProperty[] destinationProperties)
         {
             DestinationType = destinationType;
             this.resolverContainer = resolverContainer;
@@ -20,11 +20,11 @@ namespace Ditto.Internal
 
         public void Execute(IResolutionContext context)
         {
-            foreach (var prop in destinationProperties.Where(p=>resolverContainer.WillResolve(p)))
+            foreach (var prop in destinationProperties.Where(p => resolverContainer.WillResolve(p)))
             {
-                var assignment = context.Scope(prop);
+                var assignment = context.BuildValueAssignment(prop);
                 var resolver = resolverContainer.GetResolver(prop);
-                var result= resolver.TryResolve(context, prop);
+                var result = resolver.TryResolve(context, prop);
                 assignment.SetValue(result);
             }
         }

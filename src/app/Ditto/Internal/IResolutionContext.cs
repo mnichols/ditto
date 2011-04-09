@@ -8,7 +8,7 @@ namespace Ditto.Internal
         Type SourceType { get; }
         object Source { get; }
         object Destination { get; }
-        IAssignValue Scope(IDescribeMappableProperty destinationProperty);
+        IAssignValue BuildValueAssignment(IDescribeMappableProperty destinationProperty);
         object GetSourcePropertyValue(string propertyName);
         object GetDestinationPropertyValue(string propertyName);
         IResolutionContext Nested(IDescribeMappableProperty destinationProperty);
