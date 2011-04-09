@@ -120,7 +120,7 @@ namespace Ditto.Benchmarking.Tests
                 var contextualizer = new TestContextualizer();
                 var cacher = new CacheInitializer(contextualizer);
                 bindable.Accept(cacher);
-                dittoMapCommand = bindable.CreateCommand(typeof (BenchDestinationProps), typeof (BenchSourceProps));
+                dittoMapCommand = bindable.CreateCommand(typeof (BenchSourceProps), typeof (BenchDestinationProps));
             }
             catch (Exception ex)
             {

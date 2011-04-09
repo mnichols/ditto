@@ -27,7 +27,8 @@ namespace Ditto
             {
                 return cfg.ApplyingConvention(new ImmutableDestinationResolver(new PropertyNameResolver(Reflect.GetProperty(destinationProperty).Name)), destinationProperties);    
             }
-            
+
+            return cfg;
         }
     
     }

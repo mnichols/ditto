@@ -34,7 +34,7 @@ namespace Ditto.Internal
             
         }
 
-        public IMapCommand CreateCommand(Type destinationType, Type sourceType)
+        public IMapCommand CreateCommand(Type sourceType, Type destinationType)
         {
             BindableConfiguration cfg;
             if (bindableConfigurations.TryGetValue(destinationType, out cfg) == false)

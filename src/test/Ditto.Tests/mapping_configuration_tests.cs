@@ -67,7 +67,7 @@ namespace Ditto.Tests
 
             var source = new ComplexEvent() { Name = "RootName", Component = new EventComponent() { Name = "ComponentName" } };
             var dest = new ComplexViewModel();
-            var command = bindable.CreateCommand(typeof (ComplexViewModel), typeof (ComplexEvent));
+            var command = bindable.CreateCommand(typeof (ComplexEvent), typeof (ComplexViewModel));
             command.Map(source, dest);
             dest.Name.should_be_equal_to("RootName");
             dest.Component.should_not_be_null();
@@ -86,7 +86,7 @@ namespace Ditto.Tests
             
             var source = new ComplexEvent() { Name = "RootName", Component = new EventComponent() { Name = "ComponentName" } };
             var dest = new ComplexViewModel();
-            var command = bindable.CreateCommand(typeof(ComplexViewModel), typeof(ComplexEvent));
+            var command = bindable.CreateCommand(typeof(ComplexEvent), typeof(ComplexViewModel));
             command.Map(source, dest);
             dest.Name.should_be_equal_to("RootName");
             dest.Component.should_not_be_null();

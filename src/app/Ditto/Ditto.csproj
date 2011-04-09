@@ -167,7 +167,7 @@
     <Compile Include="ISourcedDestinationConfiguration.cs" />
     <Compile Include="MappingConfigurationException.cs" />
     <Compile Include="MappingExecutionException.cs" />
-    <Compile Include="MappingExtensions.cs" />
+    <Compile Include="DittoExtensions.cs" />
     <Compile Include="MissingProperties.cs" />
     <Compile Include="Reflect.cs" />
     <Compile Include="Resolvers\DefaultResolverFactory.cs" />

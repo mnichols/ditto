@@ -27,7 +27,7 @@ namespace Ditto.Tests
 
             var source = new ComplexEvent(){Name = "RootName", Component = new EventComponent() {Name = "ComponentName"}};
             var dest = new ComplexViewModel();
-            var executable = bindable.CreateCommand(typeof (ComplexViewModel), typeof (ComplexEvent));
+            var executable = bindable.CreateCommand(typeof (ComplexEvent), typeof (ComplexViewModel));
             executable.Map(source, dest);
             dest.Name.should_be_equal_to("RootName");
             dest.Component.should_not_be_null();
@@ -82,7 +82,7 @@ namespace Ditto.Tests
 
             var source = new TypicalEvent() { Name = "RedirectingName",};
             var dest = new ComplexViewModel();
-            var executable = bindable.CreateCommand(typeof (ComplexViewModel), typeof (TypicalEvent));
+            var executable = bindable.CreateCommand(typeof (TypicalEvent), typeof (ComplexViewModel));
             executable.Map(source, dest);
             dest.Component.should_not_be_null();
             dest.Component.Name.should_be_equal_to("RedirectingName");
@@ -99,7 +99,7 @@ namespace Ditto.Tests
             bindable.Bind();
             bindable.Assert();
 
-            var mapper = bindable.CreateCommand(typeof(NestedPropsDestination), typeof(NestedPropsSource));
+            var mapper = bindable.CreateCommand(typeof(NestedPropsSource), typeof(NestedPropsDestination));
             var src = new NestedPropsSource();
             var dest = new NestedPropsDestination();
             mapper.Map(src, dest);

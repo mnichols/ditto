@@ -27,8 +27,7 @@ namespace Ditto.Tests
                                      new[] {new IntegerSource() {AnInt = 1}, new IntegerSource() {AnInt = 3},}
                              };
             var dest = new DestinationWithComponentArray();
-            var executable = bindable.CreateCommand(typeof (DestinationWithComponentArray),
-                                                    typeof (SourceWithComponentArray));
+            var executable = bindable.CreateCommand(typeof (SourceWithComponentArray), typeof (DestinationWithComponentArray));
             executable.Map(source, dest);
             dest.IntegerComponents.Length.should_be_equal_to(2);
         }
@@ -47,7 +46,7 @@ namespace Ditto.Tests
             };
             var dest = new DestWithCollections();
 
-            var executable = bindable.CreateCommand(typeof (DestWithCollections), typeof (SourceWithCollections));
+            var executable = bindable.CreateCommand(typeof (SourceWithCollections), typeof (DestWithCollections));
             executable.Map(source, dest);
             dest.ListOfIntegerComponents.Count.should_be_equal_to(2);
         }

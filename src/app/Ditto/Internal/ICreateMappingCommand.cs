@@ -4,6 +4,6 @@ namespace Ditto.Internal
 {
     public interface ICreateMappingCommand
     {
-        IMapCommand CreateCommand(Type destinationType, Type sourceType);
+        IMapCommand CreateCommand(Type sourceType, Type destinationType);
     }
 }
