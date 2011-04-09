@@ -9,14 +9,14 @@ namespace Ditto.Internal
         private readonly object destination;
         private readonly object source;
         private readonly ICreateValueAssignment valueAssignments;
-        private readonly IReflection reflection;
+        private readonly IInvoke invoke;
 
         public DefaultResolutionContext(object source, 
             object destination, 
             IActivator activator,
             IContextualizeResolution contextualizer,
             ICreateValueAssignment valueAssignments,
-            IReflection reflection)
+            IInvoke invoke)
         {
             if (source == null)
                 throw new ArgumentNullException("source");
@@ -31,12 +31,12 @@ namespace Ditto.Internal
             this.activator = activator;
             this.contextualizer = contextualizer;
             this.valueAssignments = valueAssignments;
-            this.reflection = reflection;
+            this.invoke = invoke;
         }
 
         public IResolutionContext Nested(IDescribeMappableProperty destinationProperty)
         {
-            var dest = reflection.GetValue(destinationProperty.Name, Destination) ?? activator.CreateInstance(destinationProperty.PropertyType);
+            var dest = invoke.GetValue(destinationProperty.Name, Destination) ?? activator.CreateInstance(destinationProperty.PropertyType);
             return contextualizer.CreateContext(Source, dest);
         }
 
@@ -64,11 +64,11 @@ namespace Ditto.Internal
 
         public object GetSourcePropertyValue(string propertyName)
         {
-            return reflection.GetValue(propertyName, Source);
+            return invoke.GetValue(propertyName, Source);
         }
         public object GetDestinationPropertyValue(string propertyName)
         {
-            return reflection.GetValue(propertyName, destination);
+            return invoke.GetValue(propertyName, destination);
         }
 
         public IResolutionContext Nested(IDescribeMappableProperty destinationProperty, IDescribeMappableProperty sourceProperty)
@@ -83,7 +83,7 @@ namespace Ditto.Internal
 
             if (collectionSpec.IsSatisfiedBy(src) == false)
             {
-                return reflection.GetValue(sourceProperty.Name, Source);
+                return invoke.GetValue(sourceProperty.Name, Source);
             }
             return collectionSpec.GetValue(src, sourceProperty as IDescribePropertyElement);
         }
@@ -97,7 +97,7 @@ namespace Ditto.Internal
                 {
                     return activator.CreateInstance(destinationProperty.PropertyType);
                 }
-                return reflection.GetValue(destinationProperty.Name, Destination) ?? activator.CreateInstance(destinationProperty.PropertyType);
+                return invoke.GetValue(destinationProperty.Name, Destination) ?? activator.CreateInstance(destinationProperty.PropertyType);
             }
             return activator.CreateCollectionInstance(destinationProperty.PropertyType, collectionSpec.GetLength(src));
         }

@@ -6,17 +6,17 @@ namespace Ditto.Internal
     {
         private readonly object destination;
         private readonly IDescribeMappableProperty destinationProperty;
-        private readonly IReflection reflection;
+        private readonly IInvoke invoke;
         private readonly IValueConverterContainer valueConverters;
 
         public ValueAssignment(object destination, IDescribeMappableProperty destinationProperty,
-                               IValueConverterContainer valueConverters, IReflection reflection)
+                               IValueConverterContainer valueConverters, IInvoke invoke)
         {
             if (destinationProperty == null)
                 throw new ArgumentNullException("destinationProperty");
             this.destination = destination;
             this.destinationProperty = destinationProperty;
-            this.reflection = reflection;
+            this.invoke = invoke;
             this.valueConverters = valueConverters ?? NullValueConverterContainer.Instance;
         }
 
@@ -25,7 +25,7 @@ namespace Ditto.Internal
             if (value.IsResolved == false)
                 return;
             var assignable = new AssignableValue(value.Value, destinationProperty, valueConverters);
-            reflection.SetValue(assignable, destination);
+            invoke.SetValue(assignable, destination);
         }
     }
 }

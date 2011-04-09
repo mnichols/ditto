@@ -3,22 +3,22 @@ namespace Ditto.Internal
     public class CloningMapCommand : IMapCommand
     {
         private readonly IMapCommand inner;
-        private readonly IReflection reflection;
+        private readonly IInvoke invoke;
 
-        public CloningMapCommand(IReflection reflection, IMapCommand inner)
+        public CloningMapCommand(IInvoke invoke, IMapCommand inner)
         {
             this.inner = inner;
-            this.reflection = reflection;
+            this.invoke = invoke;
         }
 
         public TDest Map<TDest>(object source)
         {
-            return inner.Map<TDest>(reflection.Copy(source));
+            return inner.Map<TDest>(invoke.Copy(source));
         }
 
         public TDest Map<TDest>(object source, TDest dest)
         {
-            return inner.Map(reflection.Copy(source), dest);
+            return inner.Map(invoke.Copy(source), dest);
         }
     }
 }

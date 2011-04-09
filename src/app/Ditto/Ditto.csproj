@@ -132,7 +132,7 @@
     <Compile Include="Internal\IProvideBinders.cs" />
     <Compile Include="Internal\IProvideConventions.cs" />
     <Compile Include="Internal\IRedirected.cs" />
-    <Compile Include="Internal\IReflection.cs" />
+    <Compile Include="Internal\IInvoke.cs" />
     <Compile Include="Internal\IResolutionContext.cs" />
     <Compile Include="Internal\IContainResolvers.cs" />
     <Compile Include="Internal\IToggle.cs" />

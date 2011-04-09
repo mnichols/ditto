@@ -1,6 +1,6 @@
 namespace Ditto.Internal
 {
-    public interface IReflection
+    public interface IInvoke
     {
         object GetValue(string propertyName, object source);
         void SetValue(AssignableValue assignableValue,object destination);

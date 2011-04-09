@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Ditto.Internal
 {
-    public class DefaultReflection:IReflection
+    public class DefaultReflection:IInvoke
     {
         private static Dictionary<CacheKey,PropertyInfo> setters=new Dictionary<CacheKey, PropertyInfo>();
         private static Dictionary<CacheKey,PropertyInfo> getters=new Dictionary<CacheKey, PropertyInfo>();

@@ -4,7 +4,7 @@ using Fasterflect;
 
 namespace Ditto.Internal
 {
-    public class Fasterflection : IReflection, ICacheInvocation,IActivator
+    public class Fasterflection : IInvoke, ICacheInvocation,IActivator
     {
         private static Dictionary<CacheKey, MemberSetter> setters = new Dictionary<CacheKey, MemberSetter>();
         private static Dictionary<CacheKey, MemberGetter> getters = new Dictionary<CacheKey, MemberGetter>();
