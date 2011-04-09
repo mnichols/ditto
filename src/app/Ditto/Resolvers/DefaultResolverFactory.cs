@@ -4,16 +4,16 @@ namespace Ditto.Resolvers
 {
     public class DefaultResolverFactory:ICreateResolver
     {
-        private IActivator activator;
+        private IActivate activate;
 
-        public DefaultResolverFactory(IActivator activator)
+        public DefaultResolverFactory(IActivate activate)
         {
-            this.activator = activator;
+            this.activate = activate;
         }
 
         public ListResolver CreateListResolver(ResolverContext resolverContext)
         {
-            return new ListResolver(resolverContext.SourceProperty,resolverContext.Configuration,activator);
+            return new ListResolver(resolverContext.SourceProperty,resolverContext.Configuration,activate);
         }
 
         public RedirectingConfigurationResolver CreateRedirectingConfigurationResolver(ResolverContext resolverContext)

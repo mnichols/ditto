@@ -4,7 +4,7 @@ namespace Ditto.Internal
 {
     public class DefaultResolutionContext : IResolutionContext
     {
-        private readonly IActivator activator;
+        private readonly IActivate activate;
         private readonly IContextualizeResolution contextualizer;
         private readonly object destination;
         private readonly object source;
@@ -13,7 +13,7 @@ namespace Ditto.Internal
 
         public DefaultResolutionContext(object source, 
             object destination, 
-            IActivator activator,
+            IActivate activate,
             IContextualizeResolution contextualizer,
             ICreateValueAssignment valueAssignments,
             IInvoke invoke)
@@ -22,13 +22,13 @@ namespace Ditto.Internal
                 throw new ArgumentNullException("source");
             if (destination == null)
                 throw new ArgumentNullException("destination");
-            if (activator == null)
-                throw new ArgumentNullException("activator");
+            if (activate == null)
+                throw new ArgumentNullException("activate");
             if (valueAssignments == null)
                 throw new ArgumentNullException("valueAssignments");
             this.source = source;
             this.destination = destination;
-            this.activator = activator;
+            this.activate = activate;
             this.contextualizer = contextualizer;
             this.valueAssignments = valueAssignments;
             this.invoke = invoke;
@@ -36,7 +36,7 @@ namespace Ditto.Internal
 
         public IResolutionContext Nested(IDescribeMappableProperty destinationProperty)
         {
-            var dest = invoke.GetValue(destinationProperty.Name, Destination) ?? activator.CreateInstance(destinationProperty.PropertyType);
+            var dest = invoke.GetValue(destinationProperty.Name, Destination) ?? activate.CreateInstance(destinationProperty.PropertyType);
             return contextualizer.CreateContext(Source, dest);
         }
 
@@ -95,11 +95,11 @@ namespace Ditto.Internal
             {
                 if(collectionSpec.IsElement(destinationProperty))
                 {
-                    return activator.CreateInstance(destinationProperty.PropertyType);
+                    return activate.CreateInstance(destinationProperty.PropertyType);
                 }
-                return invoke.GetValue(destinationProperty.Name, Destination) ?? activator.CreateInstance(destinationProperty.PropertyType);
+                return invoke.GetValue(destinationProperty.Name, Destination) ?? activate.CreateInstance(destinationProperty.PropertyType);
             }
-            return activator.CreateCollectionInstance(destinationProperty.PropertyType, collectionSpec.GetLength(src));
+            return activate.CreateCollectionInstance(destinationProperty.PropertyType, collectionSpec.GetLength(src));
         }
         
     }

@@ -8,15 +8,15 @@ namespace Ditto.Internal
 {
     public class DefaultValueConverterContainer : IValueConverterContainer
     {
-        private readonly IActivator activator;
+        private readonly IActivate activate;
 
-        public DefaultValueConverterContainer(IActivator activator)
+        public DefaultValueConverterContainer(IActivate activate)
         {
-            this.activator = activator;
+            this.activate = activate;
             /*always support null conversion*/
             converters.Push(new NullConverter());
 
-            converters.Push(new ValueMustMatchDestinationTypeConverter(activator));
+            converters.Push(new ValueMustMatchDestinationTypeConverter(activate));
             
         }
 
@@ -29,7 +29,7 @@ namespace Ditto.Internal
 
         public IValueConverterContainer FilteredBy(Func<IConvertValue, bool> targets)
         {
-            var container = new DefaultValueConverterContainer(activator);
+            var container = new DefaultValueConverterContainer(activate);
             container.AddRange(converters.Where(targets));
             return container;
         }

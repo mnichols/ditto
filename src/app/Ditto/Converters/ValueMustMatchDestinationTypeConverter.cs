@@ -6,11 +6,11 @@ namespace Ditto.Converters
 {
     public class ValueMustMatchDestinationTypeConverter : IConvertValue
     {
-        private readonly IActivator activator;
+        private readonly IActivate activate;
 
-        public ValueMustMatchDestinationTypeConverter(IActivator activator)
+        public ValueMustMatchDestinationTypeConverter(IActivate activate)
         {
-            this.activator = activator;
+            this.activate = activate;
         }
 
         private ConversionResult TryListConversion(ConversionContext context)
@@ -19,7 +19,7 @@ namespace Ditto.Converters
             if (collectionTypeSpec.IsSatisfiedBy(context.DestinationPropertyType) == false || collectionTypeSpec.IsSatisfiedBy(context.Value)==false)
                 return context.Unconverted();
             
-            var destColl = (IList)activator.CreateCollectionInstance(context.DestinationPropertyType,collectionTypeSpec.GetLength(context.Value));
+            var destColl = (IList)activate.CreateCollectionInstance(context.DestinationPropertyType,collectionTypeSpec.GetLength(context.Value));
             var destElement = context.DestinationPropertyType.ElementType();
             var srcList = (IEnumerable) context.Value;
             var enumerator = srcList.GetEnumerator();

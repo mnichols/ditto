@@ -6,15 +6,15 @@ namespace Ditto.Resolvers
     public class ListResolver : IResolveValue
     {
         private readonly ICreateExecutableMapping executor;
-        private readonly IActivator activator;
+        private readonly IActivate activate;
 
         private readonly IDescribeMappableProperty sourceProperty;
 
-        public ListResolver(IDescribeMappableProperty sourceProperty, ICreateExecutableMapping executor, IActivator activator)
+        public ListResolver(IDescribeMappableProperty sourceProperty, ICreateExecutableMapping executor, IActivate activate)
         {
             this.sourceProperty = sourceProperty;
             this.executor = executor;
-            this.activator = activator;
+            this.activate = activate;
         }
 
 
@@ -22,7 +22,7 @@ namespace Ditto.Resolvers
         {
             var collectionContext = context.Nested(destinationProperty, sourceProperty);
             var src = (IList) context.GetSourcePropertyValue(sourceProperty.Name);
-            var dest = (IList)activator.CreateCollectionInstance(destinationProperty.PropertyType, src.Count);
+            var dest = (IList)activate.CreateCollectionInstance(destinationProperty.PropertyType, src.Count);
             for (int i = 0; i < src.Count; i++)
             {
                 var sourceElement = sourceProperty.ElementAt(i);

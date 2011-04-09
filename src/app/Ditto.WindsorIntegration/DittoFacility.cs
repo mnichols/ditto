@@ -59,7 +59,7 @@ namespace Ditto.WindsorIntegration
             Kernel.Register(
                 Component.For<IContextualizeResolution>().ImplementedBy<DefaultContextualizer>().LifeStyle.Singleton);
             Kernel.Register(
-                Component.For<IInvoke, ICacheInvocation,IActivator>().ImplementedBy<Fasterflection>().LifeStyle.Transient);
+                Component.For<IInvoke, ICacheInvocation,IActivate>().ImplementedBy<Fasterflection>().LifeStyle.Transient);
             Kernel.Register(Component.For<IVisitCacheable>().ImplementedBy<CacheInitializer>().LifeStyle.Transient);
             Kernel.Register(
                 Component.For<IValueConverterContainer>().ImplementedBy<DefaultValueConverterContainer>().LifeStyle.

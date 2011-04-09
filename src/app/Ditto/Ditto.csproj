@@ -108,7 +108,7 @@
     <Compile Include="Internal\ExecutableMapping.cs" />
     <Compile Include="Internal\Fasterflection.cs" />
     <Compile Include="Internal\GlobalConventions.cs" />
-    <Compile Include="Internal\IActivator.cs" />
+    <Compile Include="Internal\IActivate.cs" />
     <Compile Include="Internal\IApplyConventions.cs" />
     <Compile Include="Internal\IAssignValue.cs" />
     <Compile Include="Internal\IBindable.cs" />
@@ -143,7 +143,6 @@
     <Compile Include="Internal\ListPropertyCriterion.cs" />
     <Compile Include="Internal\MappableProperty.cs" />
     <Compile Include="Internal\GetValue.cs" />
-    <Compile Include="Internal\NativeActivator.cs" />
     <Compile Include="Internal\NativeConverters.cs" />
     <Compile Include="Internal\NullLogFactory.cs" />
     <Compile Include="Internal\NullLogger.cs" />
