@@ -24,7 +24,6 @@ namespace Ditto.Tests
         public void it_should_resolve_to_list_from_list()
         {
             var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ListOfIntegerComponents),
-                MappableProperty.For<DestWithCollections>(d => d.ListOfIntegerComponents),
                 integerComponentElementConfig, new Fasterflection());
             var source = new SourceWithCollections()
             {
@@ -34,7 +33,7 @@ namespace Ditto.Tests
 
 
             var destination = new DestWithCollections();
-            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), null);
+            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), MappableProperty.For<DestWithCollections>(its=>its.ListOfIntegerComponents));
             result.Value.should_be_a_type_of<List<IntegerDest>>();
             ((List<IntegerDest>)result.Value)[0].AnInt.should_be_equal_to(1);
             ((List<IntegerDest>)result.Value)[1].AnInt.should_be_equal_to(4);
@@ -44,7 +43,6 @@ namespace Ditto.Tests
         public void it_should_resolve_to_array_from_array()
         {
             var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ArrayOfIntegerComponents),
-                                         MappableProperty.For<DestWithCollections>(d => d.ArrayOfIntegerComponents),
                                          integerComponentElementConfig, new Fasterflection());
             var source = new SourceWithCollections()
                              {
@@ -54,16 +52,15 @@ namespace Ditto.Tests
 
 
             var destination = new DestWithCollections();
-            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), null);
+            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), MappableProperty.For<DestWithCollections>(its => its.ArrayOfIntegerComponents));
             result.Value.should_be_a_type_of<IntegerDest[]>();
             ((IntegerDest[])result.Value)[0].AnInt.should_be_equal_to(1);
             ((IntegerDest[])result.Value)[1].AnInt.should_be_equal_to(4);
         }
         [Fact]
-        public void it_should_resolve_to_array_from_list()
+        public void it_should_resolve_from_array_to_list()
         {
             var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ArrayOfIntegerComponents),
-                                         MappableProperty.For<DestWithCollections>(d => d.ListOfIntegerComponents),
                                          integerComponentElementConfig, new Fasterflection());
             var source = new SourceWithCollections()
             {
@@ -73,16 +70,15 @@ namespace Ditto.Tests
 
 
             var destination = new DestWithCollections();
-            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), null);
+            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), MappableProperty.For<DestWithCollections>(its => its.ListOfIntegerComponents));
             result.Value.should_be_a_type_of<List<IntegerDest>>();
             ((List<IntegerDest>)result.Value)[0].AnInt.should_be_equal_to(1);
             ((List<IntegerDest>)result.Value)[1].AnInt.should_be_equal_to(4);
         }
         [Fact]
-        public void it_should_resolve_to_list_from_array()
+        public void it_should_resolve_from_list_to_array()
         {
             var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ListOfIntegerComponents),
-                                         MappableProperty.For<DestWithCollections>(d => d.ArrayOfIntegerComponents),
                                          integerComponentElementConfig, new Fasterflection());
             var source = new SourceWithCollections()
             {
@@ -92,7 +88,7 @@ namespace Ditto.Tests
 
 
             var destination = new DestWithCollections();
-            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), null);
+            var result = resolver.TryResolve(contextualizer.CreateContext(source, destination), MappableProperty.For<DestWithCollections>(its => its.ArrayOfIntegerComponents));
             result.Value.should_be_a_type_of<IntegerDest[]>();
             ((IntegerDest[])result.Value)[0].AnInt.should_be_equal_to(1);
             ((IntegerDest[])result.Value)[1].AnInt.should_be_equal_to(4);

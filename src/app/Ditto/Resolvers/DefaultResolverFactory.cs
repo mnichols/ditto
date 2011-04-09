@@ -13,7 +13,7 @@ namespace Ditto.Resolvers
 
         public ListResolver CreateListResolver(ResolverContext resolverContext)
         {
-            return new ListResolver(resolverContext.SourceProperty,resolverContext.DestinationProperty,resolverContext.Configuration,activator);
+            return new ListResolver(resolverContext.SourceProperty,resolverContext.Configuration,activator);
         }
 
         public RedirectingConfigurationResolver CreateRedirectingConfigurationResolver(ResolverContext resolverContext)

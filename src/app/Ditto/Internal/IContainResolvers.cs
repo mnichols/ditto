@@ -1,6 +1,6 @@
 namespace Ditto.Internal
 {
-    public interface IResolverContainer
+    public interface IContainResolvers
     {
         bool WillResolve(IDescribeMappableProperty mappableProperty);
         IResolveValue GetResolver(IDescribeMappableProperty mappableProperty);

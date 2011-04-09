@@ -38,7 +38,7 @@ namespace Ditto.Internal
                     SourcedConventions.Where(its => its.SourceType == sourceType).ToArray());
 
             var composed =
-                new PrioritizedComposedFirstMatchingResolverContainer(new IResolverContainer[] { sourceContext, sourcedConventions });
+                new PrioritizedComposedFirstMatchingResolverContainer(new IContainResolvers[] { sourceContext, sourcedConventions });
             return new ExecutableMapping(DestinationType, composed, DestinationProperties);
         }
 
@@ -46,7 +46,7 @@ namespace Ditto.Internal
         {
             var validator = new ConfigurationValidator(DestinationType,
                                                        DestinationProperties,
-                                                       SourceContexts.Concat<IResolverContainer>(SourcedConventions).
+                                                       SourceContexts.Concat<IContainResolvers>(SourcedConventions).
                                                            ToArray());
             return validator.Validate();
         }

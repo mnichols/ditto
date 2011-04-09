@@ -98,7 +98,7 @@ namespace Ditto.Internal
             sourceConfig(sourced);
             inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty),
                 typeof (TSource),
-                new NestingConfigurationResolver(MappableProperty.For(destinationProperty),nestedConfig.CreateBindableConfiguration()));
+                new NestingConfigurationResolver(nestedConfig.CreateBindableConfiguration()));
             return this;
         }
 

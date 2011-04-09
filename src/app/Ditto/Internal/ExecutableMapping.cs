@@ -6,9 +6,9 @@ namespace Ditto.Internal
 {
     public class ExecutableMapping : IExecuteMapping
     {
-        private readonly IResolverContainer resolverContainer;
+        private readonly IContainResolvers resolverContainer;
         private readonly IDescribeMappableProperty[] destinationProperties;
-        public ExecutableMapping(Type destinationType, IResolverContainer resolverContainer, IDescribeMappableProperty[] destinationProperties)
+        public ExecutableMapping(Type destinationType, IContainResolvers resolverContainer, IDescribeMappableProperty[] destinationProperties)
         {
             DestinationType = destinationType;
             this.resolverContainer = resolverContainer;
@@ -24,7 +24,7 @@ namespace Ditto.Internal
             {
                 var assignment = context.Scope(prop);
                 var resolver = resolverContainer.GetResolver(prop);
-                Result result= resolver.TryResolve(context, prop);
+                var result= resolver.TryResolve(context, prop);
                 assignment.SetValue(result);
             }
         }

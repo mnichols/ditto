@@ -1,6 +1,6 @@
 namespace Ditto.Internal
 {
-    public class NullResolverContainer : IResolverContainer
+    public class NullResolverContainer : IContainResolvers
     {
         public bool WillResolve(IDescribeMappableProperty mappableProperty)
         {

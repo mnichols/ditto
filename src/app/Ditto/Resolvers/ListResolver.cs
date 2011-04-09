@@ -5,22 +5,20 @@ namespace Ditto.Resolvers
 {
     public class ListResolver : IResolveValue
     {
-        private readonly IDescribeMappableProperty destinationProperty;
         private readonly ICreateExecutableMapping executor;
         private readonly IActivator activator;
 
         private readonly IDescribeMappableProperty sourceProperty;
 
-        public ListResolver(IDescribeMappableProperty sourceProperty, IDescribeMappableProperty destinationProperty, ICreateExecutableMapping executor, IActivator activator)
+        public ListResolver(IDescribeMappableProperty sourceProperty, ICreateExecutableMapping executor, IActivator activator)
         {
             this.sourceProperty = sourceProperty;
-            this.destinationProperty = destinationProperty;
             this.executor = executor;
             this.activator = activator;
         }
 
 
-        public Result TryResolve(IResolutionContext context, IDescribeMappableProperty ignore)
+        public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
         {
             var collectionContext = context.Nested(destinationProperty, sourceProperty);
             var src = (IList) context.GetSourcePropertyValue(sourceProperty.Name);
@@ -36,9 +34,6 @@ namespace Ditto.Resolvers
 
             return new Result(true, dest);
         }
-        public override string ToString()
-        {
-            return GetType() + " for Cfg=" + executor + ", DestinationProperty="+destinationProperty + ",SourceProperty=" + sourceProperty;
-        }
+        
     }
 }

@@ -6,11 +6,11 @@ namespace Ditto.Internal
     public class ConfigurationValidator : IValidatable
     {
         private readonly IDescribeMappableProperty[] destinationProperties;
-        private readonly IResolverContainer[] resolverContainers;
+        private readonly IContainResolvers[] resolverContainers;
         private MissingProperties missingProperties;
 
         public ConfigurationValidator(Type destinationType, IDescribeMappableProperty[] destinationProperties,
-                                      IResolverContainer[] resolverContainers)
+                                      IContainResolvers[] resolverContainers)
         {
             if (destinationProperties.Length == 0)
                 throw new MappingConfigurationException("Destination properties have not been queried for {0}",destinationType);

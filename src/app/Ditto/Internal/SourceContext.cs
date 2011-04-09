@@ -5,7 +5,7 @@ using Ditto.Resolvers;
 
 namespace Ditto.Internal
 {
-    public class SourceContext : IResolverContainer,ICacheable,IValidatable,IBindable
+    public class SourceContext : IContainResolvers,ICacheable,IValidatable,IBindable
     {
         private readonly Dictionary<IDescribeMappableProperty, IResolveValue> prop2Resolver = new Dictionary<IDescribeMappableProperty, IResolveValue>();
 

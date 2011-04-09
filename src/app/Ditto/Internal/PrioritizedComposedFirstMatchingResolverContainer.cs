@@ -4,15 +4,15 @@ using Ditto.Resolvers;
 
 namespace Ditto.Internal
 {
-    public class PrioritizedComposedFirstMatchingResolverContainer:IResolverContainer
+    public class PrioritizedComposedFirstMatchingResolverContainer:IContainResolvers
     {
-        private IResolverContainer[] containers;
+        private IContainResolvers[] containers;
 
-        public PrioritizedComposedFirstMatchingResolverContainer(IResolverContainer[] containers)
+        public PrioritizedComposedFirstMatchingResolverContainer(IContainResolvers[] containers)
         {
             if(containers==null || containers.Length==0)
             {
-                this.containers=new IResolverContainer[]{new NullResolverContainer()};
+                this.containers=new IContainResolvers[]{new NullResolverContainer()};
             }
             else
             {

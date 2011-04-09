@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Ditto.Internal
 {
-    public class Convention : IResolverContainer
+    public class Convention : IContainResolvers
     {
         private readonly IDescribeMappableProperty[] destinationProperties;
         private readonly IResolveValue resolver;

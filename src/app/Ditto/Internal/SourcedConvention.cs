@@ -2,7 +2,7 @@ using System;
 
 namespace Ditto.Internal
 {
-    public class SourcedConvention:IResolverContainer,ICacheable,IBindable
+    public class SourcedConvention:IContainResolvers,ICacheable,IBindable
     {
         private Type sourceType;
         private readonly Convention inner;

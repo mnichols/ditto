@@ -5,11 +5,9 @@ namespace Ditto.Resolvers
     internal class NestingConfigurationResolver: IResolveValue,IBindable,IValidatable
     {
         private readonly ICreateExecutableMapping executor;
-        private readonly IDescribeMappableProperty destinationProperty;
 
-        internal NestingConfigurationResolver(IDescribeMappableProperty destinationProperty,ICreateExecutableMapping executor)
+        internal NestingConfigurationResolver(ICreateExecutableMapping executor)
         {
-            this.destinationProperty = destinationProperty;
             this.executor = executor;
         }
 
@@ -21,7 +19,7 @@ namespace Ditto.Resolvers
             executable.Execute(nested);
             return new Result(true, nested.Destination);
         }
-
+        
         public void Bind(params ICreateExecutableMapping[] configurations)
         {
             var bindable = executor as IBindable;

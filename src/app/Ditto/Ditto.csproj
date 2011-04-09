@@ -134,7 +134,7 @@
     <Compile Include="Internal\IRedirected.cs" />
     <Compile Include="Internal\IReflection.cs" />
     <Compile Include="Internal\IResolutionContext.cs" />
-    <Compile Include="Internal\IResolverContainer.cs" />
+    <Compile Include="Internal\IContainResolvers.cs" />
     <Compile Include="Internal\IToggle.cs" />
     <Compile Include="Internal\IValidatable.cs" />
     <Compile Include="Internal\IValueConverterContainer.cs" />
