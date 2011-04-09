@@ -2,6 +2,9 @@ using System;
 
 namespace Ditto.Internal
 {
+    /// <summary>
+    /// Same as <c>PropertyNameResolver</c> only allows reachability for caching.
+    /// </summary>
     public class SourcedPropertyNameResolver:ICacheable,IResolveValue
     {
         internal Type SourceType { get; private set; }

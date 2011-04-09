@@ -3,6 +3,9 @@ using Ditto.Internal;
 
 namespace Ditto.Resolvers
 {
+    /// <summary>
+    /// Resolved based on the provided source property name. 
+    /// </summary>
     public class PropertyNameResolver : IResolveValue
     {
         private readonly string sourcePropertyName;

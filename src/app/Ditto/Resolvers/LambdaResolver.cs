@@ -3,6 +3,10 @@ using Ditto.Internal;
 
 namespace Ditto.Resolvers
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TSource">The type of the source.</typeparam>
     public class LambdaResolver<TSource>:IResolveValue
     {
         private Func<TSource, object> lambda;

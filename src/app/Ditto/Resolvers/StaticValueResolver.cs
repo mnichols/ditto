@@ -2,6 +2,9 @@
 
 namespace Ditto.Resolvers
 {
+    /// <summary>
+    /// Always resolve using the provided <para>value</para>.
+    /// </summary>
     public class StaticValueResolver:IResolveValue
     {
         public object Value { get;private set; }

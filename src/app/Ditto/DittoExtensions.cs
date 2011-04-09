@@ -4,7 +4,7 @@ using Ditto.Resolvers;
 
 namespace Ditto
 {
-    public static class MappingExtensions
+    public static class DittoExtensions
     {
         public static TDestination MultiMap<TDestination>(this IMap map,params object[] sources)
         {
@@ -21,9 +21,13 @@ namespace Ditto
         {
             return cfg.ApplyingConvention(new IgnoreResolver(), properties);
         }
-        public static ISourcedDestinationConfiguration<T> AsImmutable<T>(this ISourcedDestinationConfiguration<T> cfg, Expression<Func<T, object>> property)
+        public static ISourcedDestinationConfiguration<T> AsImmutable<T>(this ISourcedDestinationConfiguration<T> cfg, params Expression<Func<T, object>>[] destinationProperties)
         {
-            return cfg.ApplyingConvention(new ImmutableDestinationResolver(new PropertyNameResolver(Reflect.GetProperty(property).Name)), property);
+            foreach (var destinationProperty in destinationProperties)
+            {
+                return cfg.ApplyingConvention(new ImmutableDestinationResolver(new PropertyNameResolver(Reflect.GetProperty(destinationProperty).Name)), destinationProperties);    
+            }
+            
         }
     
     }
