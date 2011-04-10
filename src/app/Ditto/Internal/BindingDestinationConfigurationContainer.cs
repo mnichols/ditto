@@ -42,13 +42,7 @@ namespace Ditto.Internal
                 throw new MappingExecutionException("Could not find mapping configuration for '{0}'. Please check that a configuration exists for this type and that the mapping engine is initialized.", destinationType);
             }
 
-            var executionCreator = cfg as ICreateExecutableMapping;
-            if (executionCreator == null)
-            {
-                //TODO:brittle
-                throw new InvalidOperationException("Expected the configuration to create an executable mapping...but it can't.");
-            }
-            return mapCommands.Create(executionCreator.CreateExecutableMapping(sourceType));
+            return mapCommands.Create(cfg.CreateExecutableMapping(sourceType));
         }
 
         public MissingProperties Validate()
