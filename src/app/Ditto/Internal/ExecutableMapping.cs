@@ -25,11 +25,9 @@ namespace Ditto.Internal
             foreach (var prop in destinationProperties.Where(p => resolverContainer.WillResolve(p)))
             {
                 var assignment = context.BuildValueAssignment(prop);
-                var key = new DestProp2Source(prop, context.SourceType);
+                //TODO bottle neck to remove...resolver discovery
+                var resolver = resolverContainer.GetResolver(prop);
 
-                var resolver = prop2Resolver[key] as IResolveValue;
-                if(resolver==null)
-                    prop2Resolver[key] = resolver = resolverContainer.GetResolver(prop);
                 var result = resolver.TryResolve(context, prop);
                 assignment.SetValue(result);
             }

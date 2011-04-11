@@ -6,7 +6,7 @@ namespace Ditto
     /// <summary>
     /// The primary interface for starting configuration on a destination type
     /// </summary>
-    public interface IConfigureDestination:ICreateBindableConfiguration
+    public interface IConfigureDestination:ICreateBindableConfiguration,ITakeDestinationConfigurationSnapshot
     {
         Type DestinationType { get; }
         /// <summary>
@@ -28,13 +28,14 @@ namespace Ditto
         /// <param name="propertyCriterion">The property criterion.</param>
         /// <param name="resolver">The resolver.</param>
         void ApplyingConvention(IPropertyCriterion propertyCriterion, IResolveValue resolver);
+
     }
 
     /// <summary>
     /// The primary interface for starting configuration on a destination of <typeparamref name="TDest"/>
     /// </summary>
     /// <typeparam name="TDest">The type of the dest.</typeparam>
-    public interface IConfigureDestination<TDest>:ICreateBindableConfiguration
+    public interface IConfigureDestination<TDest>:ICreateBindableConfiguration,ITakeDestinationConfigurationSnapshot
     {
         /// <summary>
         /// Provide all the types which will provide data for this <c>destination</c> of <typeparamref name="TDest"/>.

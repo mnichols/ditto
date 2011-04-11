@@ -36,18 +36,18 @@ namespace Ditto.Tests
         [Fact]
         public void it_should_map_nested_components_by_type()
         {
-            var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent));
+            var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent), new TestDestinationConfigurationFactory());
             componentConfig.From(typeof(EventComponent));
-            
 
-            var modelConfig = new DestinationConfiguration(typeof(ComplexViewModel));
+
+            var modelConfig = new DestinationConfiguration(typeof(ComplexViewModel), new TestDestinationConfigurationFactory());
             modelConfig.From(typeof (ComplexEventWithDifferentNamedComponent));
             modelConfig.SetPropertyResolver(
                 PropertyNameCriterion.From<ComplexViewModel>(m=>m.Component), typeof(ComplexEventWithDifferentNamedComponent),
                 new RedirectingConfigurationResolver(MappableProperty.For<ComplexEventWithDifferentNamedComponent>(s => s.DifferentName), componentConfig.CreateBindableConfiguration()));
 
             var bindable = modelConfig.CreateBindableConfiguration();
-            bindable.Bind();
+//            bindable.Bind();
             bindable.Assert();
             
 

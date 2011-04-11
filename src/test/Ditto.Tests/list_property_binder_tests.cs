@@ -8,7 +8,7 @@ namespace Ditto.Tests
         [Fact]
         public void it_should_determine_candidate_properties()
         {
-            var modelConfig = new DestinationConfiguration(typeof (DestinationWithComponentArray));
+            var modelConfig = new DestinationConfiguration(typeof(DestinationWithComponentArray), new TestDestinationConfigurationFactory());
             modelConfig.From(typeof (SourceWithComponentArray));
             var cfg = modelConfig.CreateBindableConfiguration();
             var binder = new ListPropertyBinder(null);

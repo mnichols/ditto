@@ -131,7 +131,11 @@ namespace Ditto.Internal
             inner.ApplyingConvention(propertyCriterion, resolver);
         }
 
-        
+
+        public BindableConfiguration CreateBindableConfiguration(DestinationConfigurationMemento snapshot)
+        {
+            return inner.CreateBindableConfiguration(snapshot);
+        }
 
         public BindableConfiguration CreateBindableConfiguration()
         {
@@ -140,6 +144,14 @@ namespace Ditto.Internal
                 return null;
             return creator.CreateBindableConfiguration();
         }
+
+        public DestinationConfigurationMemento ToSnapshot()
+        {
+            var snapshot = inner as ITakeDestinationConfigurationSnapshot;
+            if (snapshot == null)
+                return null;
+            return snapshot.ToSnapshot();
+        }
     }
 
     public class DestinationConfiguration : IConfigureDestination,IApplyConventions,ISourcedDestinationConfiguration
@@ -147,17 +159,25 @@ namespace Ditto.Internal
         private readonly IDescribeMappableProperty[] cachedDestinationProps;
         private readonly List<Convention> conventions = new List<Convention>();
         private readonly Type destinationType;
+        private readonly ICreateBindableConfiguration bindableConfigurations;
         private readonly List<SourceContext> sourceContexts = new List<SourceContext>();
 
-        public DestinationConfiguration(Type destinationType)
+        public DestinationConfiguration(Type destinationType, ICreateBindableConfiguration bindableConfigurations)
         {
             this.destinationType = destinationType;
+            this.bindableConfigurations = bindableConfigurations;
             cachedDestinationProps = destinationType.GetProperties().Select(into => new MappableProperty(into)).ToArray();
             Logger = new NullLogFactory();
         }
+
+        public BindableConfiguration CreateBindableConfiguration(DestinationConfigurationMemento snapshot)
+        {
+            return bindableConfigurations.CreateBindableConfiguration(snapshot);
+        }
+
         public BindableConfiguration CreateBindableConfiguration()
         {
-            return new BindableConfiguration(this.destinationType,this.cachedDestinationProps,this.sourceContexts.ToArray(),conventions.ToArray(),Logger);
+            return CreateBindableConfiguration(ToSnapshot());
         }
         public ILogFactory Logger { get; set; }
         public ISourcedDestinationConfiguration From(params Type[] sourceTypes)
@@ -223,6 +243,10 @@ namespace Ditto.Internal
         {
             ApplyingConvention(propertyCriterion, resolver);
         }
-        
+
+        public DestinationConfigurationMemento ToSnapshot()
+        {
+            return new DestinationConfigurationMemento(destinationType,cachedDestinationProps,sourceContexts.ToArray(),conventions.ToArray());
+        }
     }
 }

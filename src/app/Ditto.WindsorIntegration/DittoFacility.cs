@@ -61,8 +61,7 @@ namespace Ditto.WindsorIntegration
             Kernel.Register(
                 Component.For<IInvoke, ICacheInvocation,IActivate>().ImplementedBy<Fasterflection>().LifeStyle.Transient);
             Kernel.Register(Component.For<IVisitCacheable>().ImplementedBy<CacheInitializer>().LifeStyle.Transient);
-            Kernel.Register(
-                Component.For<IValueConverterContainer>().ImplementedBy<DefaultValueConverterContainer>().LifeStyle.
+            Kernel.Register(Component.For<IValueConverterContainer>().ImplementedBy<DefaultValueConverterContainer>().LifeStyle.
                     Singleton);
             Kernel.Resolver.AddSubResolver(new MapCommandResolver(Kernel));
             Kernel.Register(Component.For<IMapCommand>()
@@ -78,6 +77,8 @@ namespace Ditto.WindsorIntegration
                     GlobalConventionsKey).LifeStyle.Singleton);
             Kernel.Register(Component.For<IMapCommandFactory>().AsFactory()); /*typedfactory*/
             Kernel.Register(Component.For<ICreateDestinationConfiguration>().AsFactory()); /*typedfactory*/
+            Kernel.Register(Component.For<ICreateBindableConfiguration>().AsFactory()); /*typedfactory*/
+            Kernel.Register(Component.For<BindableConfiguration>().LifeStyle.Transient);
             Kernel.Register(
                 Component.For<IConfigureDestination, ISourcedDestinationConfiguration>().ImplementedBy
                     <DestinationConfiguration>().LifeStyle.Transient);

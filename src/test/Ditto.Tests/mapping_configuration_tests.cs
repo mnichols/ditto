@@ -12,7 +12,7 @@ namespace Ditto.Tests
         [Fact]
         public void missing_property_mapping_throws()
         {
-            var cfg = new DestinationConfiguration(typeof (Person));
+            var cfg = new DestinationConfiguration(typeof(Person), new TestDestinationConfigurationFactory());
             cfg.From(typeof (PersonalInfo), typeof (Parents));
             var bindable = cfg.CreateBindableConfiguration();
             Action validation = bindable.Assert;
@@ -42,11 +42,11 @@ namespace Ditto.Tests
         [Fact]
         public void can_append_other_configuration_for_nested_props()
         {
-            var componentConfig = new DestinationConfiguration(typeof (ViewModelComponent));
+            var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent), new TestDestinationConfigurationFactory());
             componentConfig.From(typeof (EventComponent));
-            
 
-            var modelConfig = new DestinationConfiguration(typeof (ComplexViewModel));
+
+            var modelConfig = new DestinationConfiguration(typeof(ComplexViewModel), new TestDestinationConfigurationFactory());
             modelConfig.From(typeof (ComplexEvent));
 
             var bindable = modelConfig.CreateBindableConfiguration();
@@ -97,7 +97,7 @@ namespace Ditto.Tests
         [Fact]
         public void manually_configuring_dest_property_with_more_than_one_resolver()
         {
-            var cfg=new DestinationConfiguration(typeof(TypicalViewModel));
+            var cfg = new DestinationConfiguration(typeof(TypicalViewModel), new TestDestinationConfigurationFactory());
             cfg.From(typeof (TypicalEvent));
             cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"),typeof(TypicalEvent),new StaticValueResolver(new Guid("8CF7C50E-792D-4A28-AB74-81879BC233A8")));
             Action duplication=()=>cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"), typeof(TypicalEvent), new StaticValueResolver(new Guid("1B8CF33D-92B8-4E82-9E8F-5EEDE7BA14F0")));
@@ -107,7 +107,7 @@ namespace Ditto.Tests
         [Fact]
         public void manually_configuring_dest_property_is_not_overriden_by_convention()
         {
-            var cfg = new DestinationConfiguration(typeof(TypicalViewModel));
+            var cfg = new DestinationConfiguration(typeof(TypicalViewModel), new TestDestinationConfigurationFactory());
             cfg.From(typeof(TypicalEvent));
             cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"), typeof(TypicalEvent), new StaticValueResolver(new Guid("8CF7C50E-792D-4A28-AB74-81879BC233A8")));
             cfg.ApplyingConvention(new PropertyNameCriterion("SomeId"), new StaticValueResolver(new Guid("1B8CF33D-92B8-4E82-9E8F-5EEDE7BA14F0")));

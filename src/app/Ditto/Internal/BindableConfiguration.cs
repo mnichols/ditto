@@ -6,7 +6,19 @@ namespace Ditto.Internal
 {
     public class BindableConfiguration : ICreateExecutableMapping, IBindable, IValidatable,ICacheable
     {
-        public BindableConfiguration(Type destinationType, IDescribeMappableProperty[] destinationProperties, SourceContext[] sourceContext, Convention[] conventions, ILogFactory logger)
+        public BindableConfiguration(DestinationConfigurationMemento snapshot)
+        {
+            DestinationType = snapshot.DestinationType;
+            DestinationProperties = snapshot.DestinationProperties;
+            SourceContexts = snapshot.SourceContexts;
+            SourcedConventions = snapshot.Conventions.SelectMany(cnv => snapshot.SourceContexts.Select(ctx => ctx.ApplyConvention(cnv))).ToArray();
+            Logger = new NullLogFactory();
+        }
+        public BindableConfiguration(Type destinationType,
+            IDescribeMappableProperty[] destinationProperties, 
+            SourceContext[] sourceContext, 
+            Convention[] conventions, 
+            ILogFactory logger)
         {
             DestinationType = destinationType;
             DestinationProperties = destinationProperties;
