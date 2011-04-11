@@ -179,7 +179,7 @@ namespace Ditto.Internal
 
     public class DestinationConfiguration : IConfigureDestination, IApplyConventions, ISourcedDestinationConfiguration
     {
-        private readonly IDescribeMappableProperty[] cachedDestinationProps;
+        private readonly IDescribeMappableProperty[] destinationProperties;
         private readonly List<Convention> conventions = new List<Convention>();
         private readonly Type destinationType;
         private readonly List<SourceContext> sourceContexts = new List<SourceContext>();
@@ -187,7 +187,7 @@ namespace Ditto.Internal
         public DestinationConfiguration(Type destinationType)
         {
             this.destinationType = destinationType;
-            cachedDestinationProps =
+            destinationProperties =
                 destinationType.GetProperties().Select(into => new MappableProperty(into)).ToArray();
             Logger = new NullLogFactory();
         }
@@ -208,7 +208,7 @@ namespace Ditto.Internal
             foreach (var sourceType in sourceTypes)
             {
                 var source = new SourceContext(sourceType);
-                source.SetDestinationContext(cachedDestinationProps);
+                source.SetDestinationContext(destinationProperties);
                 sourceContexts.Add(source);
             }
 
@@ -218,7 +218,7 @@ namespace Ditto.Internal
 
         public void ApplyingConvention(IPropertyCriterion destinationPropertyCriterion, IResolveValue resolver)
         {
-            var matches = cachedDestinationProps.Where(destinationPropertyCriterion.IsSatisfiedBy).ToArray();
+            var matches = destinationProperties.Where(destinationPropertyCriterion.IsSatisfiedBy).ToArray();
             var convention = new Convention(matches, resolver);
             conventions.Add(convention);
         }
@@ -234,7 +234,7 @@ namespace Ditto.Internal
 
         public DestinationConfigurationMemento TakeSnapshot()
         {
-            return new DestinationConfigurationMemento(destinationType, cachedDestinationProps, sourceContexts.ToArray(),
+            return new DestinationConfigurationMemento(destinationType, destinationProperties, sourceContexts.ToArray(),
                                                        conventions.ToArray());
         }
 
@@ -242,7 +242,7 @@ namespace Ditto.Internal
         {
             if (propertyCriterion == null)
                 throw new ArgumentNullException("propertyCriterion");
-            var prop = cachedDestinationProps.FirstOrDefault(propertyCriterion.IsSatisfiedBy);
+            var prop = destinationProperties.FirstOrDefault(propertyCriterion.IsSatisfiedBy);
             if (prop != null)
                 return prop;
             throw new InvalidOperationException(propertyCriterion + " is not valid for " + destinationType);

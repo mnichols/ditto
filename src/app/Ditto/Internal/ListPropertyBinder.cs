@@ -4,6 +4,9 @@ using Ditto.Resolvers;
 
 namespace Ditto.Internal
 {
+    /// <summary>
+    /// Binds properties of <c>IList</c> with appropraite element mappings
+    /// </summary>
     public class ListPropertyBinder:IBinder
     {
         private readonly ICreateResolver resolvers;
@@ -40,7 +43,7 @@ namespace Ditto.Internal
             foreach (var candidate in candidate2Cfg)
             {
                 var copy = candidate;
-                foreach (var sourceContext in bindableConfiguration.SourceContexts.Where(it => it.WillResolve(copy.Key)))
+                foreach (var sourceContext in bindableConfiguration.SourceContexts.Where(it => it.RequiresCollectionConfigurationFor(copy.Key)))
                 {
                     /*be sure we set resolver for each property that has a list element matching*/
                     foreach (var createExecutableMapping in candidate.Value)

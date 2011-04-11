@@ -16,5 +16,9 @@ namespace Ditto.Internal
             SourceContexts = sourceContexts;
             Conventions = conventions;
         }
+        public override string ToString()
+        {
+            return GetType() + " for " + DestinationType;
+        }
     }
 }

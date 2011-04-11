@@ -8,10 +8,11 @@ namespace Ditto.Internal
     public class SourceContext : IContainResolvers,ICacheable,IValidatable,IBindable
     {
         private readonly Dictionary<IDescribeMappableProperty, IResolveValue> destinationProperty2Resolver = new Dictionary<IDescribeMappableProperty, IResolveValue>();
-
+        private IDescribeMappableProperty[] sourceProperties;
         public SourceContext(Type sourceType)
         {
             SourceType = sourceType;
+            sourceProperties = SourceType.GetProperties().Select(into => new MappableProperty(into)).ToArray();
         }
 
         public Type SourceType { get; private set; }
@@ -46,13 +47,21 @@ namespace Ditto.Internal
         /// <param name="destinationProperties">The destination properties.</param>
         public void SetDestinationContext(IDescribeMappableProperty[] destinationProperties)
         {
-            var sourcePropertyNames = SourceType.GetProperties().Select(its => its.Name);
+            var sourcePropertyNames = sourceProperties.Select(its => its.Name);
             foreach (var destinationProperty in destinationProperties.Where(its => sourcePropertyNames.Contains(its.Name)))
             {
-                destinationProperty2Resolver[destinationProperty] = 
-                    destinationProperty.IsCustomType ? (IResolveValue) new RequiresComponentMappingResolver():
-                    new OverrideablePropertyNameResolver(destinationProperty.Name);
+                destinationProperty2Resolver[destinationProperty] = CreateDefaultResolver(destinationProperty);
             }
+        }
+        private IResolveValue CreateDefaultResolver(IDescribeMappableProperty destinationProperty)
+        {
+            if(destinationProperty.IsCollection &&  destinationProperty.ElementType.IsCustomType)
+            {
+                return new RequiresCollectionMappingResolver();
+            }
+            if(destinationProperty.IsCustomType)
+                return new RequiresComponentMappingResolver();
+            return new OverrideablePropertyNameResolver(destinationProperty.Name);
         }
         public bool TrySetResolver(IDescribeMappableProperty destinationProperty,IResolveValue resolver)
         {
@@ -135,18 +144,29 @@ namespace Ditto.Internal
             return GetType() + " for " + SourceType;
         }
 
-        public bool RequiresConfigurationFor(IDescribeMappableProperty destinationProperty)
+        public bool RequiresComponentConfigurationFor(IDescribeMappableProperty destinationProperty)
         {
-            return destinationProperty2Resolver.ContainsKey(destinationProperty) &&
-                   destinationProperty2Resolver[destinationProperty] is RequiresComponentMappingResolver;
+            return destinationProperty2Resolver.ContainsKey(destinationProperty) && destinationProperty2Resolver[destinationProperty] is RequiresComponentMappingResolver ;
         }
 
         private class RequiresComponentMappingResolver:IResolveValue,IOverrideable
         {
             public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
             {
-                throw new MappingExecutionException("{0} requires a configuration which was not provided.",destinationProperty);
+                throw new MappingExecutionException("{0} requires a component configuration which was not provided.",destinationProperty);
             }
+        }
+        private class RequiresCollectionMappingResolver : IResolveValue,IOverrideable
+        {
+            public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
+            {
+                throw new MappingExecutionException("{0} requires a collection configuration which was not provided.", destinationProperty);
+            }
+        }
+
+        public bool RequiresCollectionConfigurationFor(IDescribeMappableProperty destinationProperty)
+        {
+            return destinationProperty2Resolver.ContainsKey(destinationProperty) && destinationProperty2Resolver[destinationProperty] is RequiresCollectionMappingResolver;
         }
     }
 

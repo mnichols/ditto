@@ -99,6 +99,7 @@ namespace Ditto.Internal
 
         public void SourceResolverContainer(Type sourceType, IContainResolvers sourcedResolverContainer)
         {
+            //it might seem superflous to have the resolver containers assigned twice, but caching shouldn't be an requirement
             sourceType2ResolverContainer[sourceType] = sourcedResolverContainer;
         }
     }

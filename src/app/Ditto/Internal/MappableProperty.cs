@@ -31,6 +31,17 @@ namespace Ditto.Internal
 
 
         public Type DeclaringType { get; private set; }
+
+        public IDescribeMappableProperty ElementType
+        {
+            get
+            {
+                AssertListType();
+                return new MappableProperty(PropertyType, PropertyType.ElementType(), PropertyType+ ".Item");
+            }
+
+        }
+
         public string Name { get; private set; }
         public Type PropertyType { get; private set; }
 
@@ -41,6 +52,11 @@ namespace Ditto.Internal
                 return PropertyType.IsArray==false &&
                     PropertyType.IsFrameworkType() == false;
             }
+        }
+
+        public bool IsCollection
+        {
+            get { return new SupportedCollectionTypeSpecification().IsSatisfiedBy(PropertyType); }
         }
 
         public static MappableProperty For<TDest>(Expression<Func<TDest, object>> property)
@@ -81,11 +97,15 @@ namespace Ditto.Internal
                 return result;
             }
         }
-
+        private void AssertListType()
+        {
+            if(new SupportedCollectionTypeSpecification().IsSatisfiedBy(PropertyType))
+                return;
+            throw new NotSupportedException(PropertyType + " is not a supported collection type");
+        }
         public IDescribePropertyElement ElementAt(int index)
         {
-            if (typeof (ICollection).IsAssignableFrom(PropertyType) == false)
-                throw new NotSupportedException(DeclaringType + " is not a supported collection type");
+            AssertListType();
             return new MappablePropertyElement(this, PropertyType/*collection type*/, PropertyType.ElementType(), index);
         }
 
