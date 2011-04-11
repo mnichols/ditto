@@ -3,6 +3,7 @@ using Ditto.Criteria;
 using Ditto.Internal;
 using Ditto.Resolvers;
 using Xunit;
+using Ditto.Tests;
 
 namespace Ditto.Tests
 {
@@ -36,7 +37,26 @@ namespace Ditto.Tests
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
+        [Fact]
+        public void can_map_from_component_property_of_diff_name()
+        {
+            var cfg = new DestinationConfigurationContainer(null,configFactory);
+            cfg.Map<ComplexViewModel>()
+            .From(typeof(ComplexEventWithDifferentNamedComponent)).Redirecting<ComplexEventWithDifferentNamedComponent>(its => its.DifferentName, its => its.Component);
 
+            var binding = cfg.ToBinding();
+            binding.Bind();
+            
+            
+            Action validation = binding.Assert;
+            validation.should_not_throw_an<MappingConfigurationException>();
+
+            var cmd=binding.CreateCommand(typeof (ComplexEventWithDifferentNamedComponent), typeof (ComplexViewModel));
+            var src = new ComplexEventWithDifferentNamedComponent(){DifferentName = new EventComponent() {Name = "monsters"}};
+            var dest = new ComplexViewModel();
+            cmd.Map(src, dest);
+            dest.Component.Name.should_be_equal_to("monsters");
+        }
         [Fact]
         public void can_map_static_value_to_property()
         {

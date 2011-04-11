@@ -34,6 +34,15 @@ namespace Ditto.Internal
         public string Name { get; private set; }
         public Type PropertyType { get; private set; }
 
+        public bool IsCustomType
+        {
+            get
+            {
+                return PropertyType.IsArray==false &&
+                    PropertyType.IsFrameworkType() == false;
+            }
+        }
+
         public static MappableProperty For<TDest>(Expression<Func<TDest, object>> property)
         {
             var info = Reflect.GetProperty(property);
@@ -95,6 +104,7 @@ namespace Ditto.Internal
 
             public int Index { get; private set; }
         }
+
     }
 
     

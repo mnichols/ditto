@@ -22,13 +22,13 @@ namespace Ditto.Internal
             if (prop == null)
                 return false;
 
-            return prop.PropertyType.IsCustomType() == false ||
+            return prop.IsCustomType == false ||
                    IsCustomTypeAndCustomResolverSet(prop);
         }
         private bool IsCustomTypeAndCustomResolverSet(IDescribeMappableProperty prop)
         {
             var resolver = destinationProperty2Resolver[prop];
-            return prop.PropertyType.IsCustomType() &&
+            return prop.IsCustomType &&
                    typeof (RequiresComponentMappingResolver).IsInstanceOfType(resolver) == false;
         }
 
@@ -50,7 +50,7 @@ namespace Ditto.Internal
             foreach (var destinationProperty in destinationProperties.Where(its => sourcePropertyNames.Contains(its.Name)))
             {
                 destinationProperty2Resolver[destinationProperty] = 
-                    destinationProperty.PropertyType.IsCustomType() ? (IResolveValue) new RequiresComponentMappingResolver():
+                    destinationProperty.IsCustomType ? (IResolveValue) new RequiresComponentMappingResolver():
                     new OverrideablePropertyNameResolver(destinationProperty.Name);
             }
         }

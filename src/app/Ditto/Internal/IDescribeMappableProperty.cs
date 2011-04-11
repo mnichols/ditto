@@ -8,5 +8,6 @@ namespace Ditto.Internal
         Type PropertyType { get; }
         Type DeclaringType { get; }
         IDescribePropertyElement ElementAt(int index);
+        bool IsCustomType { get; }
     }
 }

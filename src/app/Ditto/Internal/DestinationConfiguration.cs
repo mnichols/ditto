@@ -81,11 +81,25 @@ namespace Ditto.Internal
         public ISourcedDestinationConfiguration<TDest> Redirecting<TSource>(
             Expression<Func<TSource, object>> sourceProperty, Expression<Func<TDest, object>> destinationProperty)
         {
-            inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty), typeof (TSource),
-                                      new PropertyNameResolver(Reflect.GetProperty(sourceProperty).Name));
+            var mappableDestinationProperty = MappableProperty.For(destinationProperty);
+            var mappableSourceProperty = MappableProperty.For(sourceProperty);
+            if(mappableDestinationProperty.IsCustomType)
+            {
+                var nestedConfig = configurations.Create(mappableDestinationProperty.PropertyType);
+                nestedConfig.From(mappableSourceProperty.PropertyType);
+                inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty),
+                                      typeof(TSource),
+                                      new RedirectingConfigurationResolver(MappableProperty.For(sourceProperty),
+                                          configurations.CreateBindableConfiguration(nestedConfig.TakeSnapshot())));
+            }
+            else
+            {
+                inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty), typeof(TSource),
+                                          new PropertyNameResolver(Reflect.GetProperty(sourceProperty).Name));    
+            }
+            
             return this;
         }
-
         public ISourcedDestinationConfiguration<TDest>  Redirecting<TSource, TNest>(
             Expression<Func<TSource, object>> sourceProperty, Expression<Func<TDest, object>> destinationProperty,
             Action<ISourcedDestinationConfiguration<TNest>> nestedCfg)
