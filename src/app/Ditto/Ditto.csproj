@@ -156,6 +156,7 @@
     <Compile Include="Internal\SetValue.cs" />
     <Compile Include="Internal\SourceContext.cs" />
     <Compile Include="Internal\SourcedConvention.cs" />
+    <Compile Include="Internal\SourcedExecutableMapping.cs" />
     <Compile Include="Internal\SourcedPropertyNameResolver.cs" />
     <Compile Include="Internal\SupportedCollectionTypeSpecification.cs" />
     <Compile Include="Internal\Toggler.cs" />

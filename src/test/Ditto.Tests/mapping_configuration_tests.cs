@@ -50,7 +50,7 @@ namespace Ditto.Tests
             modelConfig.From(typeof (ComplexEvent));
 
             var bindable = modelConfig.CreateBindableConfiguration();
-            bindable.Bind(componentConfig.CreateBindableConfiguration());
+//            bindable.Bind(componentConfig.CreateBindableConfiguration());
             bindable.Assert();
 
         }

@@ -1,18 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Ditto.Internal
 {
     public class BindableConfiguration : ICreateExecutableMapping, IBindable, IValidatable,ICacheable
     {
-        public BindableConfiguration(Type destinationType, IDescribeMappableProperty[] destinationProperties,
-                                     SourceContext[] sourceContext, Convention[] conventions)
+        public BindableConfiguration(Type destinationType, IDescribeMappableProperty[] destinationProperties, SourceContext[] sourceContext, Convention[] conventions, ILogFactory logger)
         {
             DestinationType = destinationType;
             DestinationProperties = destinationProperties;
             SourceContexts = sourceContext;
+            Logger = logger ?? new NullLogFactory();
             SourcedConventions = conventions.SelectMany(cnv => sourceContext.Select(ctx => ctx.ApplyConvention(cnv))).ToArray();
-            Logger = new NullLogFactory();
         }
 
         public IDescribeMappableProperty[] DestinationProperties { get; private set; }
@@ -21,6 +21,7 @@ namespace Ditto.Internal
         public ILogFactory Logger { get; set; }
         public void Bind(params ICreateExecutableMapping[] configurations)
         {
+            //TODO: primordial refactoring needs to be completed by removing this call
             var binders = new BinderFactory(new Fasterflection()){Logger = Logger};
             foreach (var binder in binders.Create())
             {
@@ -37,9 +38,12 @@ namespace Ditto.Internal
                 new PrioritizedComposedFirstMatchingResolverContainer(
                     SourcedConventions.Where(its => its.SourceType == sourceType).ToArray());
 
-            var composed =
-                new PrioritizedComposedFirstMatchingResolverContainer(new IContainResolvers[] { sourceContext, sourcedConventions });
+            var composed = new PrioritizedComposedFirstMatchingResolverContainer(new IContainResolvers[] { sourceContext, sourcedConventions });
             return new ExecutableMapping(DestinationType, composed, DestinationProperties);
+        }
+        public IEnumerable<IExecuteMapping> CreateAllExecutableMappings()
+        {
+            return SourceContexts.Select(sourceContext => CreateExecutableMapping(sourceContext.SourceType));
         }
 
         public MissingProperties Validate()

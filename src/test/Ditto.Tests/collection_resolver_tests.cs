@@ -14,9 +14,7 @@ namespace Ditto.Tests
         {
             var cfg = new DestinationConfiguration(typeof (IntegerDest));
             cfg.From(typeof (IntegerSource));
-            var bindable=cfg.CreateBindableConfiguration();
-            bindable.Bind();
-            integerComponentElementConfig = bindable;
+            integerComponentElementConfig = cfg.CreateBindableConfiguration();
             contextualizer = new TestContextualizer();
         }
        

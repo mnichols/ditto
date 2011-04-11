@@ -157,7 +157,7 @@ namespace Ditto.Internal
         }
         public BindableConfiguration CreateBindableConfiguration()
         {
-            return new BindableConfiguration(this.destinationType,this.cachedDestinationProps,this.sourceContexts.ToArray(),conventions.ToArray()){Logger = Logger};
+            return new BindableConfiguration(this.destinationType,this.cachedDestinationProps,this.sourceContexts.ToArray(),conventions.ToArray(),Logger);
         }
         public ILogFactory Logger { get; set; }
         public ISourcedDestinationConfiguration From(params Type[] sourceTypes)

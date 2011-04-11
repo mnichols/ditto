@@ -4,13 +4,17 @@ using System.Linq;
 
 namespace Ditto.Internal
 {
+
     public class BindingDestinationConfigurationContainer:IBindConfigurations,ICreateMappingCommand,IValidatable,ICacheable
     {
+
         private readonly IProvideBinders binders;
         private readonly IMapCommandFactory mapCommands;
         private readonly ICollection<BindableConfiguration> configurations;
         private Dictionary<Type,BindableConfiguration> bindableConfigurations=new Dictionary<Type, BindableConfiguration>();
-        public BindingDestinationConfigurationContainer(IProvideBinders binders, IMapCommandFactory mapCommands, IProvideBindableConfigurations bindableConfigurations)
+        public BindingDestinationConfigurationContainer(IProvideBinders binders, 
+            IMapCommandFactory mapCommands, 
+            IProvideBindableConfigurations bindableConfigurations)
         {
             this.binders = binders;
             this.mapCommands = mapCommands;
@@ -41,7 +45,6 @@ namespace Ditto.Internal
             {
                 throw new MappingExecutionException("Could not find mapping configuration for '{0}'. Please check that a configuration exists for this type and that the mapping engine is initialized.", destinationType);
             }
-
             return mapCommands.Create(cfg.CreateExecutableMapping(sourceType));
         }
 

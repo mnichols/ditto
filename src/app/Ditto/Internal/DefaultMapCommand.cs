@@ -1,4 +1,6 @@
-﻿namespace Ditto.Internal
+﻿using System;
+
+namespace Ditto.Internal
 {
     public class DefaultMapCommand : IMapCommand
     {
