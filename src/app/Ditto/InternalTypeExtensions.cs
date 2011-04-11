@@ -9,7 +9,7 @@ namespace Ditto
         {
             return 
                 type.IsArray == false &&
-                type.Namespace.StartsWith("System.")==false;
+                type.FullName.StartsWith("System.")==false;
         }
         internal static T As<T>(this object obj)
         {

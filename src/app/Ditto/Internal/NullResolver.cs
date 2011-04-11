@@ -1,6 +1,8 @@
+using Ditto.Resolvers;
+
 namespace Ditto.Internal
 {
-    public class NullResolver:IResolveValue
+    public class NullResolver:IResolveValue,IOverrideable
     {
         private static readonly IResolveValue instance;
         public static IResolveValue Instance { get { return instance; } }

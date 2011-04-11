@@ -18,20 +18,22 @@ namespace Ditto.Internal
 
         public bool WillResolve(IDescribeMappableProperty mappableProperty)
         {
-//            var prop = prop2Resolver.Keys.FirstOrDefault(its => its.Name == mappableProperty.Name);
-//            if (prop == null)
-//                return false;
-//
-//            return prop.PropertyType.IsCustomType() == false ||
-//                   IsCustomTypeAndResolverIsNotBasedOnPropertyName(prop);
+            var prop = prop2Resolver.Keys.FirstOrDefault(its => its.Name == mappableProperty.Name);
+            if (prop == null)
+                return false;
+
+            return prop.PropertyType.IsCustomType() == false ||
+                   IsCustomTypeAndResolverIsNotBasedOnPropertyName(prop);
 //            /*for now, we are just answering this question by the property's name*/
-            return prop2Resolver.Keys.Select(its => its.Name).Contains(mappableProperty.Name);
+//            return prop2Resolver.Keys.Select(its => its.Name).Contains(mappableProperty.Name);
         }
         private bool IsCustomTypeAndResolverIsNotBasedOnPropertyName(IDescribeMappableProperty prop)
         {
+            var resolver = prop2Resolver[prop];
             return prop.PropertyType.IsCustomType() &&
-                   typeof (IOverrideable).IsInstanceOfType(prop2Resolver[prop]) == false &&
-                   typeof (SourcedPropertyNameResolver).IsInstanceOfType(prop2Resolver[prop]) == false;
+                   typeof(RequiresComponentMappingResolver).IsInstanceOfType(resolver)==false &&
+                   typeof (IOverrideable).IsInstanceOfType(resolver) == false &&
+                   typeof (SourcedPropertyNameResolver).IsInstanceOfType(resolver) == false;
         }
 
         public IResolveValue GetResolver(IDescribeMappableProperty mappableProperty)
@@ -46,7 +48,9 @@ namespace Ditto.Internal
             var sourcePropertyNames = SourceType.GetProperties().Select(its => its.Name);
             foreach (var destinationProperty in destinationProperties.Where(its => sourcePropertyNames.Contains(its.Name)))
             {
-                prop2Resolver[destinationProperty] = new OverrideablePropertyNameResolver(destinationProperty.Name);
+                prop2Resolver[destinationProperty] = 
+                    destinationProperty.PropertyType.IsCustomType() ? (IResolveValue) new RequiresComponentMappingResolver():
+                    new OverrideablePropertyNameResolver(destinationProperty.Name);
             }
         }
         public bool TrySetResolver(IDescribeMappableProperty prop,IResolveValue resolver)
@@ -130,11 +134,18 @@ namespace Ditto.Internal
             return GetType() + " for " + SourceType;
         }
 
-        public bool Matches(IDescribeMappableProperty destinationProperty, Type sourcePropertyType)
+        public bool RequiresConfigurationFor(IDescribeMappableProperty destinationProperty)
         {
-            return 
-                prop2Resolver.ContainsKey(destinationProperty) &&
-                SourceType.GetProperties().Any(its => its.PropertyType == sourcePropertyType);
+            return prop2Resolver.ContainsKey(destinationProperty) &&
+                   prop2Resolver[destinationProperty] is RequiresComponentMappingResolver;
+        }
+
+        private class RequiresComponentMappingResolver:IResolveValue,IOverrideable
+        {
+            public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
+            {
+                throw new MappingExecutionException("{0} requires a configuration which was not provided.",destinationProperty);
+            }
         }
     }
 

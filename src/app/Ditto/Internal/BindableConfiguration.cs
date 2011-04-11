@@ -5,7 +5,6 @@ using System.Linq;
 namespace Ditto.Internal
 {
     /// <summary>
-    /// Note that this does not implement <c>IBindable</c>. 
     /// Intermediate representation of configuration which provide the executable mapping, as well as validation and caching hooks.
     /// </summary>
     public class BindableConfiguration : ICreateExecutableMapping, IValidatable,ICacheable,IBindable
