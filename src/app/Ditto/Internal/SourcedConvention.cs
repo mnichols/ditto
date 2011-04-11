@@ -17,14 +17,14 @@ namespace Ditto.Internal
 
         public Type SourceType{get {return sourceType;}}
 
-        public bool WillResolve(IDescribeMappableProperty mappableProperty)
+        public bool WillResolve(IDescribeMappableProperty destinationProperty)
         {
-            return inner.WillResolve(mappableProperty);
+            return inner.WillResolve(destinationProperty);
         }
 
-        public IResolveValue GetResolver(IDescribeMappableProperty mappableProperty)
+        public IResolveValue GetResolver(IDescribeMappableProperty destinationProperty)
         {
-            return inner.GetResolver(mappableProperty);
+            return inner.GetResolver(destinationProperty);
         }
 
         public void Accept(IVisitCacheable visitor)

@@ -23,13 +23,13 @@ namespace Ditto.Internal
             
         }
 
-        public bool WillResolve(IDescribeMappableProperty mappableProperty)
+        public bool WillResolve(IDescribeMappableProperty destinationProperty)
         {
-            return cachedResolvers.ContainsKey(mappableProperty) ||
-                containers.Any(it => it.WillResolve(mappableProperty));
+            return cachedResolvers.ContainsKey(destinationProperty) ||
+                containers.Any(it => it.WillResolve(destinationProperty));
         }
 
-        public IResolveValue GetResolver(IDescribeMappableProperty mappableProperty)
+        public IResolveValue GetResolver(IDescribeMappableProperty destinationProperty)
         {
             
             /*
@@ -38,17 +38,17 @@ namespace Ditto.Internal
              * This means the ordering is imporant in the construction of this resolver.
              */
             IResolveValue candidate;
-            if (cachedResolvers.TryGetValue(mappableProperty, out candidate))
+            if (cachedResolvers.TryGetValue(destinationProperty, out candidate))
                 return candidate;
 
-            candidate = TryGetCandidate(mappableProperty);
+            candidate = TryGetCandidate(destinationProperty);
 
             if (candidate != null)
             {
-                cachedResolvers.Add(mappableProperty,candidate);
+                cachedResolvers.Add(destinationProperty,candidate);
                 return candidate;
             }
-            throw new InvalidOperationException("This container does not having any matching resolvers for '" + mappableProperty + "'");
+            throw new InvalidOperationException("This container does not having any matching resolvers for '" + destinationProperty + "'");
         }
         private IResolveValue TryGetCandidate(IDescribeMappableProperty mappableProperty)
         {
