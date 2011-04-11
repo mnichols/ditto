@@ -41,21 +41,37 @@ namespace Ditto.Internal
             if (cachedResolvers.TryGetValue(mappableProperty, out candidate))
                 return candidate;
 
-            foreach (var container in containers)
-            {
-                if (container.WillResolve(mappableProperty)==false)
-                    continue;
-                candidate= container.GetResolver(mappableProperty);
-                if(candidate is IOverrideable) /*system resolver...keep trying but remember it in case none else be found*/
-                    continue;
-                return candidate;
-            }
+            candidate = TryGetCandidate(mappableProperty);
+
             if (candidate != null)
             {
                 cachedResolvers.Add(mappableProperty,candidate);
                 return candidate;
             }
             throw new InvalidOperationException("This container does not having any matching resolvers for '" + mappableProperty + "'");
+        }
+        private IResolveValue TryGetCandidate(IDescribeMappableProperty mappableProperty)
+        {
+            IResolveValue candidate=null;
+            foreach (var container in containers)
+            {
+                if (container.WillResolve(mappableProperty) == false)
+                    continue;
+                candidate = container.GetResolver(mappableProperty);
+                if (typeof(IOverrideable).IsInstanceOfType(candidate) == false) 
+                    return candidate;
+                /*default resolver...keep trying but remember it in case none else be found*/
+            }
+            return candidate;
+        }
+        public void Source(IDescribeMappableProperty[] destinationProperties)
+        {
+            var cacheable = destinationProperties.Where(WillResolve).ToArray();
+            foreach (var property in cacheable)
+            {
+                cachedResolvers[property]=TryGetCandidate(property);
+            }
+            
         }
     }
 }

@@ -48,9 +48,7 @@ namespace Ditto.Tests
                 new RedirectingConfigurationResolver(MappableProperty.For<ComplexEventWithDifferentNamedComponent>(s => s.DifferentName), configFactory.CreateBindableConfiguration(componentConfig.ToSnapshot())));
 
             var bindable = configFactory.CreateBindableConfiguration(modelConfig.ToSnapshot());
-//            bindable.Bind();
-//            bindable.Assert();
-            
+          
 
             var source = new ComplexEventWithDifferentNamedComponent() { Name = "RootName", DifferentName= new EventComponent() { Name = "ComponentName" } };
             var dest = new ComplexViewModel();

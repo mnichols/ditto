@@ -36,6 +36,7 @@ namespace Ditto.Internal
             {
                 foreach (var bindableConfiguration in destinationType2BindableConfig)
                 {
+                    //note that the executable collection already includes the current bindableConfiguration
                     binder.Bind(bindableConfiguration.Value,executable);
                 }
             }

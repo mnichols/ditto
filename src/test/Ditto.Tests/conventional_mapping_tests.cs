@@ -39,9 +39,7 @@ namespace Ditto.Tests
                 .ApplyingConvention(new StaticValueResolver(systemId), m=>m.SystemId);
 
             var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
-//            bindable.Bind();
-//            Action validation = bindable.Assert;
-//            validation.should_not_throw_an<MappingConfigurationException>();
+
             var executable = bindable.CreateExecutableMapping(typeof (PersonalInfo));
             
             executable.Execute(contextualizer.CreateContext(src1,destination));
@@ -62,12 +60,11 @@ namespace Ditto.Tests
             cfg.ApplyingConvention(new StaticValueResolver(systemId), m => m.SystemId);
             cfg.UsingValue<PersonalInfo>(myManualSystemId, on => on.SystemId);
             var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
-//            bindable.Bind();
-//            Action validation = bindable.Assert;
-//            validation.should_not_throw_an<MappingConfigurationException>();
+            
             var executable = bindable.CreateExecutableMapping(typeof(PersonalInfo));
 
             executable.Execute(contextualizer.CreateContext(src1, destination));
+            destination.SystemId.should_not_be_equal_to(systemId);
             destination.SystemId.should_be_equal_to(myManualSystemId);
         }
         [Fact]

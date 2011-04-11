@@ -4,6 +4,10 @@ using System.Linq;
 
 namespace Ditto.Internal
 {
+    /// <summary>
+    /// Note that this does not implement <c>IBindable</c>. 
+    /// Intermediate representation of configuration which provide the executable mapping, as well as validation and caching hooks.
+    /// </summary>
     public class BindableConfiguration : ICreateExecutableMapping, IValidatable,ICacheable
     {
         public BindableConfiguration(DestinationConfigurationMemento snapshot)
@@ -15,16 +19,17 @@ namespace Ditto.Internal
             Logger = new NullLogFactory();
             SourceResolverContainers();
         }
-        private Dictionary<Type,IContainResolvers> sourceType2ResolverContainer=new Dictionary<Type, IContainResolvers>();
+        private readonly Dictionary<Type, PrioritizedComposedFirstMatchingResolverContainer> sourceType2ResolverContainer = new Dictionary<Type, PrioritizedComposedFirstMatchingResolverContainer>();
         private void SourceResolverContainers()
         {
             foreach (var sourceContext in SourceContexts)
             {
                 var copy = sourceContext;
                 var sourcedConventions = new PrioritizedComposedFirstMatchingResolverContainer(
-                        SourcedConventions.Where(its => its.SourceType == copy.SourceType).ToArray());
+                    SourcedConventions.Where(its => its.SourceType == copy.SourceType).ToArray());
                 
-                var composed = new PrioritizedComposedFirstMatchingResolverContainer(new IContainResolvers[] { sourceContext, sourcedConventions });
+                var composed = new PrioritizedComposedFirstMatchingResolverContainer(new IContainResolvers[] { copy, sourcedConventions });
+                
                 sourceType2ResolverContainer.Add(sourceContext.SourceType,composed);
             }
         }
@@ -73,6 +78,7 @@ namespace Ditto.Internal
             return GetType() + " for '" + DestinationType+"'";
         }
 
+
         public void Accept(IVisitCacheable visitor)
         {
             foreach (var sourceContext in SourceContexts)
@@ -82,6 +88,10 @@ namespace Ditto.Internal
             foreach (var cachedDestinationProp in DestinationProperties.OfType<ICacheable>())
             {
                 cachedDestinationProp.Accept(visitor);
+            }
+            foreach (var resolverContainer in sourceType2ResolverContainer)
+            {
+                resolverContainer.Value.Source(DestinationProperties);
             }
         }
     }
