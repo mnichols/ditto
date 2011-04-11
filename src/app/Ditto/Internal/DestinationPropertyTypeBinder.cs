@@ -29,7 +29,7 @@ namespace Ditto.Internal
                 foreach (var destinationProperty in bindableConfiguration.DestinationProperties.Where(destProp => cfg.Key.IsSatisfiedBy(destProp)))
                 {
                     var copy = destinationProperty;
-                    foreach (var sourceContext in bindableConfiguration.SourceContexts.Where(sourceContext => sourceContext.WillResolve(copy)))
+                    foreach (var sourceContext in bindableConfiguration.SourceContexts.Where(sourceContext => sourceContext.Matches(copy,cfg.Value.DestinationType)))
                     {
                         Logger.Create(this).Debug("Extending configuration on '{0}' from '{1}' for property '{2}'", bindableConfiguration.DestinationType, childCfg.Value.DestinationType, copy.Name);
                         var resolverContext = new ResolverContext(sourceContext.CreateProperty(destinationProperty), destinationProperty, childCfg.Value);

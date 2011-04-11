@@ -18,10 +18,21 @@ namespace Ditto.Internal
 
         public bool WillResolve(IDescribeMappableProperty mappableProperty)
         {
-            /*for now, we are just answering this question by the property's name*/
+//            var prop = prop2Resolver.Keys.FirstOrDefault(its => its.Name == mappableProperty.Name);
+//            if (prop == null)
+//                return false;
+//
+//            return prop.PropertyType.IsCustomType() == false ||
+//                   IsCustomTypeAndResolverIsNotBasedOnPropertyName(prop);
+//            /*for now, we are just answering this question by the property's name*/
             return prop2Resolver.Keys.Select(its => its.Name).Contains(mappableProperty.Name);
         }
-
+        private bool IsCustomTypeAndResolverIsNotBasedOnPropertyName(IDescribeMappableProperty prop)
+        {
+            return prop.PropertyType.IsCustomType() &&
+                   typeof (IOverrideable).IsInstanceOfType(prop2Resolver[prop]) == false &&
+                   typeof (SourcedPropertyNameResolver).IsInstanceOfType(prop2Resolver[prop]) == false;
+        }
 
         public IResolveValue GetResolver(IDescribeMappableProperty mappableProperty)
         {
@@ -103,11 +114,7 @@ namespace Ditto.Internal
             {
                 missing=missing.Merge(validatable.Validate());
             }
-            foreach (var item in prop2Resolver.Where(its=>typeof(IValidatable).IsInstanceOfType(its.Value)==false))
-            {
-                if(item.Key.PropertyType.IsCustomType() && (item.Value is IOverrideable || item.Value is SourcedPropertyNameResolver))
-                    missing.Add(item.Key);
-            }
+            
             return missing;
         }
 
@@ -121,6 +128,13 @@ namespace Ditto.Internal
         public override string ToString()
         {
             return GetType() + " for " + SourceType;
+        }
+
+        public bool Matches(IDescribeMappableProperty destinationProperty, Type sourcePropertyType)
+        {
+            return 
+                prop2Resolver.ContainsKey(destinationProperty) &&
+                SourceType.GetProperties().Any(its => its.PropertyType == sourcePropertyType);
         }
     }
 

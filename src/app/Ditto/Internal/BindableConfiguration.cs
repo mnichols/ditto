@@ -8,7 +8,7 @@ namespace Ditto.Internal
     /// Note that this does not implement <c>IBindable</c>. 
     /// Intermediate representation of configuration which provide the executable mapping, as well as validation and caching hooks.
     /// </summary>
-    public class BindableConfiguration : ICreateExecutableMapping, IValidatable,ICacheable
+    public class BindableConfiguration : ICreateExecutableMapping, IValidatable,ICacheable,IBindable
     {
         public BindableConfiguration(DestinationConfigurationMemento snapshot)
         {
@@ -69,6 +69,18 @@ namespace Ditto.Internal
         public override string ToString()
         {
             return GetType() + " for '" + DestinationType+"'";
+        }
+
+        public void Bind(params ICreateExecutableMapping[] configurations)
+        {
+            foreach (var sourceContext in SourceContexts)
+            {
+                sourceContext.Bind(configurations);
+            }
+            foreach (var sourcedConvention in SourcedConventions)
+            {
+                sourcedConvention.Bind(configurations);
+            }
         }
 
 
