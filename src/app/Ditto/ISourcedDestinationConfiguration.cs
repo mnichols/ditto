@@ -23,7 +23,8 @@ namespace Ditto
     public interface ISourcedDestinationConfiguration<TDest>
     {
         /// <summary>
-        /// Redirects <paramref name="sourceProperty"/> value to <paramref name="destinationProperty"/>.
+        /// Redirects <paramref name="sourceProperty"/> value to <paramref name="destinationProperty"/>. 
+        /// This works for component (custom type) properties, too.
         /// </summary>
         /// <typeparam name="TSource">The type of the source.</typeparam>
         /// <param name="sourceProperty">The source property.</param>

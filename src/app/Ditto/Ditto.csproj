@@ -169,8 +169,8 @@
     <Compile Include="IPropertyCriterion.cs" />
     <Compile Include="IResolveValue.cs" />
     <Compile Include="ISourcedDestinationConfiguration.cs" />
-    <Compile Include="MappingConfigurationException.cs" />
-    <Compile Include="MappingExecutionException.cs" />
+    <Compile Include="DittoConfigurationException.cs" />
+    <Compile Include="DittoExecutionException.cs" />
     <Compile Include="DittoExtensions.cs" />
     <Compile Include="MissingProperties.cs" />
     <Compile Include="Reflect.cs" />

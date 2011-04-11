@@ -33,7 +33,7 @@ namespace Ditto
                 return;
             var formatted = GetFormattedMissingProperties();
             
-            throw new MappingConfigurationException(formatted);
+            throw new DittoConfigurationException(formatted);
         }
         /// <summary>
         /// Be certain to replace the reference when calling this method (see Example).

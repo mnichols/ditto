@@ -86,7 +86,7 @@ namespace Ditto.Tests
             bindable.Bind();
             
             Action validation=bindable.Assert;
-            validation.should_throw_because<MappingConfigurationException>("The following properties are not mapped for '" + typeof(DestinationWithUnmappedMember) + "':" + Environment.NewLine + "UnmappedMember" + Environment.NewLine);
+            validation.should_throw_because<DittoConfigurationException>("The following properties are not mapped for '" + typeof(DestinationWithUnmappedMember) + "':" + Environment.NewLine + "UnmappedMember" + Environment.NewLine);
         }
         [Fact]
         public void it_should_redirect_nested_mappings_to_dest_property()

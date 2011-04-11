@@ -26,7 +26,7 @@ namespace Ditto.Tests
 
             var bindable = bindableFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
             Action validation = bindable.Assert;
-            validation.should_not_throw_an<MappingConfigurationException>();
+            validation.should_not_throw_an<DittoConfigurationException>();
         }
         [Fact]
         public void it_should_apply_convention_during_mapping()
@@ -75,7 +75,7 @@ namespace Ditto.Tests
                 .ApplyingConvention(new PrefixPropertyCriterion("System"), new IgnoreResolver());
             var bindable = bindableFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
             Action validation = bindable.Assert;
-            validation.should_not_throw_an<MappingConfigurationException>();
+            validation.should_not_throw_an<DittoConfigurationException>();
         }
         [Fact]
         public void it_should_apply_conventions_to_types_of_properties()

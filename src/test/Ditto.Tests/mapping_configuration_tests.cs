@@ -3,6 +3,7 @@ using Ditto.Criteria;
 using Ditto.Internal;
 using Ditto.Resolvers;
 using Xunit;
+using Ditto.Tests;
 
 namespace Ditto.Tests
 {
@@ -23,8 +24,8 @@ namespace Ditto.Tests
             cfg.From(typeof (PersonalInfo), typeof (Parents));
             var bindable = configFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
             Action validation = bindable.Assert;
-            validation.should_throw_an<MappingConfigurationException>();
-            validation.should_throw_because<MappingConfigurationException>("The following properties are not mapped for '" + typeof(Person) + "':" + Environment.NewLine + "FathersName" + Environment.NewLine);
+            validation.should_throw_an<DittoConfigurationException>();
+            validation.should_throw_because<DittoConfigurationException>("The following properties are not mapped for '" + typeof(Person) + "':" + Environment.NewLine + "FathersName" + Environment.NewLine);
         }
 
         [Fact]
@@ -34,9 +35,28 @@ namespace Ditto.Tests
             cfg.From(typeof (TypicalEvent)).Redirecting<TypicalEvent>(its => its.Id, its => its.SomeId);
             var bindable = configFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
             Action validation = bindable.Assert;
-            validation.should_not_throw_an<MappingConfigurationException>();
+            validation.should_not_throw_an<DittoConfigurationException>();
         }
+        [Fact]
+        public void can_map_from_component_property_of_diff_name()
+        {
+            var cfg = new DestinationConfigurationContainer(null,configFactory);
+            cfg.Map<ComplexViewModel>()
+            .From(typeof(ComplexEventWithDifferentNamedComponent)).Redirecting<ComplexEventWithDifferentNamedComponent>(its => its.DifferentName, its => its.Component);
 
+            var binding = cfg.ToBinding();
+            binding.Bind();
+            
+            
+            Action validation = binding.Assert;
+            validation.should_not_throw_an<DittoConfigurationException>();
+
+            var cmd=binding.CreateCommand(typeof (ComplexEventWithDifferentNamedComponent), typeof (ComplexViewModel));
+            var src = new ComplexEventWithDifferentNamedComponent(){DifferentName = new EventComponent() {Name = "monsters"}};
+            var dest = new ComplexViewModel();
+            cmd.Map(src, dest);
+            dest.Component.Name.should_be_equal_to("monsters");
+        }
         [Fact]
         public void can_map_static_value_to_property()
         {
@@ -44,7 +64,7 @@ namespace Ditto.Tests
             cfg.From(typeof (TypicalEvent)).UsingValue<TypicalEvent>(Guid.NewGuid(), its => its.SomeId);
             var bindable = configFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
             Action validation = bindable.Assert;
-            validation.should_not_throw_an<MappingConfigurationException>();
+            validation.should_not_throw_an<DittoConfigurationException>();
         }
         
         [Fact]
@@ -75,7 +95,7 @@ namespace Ditto.Tests
             cfg.From(typeof (TypicalEvent));
             cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"),typeof(TypicalEvent),new StaticValueResolver(new Guid("8CF7C50E-792D-4A28-AB74-81879BC233A8")));
             Action duplication=()=>cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"), typeof(TypicalEvent), new StaticValueResolver(new Guid("1B8CF33D-92B8-4E82-9E8F-5EEDE7BA14F0")));
-            duplication.should_throw_because<MappingConfigurationException>("Destination property 'Ditto.Tests.TypicalViewModel:SomeId' already has a manually, or conventioned, configured resolver from source type 'Ditto.Tests.TypicalEvent'");
+            duplication.should_throw_because<DittoConfigurationException>("Destination property 'Ditto.Tests.TypicalViewModel:SomeId' already has a manually, or conventioned, configured resolver from source type 'Ditto.Tests.TypicalEvent'");
 
         }
         [Fact]
@@ -85,7 +105,7 @@ namespace Ditto.Tests
             cfg.From(typeof(TypicalEvent));
             cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"), typeof(TypicalEvent), new StaticValueResolver(new Guid("8CF7C50E-792D-4A28-AB74-81879BC233A8")));
             Action duplication = () => cfg.ApplyingConvention(new PropertyNameCriterion("SomeId"), new StaticValueResolver(new Guid("1B8CF33D-92B8-4E82-9E8F-5EEDE7BA14F0")));
-            duplication.should_not_throw_an<MappingConfigurationException>();
+            duplication.should_not_throw_an<DittoConfigurationException>();
 
             var source = new TypicalEvent() {Id = Guid.NewGuid(), Name = "mikey"};
             var dest = new TypicalViewModel();
@@ -100,12 +120,12 @@ namespace Ditto.Tests
         {
             var cfg = new DestinationConfigurationContainer(null, configFactory);
 //            cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
-            cfg.Map(typeof(ComplexViewModel)).From(typeof(ComplexEvent));
+            cfg.Map(typeof(ComplexViewModel)).From(typeof(ComplexEvent));//both have property named 'Component', but this would require a custom mapping
 
             var binding = cfg.ToBinding();
             binding.Bind();
             Action propertyNameMappingOnCustomType = binding.Assert;
-            propertyNameMappingOnCustomType.should_throw_an<MappingConfigurationException>();
+            propertyNameMappingOnCustomType.should_throw_because<DittoConfigurationException>("The following properties are not mapped for 'Ditto.Tests.ComplexViewModel':"+Environment.NewLine+"Component"+Environment.NewLine);
         }
     }
 

@@ -44,7 +44,7 @@ namespace Ditto.Internal
             }
             catch (Exception ex)
             {
-                throw new MappingExecutionException(ex, "Failure while mapping '{0}'{1}{2}", assignableValue,
+                throw new DittoExecutionException(ex, "Failure while mapping '{0}'{1}{2}", assignableValue,
                                                     Environment.NewLine, ex);
             }
         }

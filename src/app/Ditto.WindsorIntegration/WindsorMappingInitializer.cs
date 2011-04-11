@@ -90,7 +90,7 @@ namespace Ditto.WindsorIntegration
                     visitor = cache.Resolve(CreationContext.Empty) as IVisitCacheable;
                     if (visitor == null)
                     {
-                        throw new MappingConfigurationException("Problem with resolution of {0}",cache.ComponentModel.Implementation);
+                        throw new DittoConfigurationException("Problem with resolution of {0}",cache.ComponentModel.Implementation);
                     }
                     cacheable.Accept(visitor);
                 }

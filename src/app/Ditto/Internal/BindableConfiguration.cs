@@ -57,13 +57,13 @@ namespace Ditto.Internal
         private void AssertSourceContext(Type sourceType)
         {
             if (SourceContexts.Length == 0)
-                throw new MappingConfigurationException(
+                throw new DittoConfigurationException(
                     "Sources have not been setup for '{0}'. Did you forget to call 'From'?", DestinationType);
 
             if( SourceContexts.Any(its => its.SourceType == sourceType))
                 return;
 
-            throw new MappingConfigurationException("'{0}' has not been setup as a source for '{1}'.", sourceType,DestinationType);
+            throw new DittoConfigurationException("'{0}' has not been setup as a source for '{1}'.", sourceType,DestinationType);
         }
         public override string ToString()
         {
@@ -99,6 +99,7 @@ namespace Ditto.Internal
 
         public void SourceResolverContainer(Type sourceType, IContainResolvers sourcedResolverContainer)
         {
+            //it might seem superflous to have the resolver containers assigned twice, but caching shouldn't be an requirement
             sourceType2ResolverContainer[sourceType] = sourcedResolverContainer;
         }
     }
