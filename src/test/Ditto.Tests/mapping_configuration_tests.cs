@@ -48,37 +48,19 @@ namespace Ditto.Tests
         }
         
         [Fact]
-        public void configurations_can_be_bound_to_one_another()
-        {
-            var cfg = new DestinationConfigurationContainer(null, configFactory);
-            cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
-            cfg.Map(typeof (ComplexViewModel)).From(typeof (ComplexEvent));
-            var bindable = cfg.ToBinding();
-            bindable.Bind();
-            bindable.Assert();
-
-            var source = new ComplexEvent() { Name = "RootName", Component = new EventComponent() { Name = "ComponentName" } };
-            var dest = new ComplexViewModel();
-            var command = bindable.CreateCommand(typeof (ComplexEvent), typeof (ComplexViewModel));
-            command.Map(source, dest);
-            dest.Name.should_be_equal_to("RootName");
-            dest.Component.should_not_be_null();
-            dest.Component.Name.should_be_equal_to("ComponentName");
-
-        }
-        [Fact]
         public void configurations_can_be_bound_to_one_another_using_binding_container()
         {
             var cfg = new DestinationConfigurationContainer(null, configFactory);
             cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
             cfg.Map(typeof(ComplexViewModel)).From(typeof(ComplexEvent));
-            var bindable = cfg.ToBinding();
-            bindable.Bind();
-            bindable.Assert();
+
+            var binding = cfg.ToBinding();
+            binding.Bind();
+            binding.Assert();
             
             var source = new ComplexEvent() { Name = "RootName", Component = new EventComponent() { Name = "ComponentName" } };
             var dest = new ComplexViewModel();
-            var command = bindable.CreateCommand(typeof(ComplexEvent), typeof(ComplexViewModel));
+            var command = binding.CreateCommand(typeof(ComplexEvent), typeof(ComplexViewModel));
             command.Map(source, dest);
             dest.Name.should_be_equal_to("RootName");
             dest.Component.should_not_be_null();
@@ -111,6 +93,19 @@ namespace Ditto.Tests
             var command = new DefaultMapCommand(exec, contextualizer);
             command.Map(source, dest);
             dest.SomeId.should_be_equal_to(new Guid("8CF7C50E-792D-4A28-AB74-81879BC233A8"));
+        }
+
+        [Fact]
+        public void validation_fails_when_custom_types_are_mapped_by_property_name_default_but_not_provided_mapping()
+        {
+            var cfg = new DestinationConfigurationContainer(null, configFactory);
+//            cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
+            cfg.Map(typeof(ComplexViewModel)).From(typeof(ComplexEvent));
+
+            var binding = cfg.ToBinding();
+            binding.Bind();
+            Action propertyNameMappingOnCustomType = binding.Assert;
+            propertyNameMappingOnCustomType.should_throw_an<MappingConfigurationException>();
         }
     }
 

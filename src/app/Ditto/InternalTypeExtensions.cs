@@ -5,6 +5,10 @@ namespace Ditto
 {
     internal static class InternalTypeExtensions
     {
+        internal static bool IsCustomType(this Type type)
+        {
+            return type.Namespace.StartsWith("System")==false;
+        }
         internal static T As<T>(this object obj)
         {
             return (T) obj;

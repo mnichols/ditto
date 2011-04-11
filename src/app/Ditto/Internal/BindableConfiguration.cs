@@ -45,8 +45,7 @@ namespace Ditto.Internal
         {
             var validator = new ConfigurationValidator(DestinationType,
                                                        DestinationProperties,
-                                                       SourceContexts.Concat<IContainResolvers>(SourcedConventions).
-                                                           ToArray());
+                                                       SourceContexts.Concat<IContainResolvers>(SourcedConventions).ToArray());
             return validator.Validate();
         }
 

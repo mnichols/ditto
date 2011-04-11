@@ -103,6 +103,11 @@ namespace Ditto.Internal
             {
                 missing=missing.Merge(validatable.Validate());
             }
+            foreach (var item in prop2Resolver.Where(its=>typeof(IValidatable).IsInstanceOfType(its.Value)==false))
+            {
+                if(item.Key.PropertyType.IsCustomType() && (item.Value is IOverrideable || item.Value is SourcedPropertyNameResolver))
+                    missing.Add(item.Key);
+            }
             return missing;
         }
 

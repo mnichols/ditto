@@ -62,10 +62,9 @@ namespace Ditto.Tests
         public void it_should_map_nested_components_by_type_with_generic_sugar()
         {
             var container = new DestinationConfigurationContainer(null, configFactory);
-            var modelConfig = container.Map<ComplexViewModel>().From<ComplexEventWithDifferentNamedComponent>()
-                .Redirecting<ComplexEventWithDifferentNamedComponent,ViewModelComponent>(from => from.DifferentName, to => to.Component,nested=>
-                                                                                                                                            {
-                                                                                                                                            });
+            container.Map<ComplexViewModel>()
+                .From<ComplexEventWithDifferentNamedComponent>()
+                .Redirecting<ComplexEventWithDifferentNamedComponent,ViewModelComponent>(from => from.DifferentName, to => to.Component,nested=>{});
             var binding = container.ToBinding();
             binding.Bind();
             binding.Assert();
@@ -80,8 +79,9 @@ namespace Ditto.Tests
         [Fact]
         public void nested_configurations_are_validated()
         {
-            container.Map<DestinationWrapper>().From<SourceWithIncompleteMembers>().Nesting
-                <SourceWithIncompleteMembers, DestinationWithUnmappedMember>(its => its.Component, cfg => { });
+            container.Map<DestinationWrapper>()
+                .From<SourceWithIncompleteMembers>()
+                .Nesting<SourceWithIncompleteMembers, DestinationWithUnmappedMember>(its => its.Component, cfg => { });
             var bindable = container.ToBinding();
             bindable.Bind();
             
@@ -105,7 +105,6 @@ namespace Ditto.Tests
             dest.Component.should_not_be_null();
             dest.Component.Name.should_be_equal_to("RedirectingName");
         }
-        
         
         [Fact]
         public void it_should_map_nested_models()
