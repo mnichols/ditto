@@ -12,7 +12,7 @@ namespace Ditto.Tests
         public void it_should_map_props_of_same_name()
         {
             var src = new SimpleSource() {Name = "mikey"};
-            var cfg = new DestinationConfiguration(typeof(SimpleDestination), new TestConfigurationFactory());
+            var cfg = new DestinationConfiguration(typeof(SimpleDestination));
             cfg.From(typeof (SimpleSource));
 
             var executable = cfg.ToExecutable(src.GetType());
@@ -25,7 +25,7 @@ namespace Ditto.Tests
         public void it_should_handle_collections_natively()
         {
             var src = new CollectionSource {Name = "mikey", List = new List<string> {"one", "two"}};
-            var cfg = new DestinationConfiguration(typeof(CollectionDestination), new TestConfigurationFactory());
+            var cfg = new DestinationConfiguration(typeof(CollectionDestination));
             cfg.From(typeof (CollectionSource));
             var executable = cfg.ToExecutable(src.GetType());
             var mapper = new DefaultMapCommand(executable, new TestContextualizer());
@@ -41,7 +41,7 @@ namespace Ditto.Tests
         public void it_can_transparently_convert_values()
         {
             var src = new IntegerSource() {AnInt = 3};
-            var cfg = new DestinationConfiguration(typeof(IntegerDest), new TestConfigurationFactory());
+            var cfg = new DestinationConfiguration(typeof(IntegerDest));
             cfg.From(typeof (IntegerSource));
             var executable = cfg.ToExecutable(src.GetType());
             var mapper = new DefaultMapCommand(executable, new TestContextualizer());
@@ -53,7 +53,7 @@ namespace Ditto.Tests
         public void it_can_map_to_instance()
         {
             var src = new OnlyCollectionSource() { List = new List<string> { "blah", "goo" } };
-            var cfg = new DestinationConfiguration(typeof(MultiDestination), new TestConfigurationFactory());
+            var cfg = new DestinationConfiguration(typeof(MultiDestination));
             cfg.From(typeof (OnlyCollectionSource));
             var executable = cfg.ToExecutable(src.GetType());
             var mapper = new DefaultMapCommand(executable, new TestContextualizer());
@@ -89,7 +89,7 @@ namespace Ditto.Tests
         [Fact]
         public void it_can_map_list_of_nullable_double_to_nonnullable_double_list()
         {
-            var cfg = new DestinationConfiguration(typeof(CollectionDestination), new TestConfigurationFactory());
+            var cfg = new DestinationConfiguration(typeof(CollectionDestination));
             cfg.From(typeof (CollectionSource));
             var src = new CollectionSource() {MyDoubles = new List<double?> {2.1, null, 3.2}};
             var executable = cfg.ToExecutable(src.GetType());

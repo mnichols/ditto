@@ -22,7 +22,7 @@ namespace Ditto.Tests
         {
             container.Map(typeof (ViewModelComponent)).From(typeof (EventComponent));
             container.Map(typeof (ComplexViewModel)).From(typeof (ComplexEvent));
-            var bindable = container.ToBindable();
+            var bindable = container.ToBinding();
             bindable.Bind();
             bindable.Assert();
 
@@ -37,17 +37,17 @@ namespace Ditto.Tests
         [Fact]
         public void it_should_map_nested_components_by_type()
         {
-            var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent), configFactory);
+            var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent));
             componentConfig.From(typeof(EventComponent));
 
 
-            var modelConfig = new DestinationConfiguration(typeof(ComplexViewModel), configFactory);
+            var modelConfig = new DestinationConfiguration(typeof(ComplexViewModel));
             modelConfig.From(typeof (ComplexEventWithDifferentNamedComponent));
             modelConfig.SetPropertyResolver(
                 PropertyNameCriterion.From<ComplexViewModel>(m=>m.Component), typeof(ComplexEventWithDifferentNamedComponent),
-                new RedirectingConfigurationResolver(MappableProperty.For<ComplexEventWithDifferentNamedComponent>(s => s.DifferentName), configFactory.CreateBindableConfiguration(componentConfig.ToSnapshot())));
+                new RedirectingConfigurationResolver(MappableProperty.For<ComplexEventWithDifferentNamedComponent>(s => s.DifferentName), configFactory.CreateBindableConfiguration(componentConfig.TakeSnapshot())));
 
-            var bindable = configFactory.CreateBindableConfiguration(modelConfig.ToSnapshot());
+            var bindable = configFactory.CreateBindableConfiguration(modelConfig.TakeSnapshot());
           
 
             var source = new ComplexEventWithDifferentNamedComponent() { Name = "RootName", DifferentName= new EventComponent() { Name = "ComponentName" } };
@@ -59,11 +59,30 @@ namespace Ditto.Tests
             dest.Component.Name.should_be_equal_to("ComponentName");
         }
         [Fact]
+        public void it_should_map_nested_components_by_type_with_generic_sugar()
+        {
+            var container = new DestinationConfigurationContainer(null, configFactory);
+            var modelConfig = container.Map<ComplexViewModel>().From<ComplexEventWithDifferentNamedComponent>()
+                .Redirecting<ComplexEventWithDifferentNamedComponent,ViewModelComponent>(from => from.DifferentName, to => to.Component,nested=>
+                                                                                                                                            {
+                                                                                                                                            });
+            var binding = container.ToBinding();
+            binding.Bind();
+            binding.Assert();
+            var source = new ComplexEventWithDifferentNamedComponent() { Name = "RootName", DifferentName = new EventComponent() { Name = "ComponentName" } };
+            var dest = new ComplexViewModel();
+            var cmd=binding.CreateCommand(source.GetType(), dest.GetType());
+            cmd.Map(source, dest);
+            dest.Name.should_be_equal_to("RootName");
+            dest.Component.should_not_be_null();
+            dest.Component.Name.should_be_equal_to("ComponentName");
+        }
+        [Fact]
         public void nested_configurations_are_validated()
         {
             container.Map<DestinationWrapper>().From<SourceWithIncompleteMembers>().Nesting
                 <SourceWithIncompleteMembers, DestinationWithUnmappedMember>(its => its.Component, cfg => { });
-            var bindable = container.ToBindable();
+            var bindable = container.ToBinding();
             bindable.Bind();
             
             Action validation=bindable.Assert;
@@ -75,7 +94,7 @@ namespace Ditto.Tests
             container.Map<ComplexViewModel>()
                 .From<ComplexEvent,TypicalEvent>()
                 .Nesting<TypicalEvent,ViewModelComponent>(its=>its.Component,cfg => { });
-            var bindable = container.ToBindable();
+            var bindable = container.ToBinding();
             bindable.Bind();
             bindable.Assert();
 
@@ -94,7 +113,7 @@ namespace Ditto.Tests
             container.Map(typeof (NestedPropsDestination.Int1)).From(typeof (NestedPropsSource.Int1));
             container.Map(typeof (NestedPropsDestination.Int2)).From(typeof (NestedPropsSource.Int2));
             container.Map(typeof (NestedPropsDestination)).From(typeof (NestedPropsSource));
-            var bindable = container.ToBindable();
+            var bindable = container.ToBinding();
             bindable.Bind();
             bindable.Assert();
 

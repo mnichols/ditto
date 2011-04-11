@@ -17,20 +17,14 @@ namespace Ditto.Internal
             SourceContexts = snapshot.SourceContexts;
             SourcedConventions = snapshot.Conventions.SelectMany(cnv => snapshot.SourceContexts.Select(ctx => ctx.ApplyConvention(cnv))).ToArray();
             Logger = new NullLogFactory();
-            SourceResolverContainers();
+            InitializeResolverContainers();
         }
-        private readonly Dictionary<Type, PrioritizedComposedFirstMatchingResolverContainer> sourceType2ResolverContainer = new Dictionary<Type, PrioritizedComposedFirstMatchingResolverContainer>();
-        private void SourceResolverContainers()
+        private readonly Dictionary<Type, IContainResolvers> sourceType2ResolverContainer = new Dictionary<Type, IContainResolvers>();
+        private void InitializeResolverContainers()
         {
-            foreach (var sourceContext in SourceContexts)
+            foreach (var resolverContainer in ResolverPrecedence.ToResolverContainer(this))
             {
-                var copy = sourceContext;
-                var sourcedConventions = new PrioritizedComposedFirstMatchingResolverContainer(
-                    SourcedConventions.Where(its => its.SourceType == copy.SourceType).ToArray());
-                
-                var composed = new PrioritizedComposedFirstMatchingResolverContainer(new IContainResolvers[] { copy, sourcedConventions });
-                
-                sourceType2ResolverContainer.Add(sourceContext.SourceType,composed);
+                sourceType2ResolverContainer.Add(resolverContainer.Key,resolverContainer.Value);
             }
         }
 
@@ -89,10 +83,13 @@ namespace Ditto.Internal
             {
                 cachedDestinationProp.Accept(visitor);
             }
-            foreach (var resolverContainer in sourceType2ResolverContainer)
-            {
-                resolverContainer.Value.Source(DestinationProperties);
-            }
+            visitor.Visit(this);
+            
+        }
+
+        public void SourceResolverContainer(Type sourceType, IContainResolvers sourcedResolverContainer)
+        {
+            sourceType2ResolverContainer[sourceType] = sourcedResolverContainer;
         }
     }
 }

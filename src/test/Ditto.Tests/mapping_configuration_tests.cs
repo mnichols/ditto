@@ -9,17 +9,19 @@ namespace Ditto.Tests
     public class mapping_configuration_tests
     {
         private TestConfigurationFactory configFactory;
+        private TestContextualizer contextualizer;
 
         public mapping_configuration_tests()
         {
             configFactory=new TestConfigurationFactory();
+            contextualizer=new TestContextualizer();
         }
         [Fact]
         public void missing_property_mapping_throws()
         {
-            var cfg = new DestinationConfiguration(typeof(Person), configFactory);
+            var cfg = new DestinationConfiguration(typeof(Person));
             cfg.From(typeof (PersonalInfo), typeof (Parents));
-            var bindable = configFactory.CreateBindableConfiguration(cfg.ToSnapshot());
+            var bindable = configFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
             Action validation = bindable.Assert;
             validation.should_throw_an<MappingConfigurationException>();
             validation.should_throw_because<MappingConfigurationException>("The following properties are not mapped for '" + typeof(Person) + "':" + Environment.NewLine + "FathersName" + Environment.NewLine);
@@ -30,7 +32,7 @@ namespace Ditto.Tests
         {
             var cfg = new DestinationConfiguration<TypicalViewModel>(configFactory);
             cfg.From(typeof (TypicalEvent)).Redirecting<TypicalEvent>(its => its.Id, its => its.SomeId);
-            var bindable = configFactory.CreateBindableConfiguration(cfg.ToSnapshot());
+            var bindable = configFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
@@ -40,7 +42,7 @@ namespace Ditto.Tests
         {
             var cfg = new DestinationConfiguration<TypicalViewModel>(configFactory);
             cfg.From(typeof (TypicalEvent)).UsingValue<TypicalEvent>(Guid.NewGuid(), its => its.SomeId);
-            var bindable = configFactory.CreateBindableConfiguration(cfg.ToSnapshot());
+            var bindable = configFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
@@ -51,7 +53,7 @@ namespace Ditto.Tests
             var cfg = new DestinationConfigurationContainer(null, configFactory);
             cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
             cfg.Map(typeof (ComplexViewModel)).From(typeof (ComplexEvent));
-            var bindable = cfg.ToBindable();
+            var bindable = cfg.ToBinding();
             bindable.Bind();
             bindable.Assert();
 
@@ -70,7 +72,7 @@ namespace Ditto.Tests
             var cfg = new DestinationConfigurationContainer(null, configFactory);
             cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
             cfg.Map(typeof(ComplexViewModel)).From(typeof(ComplexEvent));
-            var bindable = cfg.ToBindable();
+            var bindable = cfg.ToBinding();
             bindable.Bind();
             bindable.Assert();
             
@@ -87,7 +89,7 @@ namespace Ditto.Tests
         [Fact]
         public void manually_configuring_dest_property_with_more_than_one_resolver()
         {
-            var cfg = new DestinationConfiguration(typeof(TypicalViewModel), configFactory);
+            var cfg = new DestinationConfiguration(typeof(TypicalViewModel));
             cfg.From(typeof (TypicalEvent));
             cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"),typeof(TypicalEvent),new StaticValueResolver(new Guid("8CF7C50E-792D-4A28-AB74-81879BC233A8")));
             Action duplication=()=>cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"), typeof(TypicalEvent), new StaticValueResolver(new Guid("1B8CF33D-92B8-4E82-9E8F-5EEDE7BA14F0")));
@@ -97,11 +99,18 @@ namespace Ditto.Tests
         [Fact]
         public void manually_configuring_dest_property_is_not_overriden_by_convention()
         {
-            var cfg = new DestinationConfiguration(typeof(TypicalViewModel), configFactory);
+            var cfg = new DestinationConfiguration(typeof(TypicalViewModel));
             cfg.From(typeof(TypicalEvent));
             cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"), typeof(TypicalEvent), new StaticValueResolver(new Guid("8CF7C50E-792D-4A28-AB74-81879BC233A8")));
             Action duplication = () => cfg.ApplyingConvention(new PropertyNameCriterion("SomeId"), new StaticValueResolver(new Guid("1B8CF33D-92B8-4E82-9E8F-5EEDE7BA14F0")));
             duplication.should_not_throw_an<MappingConfigurationException>();
+
+            var source = new TypicalEvent() {Id = Guid.NewGuid(), Name = "mikey"};
+            var dest = new TypicalViewModel();
+            var exec = cfg.ToExecutable(typeof (TypicalEvent));
+            var command = new DefaultMapCommand(exec, contextualizer);
+            command.Map(source, dest);
+            dest.SomeId.should_be_equal_to(new Guid("8CF7C50E-792D-4A28-AB74-81879BC233A8"));
         }
     }
 

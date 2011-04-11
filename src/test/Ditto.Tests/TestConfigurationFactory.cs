@@ -7,7 +7,7 @@ namespace Ditto.Tests
     {
         public IConfigureDestination Create(Type destinationType)
         {
-            return new DestinationConfiguration(destinationType, this);
+            return new DestinationConfiguration(destinationType);
         }
 
         public IConfigureDestination<TDest> Create<TDest>()

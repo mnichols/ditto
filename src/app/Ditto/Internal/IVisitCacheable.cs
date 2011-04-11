@@ -4,5 +4,6 @@ namespace Ditto.Internal
     {
         void Visit(SourcedPropertyNameResolver propertyNameResolver);
         void Visit(IDescribeMappableProperty mappableProperty);
+        void Visit(BindableConfiguration bindableConfiguration);
     }
 }

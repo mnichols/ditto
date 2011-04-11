@@ -6,9 +6,8 @@ namespace Ditto
     /// <summary>
     /// The primary interface for starting configuration on a destination type
     /// </summary>
-    public interface IConfigureDestination:ICreateBindableConfiguration,ITakeDestinationConfigurationSnapshot
+    public interface IConfigureDestination:ITakeDestinationConfigurationSnapshot
     {
-        Type DestinationType { get; }
         /// <summary>
         /// Provide all the types which will provide data for this <c>destination</c> type.
         /// </summary>
@@ -35,7 +34,7 @@ namespace Ditto
     /// The primary interface for starting configuration on a destination of <typeparamref name="TDest"/>
     /// </summary>
     /// <typeparam name="TDest">The type of the dest.</typeparam>
-    public interface IConfigureDestination<TDest>:ICreateBindableConfiguration,ITakeDestinationConfigurationSnapshot
+    public interface IConfigureDestination<TDest>:ITakeDestinationConfigurationSnapshot
     {
         /// <summary>
         /// Provide all the types which will provide data for this <c>destination</c> of <typeparamref name="TDest"/>.
