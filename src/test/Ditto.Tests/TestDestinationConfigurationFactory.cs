@@ -21,7 +21,7 @@ namespace Ditto.Tests
 
         public BindableConfiguration CreateBindableConfiguration(DestinationConfigurationMemento snapshot)
         {
-            return new BindableConfiguration(snapshot.DestinationType, snapshot.DestinationProperties, snapshot.SourceContexts.ToArray(), snapshot.Conventions.ToArray(), null);
+            return new BindableConfiguration(snapshot);
         }
 
         public BindableConfiguration CreateBindableConfiguration()

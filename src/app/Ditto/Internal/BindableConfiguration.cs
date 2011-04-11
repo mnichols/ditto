@@ -14,18 +14,6 @@ namespace Ditto.Internal
             SourcedConventions = snapshot.Conventions.SelectMany(cnv => snapshot.SourceContexts.Select(ctx => ctx.ApplyConvention(cnv))).ToArray();
             Logger = new NullLogFactory();
         }
-        public BindableConfiguration(Type destinationType,
-            IDescribeMappableProperty[] destinationProperties, 
-            SourceContext[] sourceContext, 
-            Convention[] conventions, 
-            ILogFactory logger)
-        {
-            DestinationType = destinationType;
-            DestinationProperties = destinationProperties;
-            SourceContexts = sourceContext;
-            Logger = logger ?? new NullLogFactory();
-            SourcedConventions = conventions.SelectMany(cnv => sourceContext.Select(ctx => ctx.ApplyConvention(cnv))).ToArray();
-        }
 
         public IDescribeMappableProperty[] DestinationProperties { get; private set; }
         public SourceContext[] SourceContexts { get; private set; }

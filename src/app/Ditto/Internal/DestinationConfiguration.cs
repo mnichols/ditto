@@ -44,11 +44,13 @@ namespace Ditto.Internal
         }
         public ISourcedDestinationConfiguration<TDest> Redirecting<TSource, TNest>(Expression<Func<TSource, object>> sourceProperty, Expression<Func<TDest, object>> destinationProperty, Action<ISourcedDestinationConfiguration<TNest>> nestedCfg)
         {
-            var newNestedConfig = configurations.Create<TNest>().From<TSource>();
-            nestedCfg(newNestedConfig);
+            var newNestedConfig = configurations.Create<TNest>();
+            var sourced=newNestedConfig.From<TSource>();
+            nestedCfg(sourced);
             inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty),
                                       typeof(TSource),
-                                      new RedirectingConfigurationResolver(MappableProperty.For(sourceProperty), (ICreateExecutableMapping)newNestedConfig));
+                                      new RedirectingConfigurationResolver(MappableProperty.For(sourceProperty), 
+                                          configurations.CreateBindableConfiguration(newNestedConfig.ToSnapshot())));
             return this;
         }
 
@@ -98,7 +100,7 @@ namespace Ditto.Internal
             sourceConfig(sourced);
             inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty),
                 typeof (TSource),
-                new NestingConfigurationResolver(nestedConfig.CreateBindableConfiguration()));
+                new NestingConfigurationResolver(configurations.CreateBindableConfiguration(ToSnapshot())));
             return this;
         }
 
@@ -137,13 +139,6 @@ namespace Ditto.Internal
             return inner.CreateBindableConfiguration(snapshot);
         }
 
-        public BindableConfiguration CreateBindableConfiguration()
-        {
-            var creator = inner as ICreateBindableConfiguration;
-            if (creator == null)
-                return null;
-            return creator.CreateBindableConfiguration();
-        }
 
         public DestinationConfigurationMemento ToSnapshot()
         {
@@ -175,10 +170,6 @@ namespace Ditto.Internal
             return bindableConfigurations.CreateBindableConfiguration(snapshot);
         }
 
-        public BindableConfiguration CreateBindableConfiguration()
-        {
-            return CreateBindableConfiguration(ToSnapshot());
-        }
         public ILogFactory Logger { get; set; }
         public ISourcedDestinationConfiguration From(params Type[] sourceTypes)
         {

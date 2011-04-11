@@ -130,7 +130,7 @@
     <Compile Include="Internal\ILogFactory.cs" />
     <Compile Include="Internal\IMapCommand.cs" />
     <Compile Include="Internal\IMapCommandFactory.cs" />
-    <Compile Include="Internal\IProvideBindableConfigurations.cs" />
+    <Compile Include="Internal\IProvideDestinationConfigurationSnapshots.cs" />
     <Compile Include="Internal\IProvideBinders.cs" />
     <Compile Include="Internal\IProvideConventions.cs" />
     <Compile Include="Internal\IRedirected.cs" />

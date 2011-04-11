@@ -9,10 +9,12 @@ namespace Ditto.Tests
     public class conventional_mapping_tests
     {
         private TestContextualizer contextualizer;
+        private TestDestinationConfigurationFactory bindableFactory;
 
         public conventional_mapping_tests()
         {
             contextualizer = new TestContextualizer();
+            bindableFactory = new TestDestinationConfigurationFactory();
         }
         [Fact]
         public void it_should_include_conventions_in_validation()
@@ -21,7 +23,8 @@ namespace Ditto.Tests
             var cfg = new DestinationConfiguration(typeof(SystemPerson), new TestDestinationConfigurationFactory());
             cfg.From(typeof (PersonalInfo), typeof (Parents))
                 .ApplyingConvention(new PropertyNameCriterion("SystemId"), new IgnoreResolver());
-            var bindable = cfg.CreateBindableConfiguration();
+
+            var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
@@ -35,7 +38,7 @@ namespace Ditto.Tests
             cfg.From(typeof(PersonalInfo), typeof(Parents))
                 .ApplyingConvention(new StaticValueResolver(systemId), m=>m.SystemId);
 
-            var bindable = cfg.CreateBindableConfiguration();
+            var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
             bindable.Bind();
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
@@ -58,8 +61,8 @@ namespace Ditto.Tests
             cfg.From(typeof(PersonalInfo), typeof(Parents));
             cfg.ApplyingConvention(new StaticValueResolver(systemId), m => m.SystemId);
             cfg.UsingValue<PersonalInfo>(myManualSystemId, on => on.SystemId);
-            var bindable = cfg.CreateBindableConfiguration();
-//            bindable.Bind();
+            var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
+            bindable.Bind();
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
             var executable = bindable.CreateExecutableMapping(typeof(PersonalInfo));
@@ -73,7 +76,7 @@ namespace Ditto.Tests
             var cfg = new DestinationConfiguration(typeof(SystemPerson), new TestDestinationConfigurationFactory());
             cfg.From(typeof(PersonalInfo), typeof(Parents))
                 .ApplyingConvention(new PrefixPropertyCriterion("System"), new IgnoreResolver());
-            var bindable = cfg.CreateBindableConfiguration();
+            var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
@@ -86,8 +89,8 @@ namespace Ditto.Tests
             var cfg = new DestinationConfiguration(typeof(ManyDates), new TestDestinationConfigurationFactory());
             cfg.From(typeof (PersonalInfo), typeof (Parents))
                 .ApplyingConvention(new TypePropertyCriterion(typeof (DateTime)), new StaticValueResolver(dateTime));
-            var bindable = cfg.CreateBindableConfiguration();
-//            bindable.Bind();
+            var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
+            bindable.Bind();
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
             var executable = bindable.CreateExecutableMapping(typeof (PersonalInfo));

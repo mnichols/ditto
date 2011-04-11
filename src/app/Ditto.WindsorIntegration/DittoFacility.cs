@@ -42,7 +42,7 @@ namespace Ditto.WindsorIntegration
 
         private void RegisterApi()
         {
-            Kernel.Register(Component.For<IContainDestinationConfiguration,IProvideBindableConfigurations>()
+            Kernel.Register(Component.For<IContainDestinationConfiguration,IProvideDestinationConfigurationSnapshots>()
                                 .ImplementedBy<DestinationConfigurationContainer>()
                                 .ServiceOverrides(new {conventions = GlobalConventionsKey})
                                 .LifeStyle.Singleton);

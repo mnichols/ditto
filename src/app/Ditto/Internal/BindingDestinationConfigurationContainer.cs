@@ -12,13 +12,15 @@ namespace Ditto.Internal
         private readonly IMapCommandFactory mapCommands;
         private readonly ICollection<BindableConfiguration> configurations;
         private Dictionary<Type,BindableConfiguration> bindableConfigurations=new Dictionary<Type, BindableConfiguration>();
+        private ICollection<DestinationConfigurationMemento> snapshots;
+
         public BindingDestinationConfigurationContainer(IProvideBinders binders, 
             IMapCommandFactory mapCommands, 
-            IProvideBindableConfigurations bindableConfigurations)
+            IProvideDestinationConfigurationSnapshots destinationConfigurationSnapshots)
         {
             this.binders = binders;
             this.mapCommands = mapCommands;
-            this.configurations = bindableConfigurations.GetBindableConfigurations();
+            this.snapshots = destinationConfigurationSnapshots.TakeSnapshots();
             Logger = new NullLogFactory();
         }
         public ILogFactory Logger { get; set; }
