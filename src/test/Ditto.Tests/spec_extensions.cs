@@ -28,12 +28,6 @@ namespace Ditto.Tests
         }
         
         
-        public static void should_be_like(this string output, string expect)
-        {
-            //			var expectX = expect.Replace("/*<![CDATA[*/", "").Replace("});/*]]>*/", "").Replace(Environment.NewLine, "");
-            //			var outputX = output.Replace("/*<![CDATA[*/", "").Replace("});/*]]>*/", "").Replace(Environment.NewLine, "");
-            Assert.Equal(expect, output, StringComparer.InvariantCultureIgnoreCase);
-        }
         public static void should_be_true(this bool isIt)
         {
             Assert.True(isIt);

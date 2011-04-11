@@ -70,7 +70,6 @@
     <Compile Include="ComplexModels.cs" />
     <Compile Include="complex_model_mapping_tests.cs" />
     <Compile Include="conventional_mapping_tests.cs" />
-    <Compile Include="fasterflect_spike_tests.cs" />
     <Compile Include="list_property_binder_tests.cs" />
     <Compile Include="mapping_configuration_tests.cs" />
     <Compile Include="PeopleModel.cs" />
