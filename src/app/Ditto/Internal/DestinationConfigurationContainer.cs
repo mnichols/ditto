@@ -51,7 +51,7 @@ namespace Ditto.Internal
 
         public ICollection<DestinationConfigurationMemento> TakeSnapshots()
         {
-            return registeredConfigurations.Values.Select(into=>into.ToSnapshot()).ToArray();
+            return registeredConfigurations.Values.Select(into=>into.TakeSnapshot()).ToArray();
         }
 
 

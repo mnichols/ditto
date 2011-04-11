@@ -18,7 +18,7 @@ namespace Ditto.Tests
         {
             container.Map(typeof (IntegerDest)).From(typeof (IntegerSource));
             container.Map(typeof (DestinationWithComponentArray)).From(typeof (SourceWithComponentArray));
-            var bindable=container.ToBindable();
+            var bindable=container.ToBinding();
             bindable.Bind();
             bindable.Assert();
             var source = new SourceWithComponentArray()
@@ -36,7 +36,7 @@ namespace Ditto.Tests
         {
             container.Map(typeof (IntegerDest)).From(typeof (IntegerSource));
             container.Map(typeof (DestWithCollections)).From(typeof (SourceWithCollections));
-            var bindable = container.ToBindable();
+            var bindable = container.ToBinding();
             bindable.Bind();
             bindable.Assert();
             var source = new SourceWithCollections()

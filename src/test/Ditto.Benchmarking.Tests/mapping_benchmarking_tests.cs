@@ -114,7 +114,7 @@ namespace Ditto.Benchmarking.Tests
                 container.Map<BenchDestinationProps>().From<BenchSourceProps>();
 
 
-                var bindable = container.ToBindable();
+                var bindable = container.ToBinding();
                 bindable.Bind();
                 bindable.Assert();
                 var contextualizer = new TestContextualizer();

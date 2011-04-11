@@ -90,7 +90,7 @@ namespace Ditto
 
         /// <summary>
         /// Provide another configuration for a nested component. This is not necesary for you to do if you have already configure your nested component elsewhere since everything is bound together
-        /// before validation and execution. 
+        /// before validation and execution. This is typically used for 'unflattening' a source object into a nested component on the destination.
         /// TODO : This behavior needs to be confirmed that it is not overriden by framework
         /// </summary>
         /// <typeparam name="TSource">The type of the source.</typeparam>

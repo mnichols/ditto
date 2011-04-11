@@ -14,15 +14,15 @@ namespace Ditto.Internal
             this.resolver = resolver;
         }
 
-        public bool WillResolve(IDescribeMappableProperty mappableProperty)
+        public bool WillResolve(IDescribeMappableProperty destinationProperty)
         {
-            return destinationProperties.Any(are => string.Equals(are.Name,mappableProperty.Name));
+            return destinationProperties.Any(are => string.Equals(are.Name,destinationProperty.Name));
         }
 
-        public IResolveValue GetResolver(IDescribeMappableProperty mappableProperty)
+        public IResolveValue GetResolver(IDescribeMappableProperty destinationProperty)
         {
-            if (WillResolve(mappableProperty) == false)
-                throw new InvalidOperationException("Resolver not configured for " + mappableProperty);
+            if (WillResolve(destinationProperty) == false)
+                throw new InvalidOperationException("Resolver not configured for " + destinationProperty);
             return resolver;
         }
         public SourcedConvention Apply(Type sourceType)

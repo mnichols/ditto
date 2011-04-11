@@ -20,11 +20,11 @@ namespace Ditto.Tests
         public void it_should_include_conventions_in_validation()
         {
 
-            var cfg = new DestinationConfiguration(typeof(SystemPerson), new TestConfigurationFactory());
+            var cfg = new DestinationConfiguration(typeof(SystemPerson));
             cfg.From(typeof (PersonalInfo), typeof (Parents))
                 .ApplyingConvention(new PropertyNameCriterion("SystemId"), new IgnoreResolver());
 
-            var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
+            var bindable = bindableFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
@@ -38,10 +38,8 @@ namespace Ditto.Tests
             cfg.From(typeof(PersonalInfo), typeof(Parents))
                 .ApplyingConvention(new StaticValueResolver(systemId), m=>m.SystemId);
 
-            var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
-            bindable.Bind();
-            Action validation = bindable.Assert;
-            validation.should_not_throw_an<MappingConfigurationException>();
+            var bindable = bindableFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
+
             var executable = bindable.CreateExecutableMapping(typeof (PersonalInfo));
             
             executable.Execute(contextualizer.CreateContext(src1,destination));
@@ -61,22 +59,21 @@ namespace Ditto.Tests
             cfg.From(typeof(PersonalInfo), typeof(Parents));
             cfg.ApplyingConvention(new StaticValueResolver(systemId), m => m.SystemId);
             cfg.UsingValue<PersonalInfo>(myManualSystemId, on => on.SystemId);
-            var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
-            bindable.Bind();
-            Action validation = bindable.Assert;
-            validation.should_not_throw_an<MappingConfigurationException>();
+            var bindable = bindableFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
+            
             var executable = bindable.CreateExecutableMapping(typeof(PersonalInfo));
 
             executable.Execute(contextualizer.CreateContext(src1, destination));
+            destination.SystemId.should_not_be_equal_to(systemId);
             destination.SystemId.should_be_equal_to(myManualSystemId);
         }
         [Fact]
         public void it_should_support_other_property_specifications()
         {
-            var cfg = new DestinationConfiguration(typeof(SystemPerson), new TestConfigurationFactory());
+            var cfg = new DestinationConfiguration(typeof(SystemPerson));
             cfg.From(typeof(PersonalInfo), typeof(Parents))
                 .ApplyingConvention(new PrefixPropertyCriterion("System"), new IgnoreResolver());
-            var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
+            var bindable = bindableFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
@@ -86,13 +83,11 @@ namespace Ditto.Tests
             var src1 = new PersonalInfo() { Age = 3, Name = "mikey" };
             var destination = new ManyDates();
             var dateTime = new DateTime(2009, 8, 1, 0, 0, 0);
-            var cfg = new DestinationConfiguration(typeof(ManyDates), new TestConfigurationFactory());
+            var cfg = new DestinationConfiguration(typeof(ManyDates));
             cfg.From(typeof (PersonalInfo), typeof (Parents))
                 .ApplyingConvention(new TypePropertyCriterion(typeof (DateTime)), new StaticValueResolver(dateTime));
-            var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
-            bindable.Bind();
-            Action validation = bindable.Assert;
-            validation.should_not_throw_an<MappingConfigurationException>();
+            var bindable = bindableFactory.CreateBindableConfiguration(cfg.TakeSnapshot());
+            
             var executable = bindable.CreateExecutableMapping(typeof (PersonalInfo));
             executable.Execute(contextualizer.CreateContext(src1, destination));
             destination.DateTime1.should_be_equal_to(dateTime);

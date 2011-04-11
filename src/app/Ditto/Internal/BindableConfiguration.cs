@@ -4,7 +4,10 @@ using System.Linq;
 
 namespace Ditto.Internal
 {
-    public class BindableConfiguration : ICreateExecutableMapping, IBindable, IValidatable,ICacheable
+    /// <summary>
+    /// Intermediate representation of configuration which provide the executable mapping, as well as validation and caching hooks.
+    /// </summary>
+    public class BindableConfiguration : ICreateExecutableMapping, IValidatable,ICacheable,IBindable
     {
         public BindableConfiguration(DestinationConfigurationMemento snapshot)
         {
@@ -13,19 +16,14 @@ namespace Ditto.Internal
             SourceContexts = snapshot.SourceContexts;
             SourcedConventions = snapshot.Conventions.SelectMany(cnv => snapshot.SourceContexts.Select(ctx => ctx.ApplyConvention(cnv))).ToArray();
             Logger = new NullLogFactory();
-            SourceResolverContainers();
+            InitializeResolverContainers();
         }
-        private Dictionary<Type,IContainResolvers> sourceType2ResolverContainer=new Dictionary<Type, IContainResolvers>();
-        private void SourceResolverContainers()
+        private readonly Dictionary<Type, IContainResolvers> sourceType2ResolverContainer = new Dictionary<Type, IContainResolvers>();
+        private void InitializeResolverContainers()
         {
-            foreach (var sourceContext in SourceContexts)
+            foreach (var resolverContainer in ResolverPrecedence.ToResolverContainer(this))
             {
-                var copy = sourceContext;
-                var sourcedConventions = new PrioritizedComposedFirstMatchingResolverContainer(
-                        SourcedConventions.Where(its => its.SourceType == copy.SourceType).ToArray());
-                
-                var composed = new PrioritizedComposedFirstMatchingResolverContainer(new IContainResolvers[] { sourceContext, sourcedConventions });
-                sourceType2ResolverContainer.Add(sourceContext.SourceType,composed);
+                sourceType2ResolverContainer.Add(resolverContainer.Key,resolverContainer.Value);
             }
         }
 
@@ -33,35 +31,20 @@ namespace Ditto.Internal
         public SourceContext[] SourceContexts { get; private set; }
         public SourcedConvention[] SourcedConventions { get; private set; }
         public ILogFactory Logger { get; set; }
-        public void Bind(params ICreateExecutableMapping[] configurations)
-        {
-            //TODO: primordial refactoring needs to be completed by removing this call
-            var binders = new BinderFactory(new Fasterflection()){Logger = Logger};
-            foreach (var binder in binders.Create())
-            {
-                binder.Bind(this, configurations);
-            }
-        }
-
         public Type DestinationType { get; private set; }
 
         public IExecuteMapping CreateExecutableMapping(Type sourceType)
         {
-            var sourceContext = DemandSourceContext(sourceType);
+            AssertSourceContext(sourceType);
             var resolversContainer = sourceType2ResolverContainer[sourceType];
             return new ExecutableMapping(DestinationType, resolversContainer, DestinationProperties);
-        }
-        public IEnumerable<IExecuteMapping> CreateAllExecutableMappings()
-        {
-            return SourceContexts.Select(sourceContext => CreateExecutableMapping(sourceContext.SourceType));
         }
 
         public MissingProperties Validate()
         {
             var validator = new ConfigurationValidator(DestinationType,
                                                        DestinationProperties,
-                                                       SourceContexts.Concat<IContainResolvers>(SourcedConventions).
-                                                           ToArray());
+                                                       SourceContexts.Concat<IContainResolvers>(SourcedConventions).ToArray());
             return validator.Validate();
         }
 
@@ -71,21 +54,34 @@ namespace Ditto.Internal
             missing.TryThrow();
         }
 
-        private SourceContext DemandSourceContext(Type sourceType)
+        private void AssertSourceContext(Type sourceType)
         {
             if (SourceContexts.Length == 0)
                 throw new MappingConfigurationException(
                     "Sources have not been setup for '{0}'. Did you forget to call 'From'?", DestinationType);
-            var ctx = SourceContexts.FirstOrDefault(its => its.SourceType == sourceType);
-            if (ctx != null)
-                return ctx;
-            throw new MappingConfigurationException("'{0}' has not been setup as a source for '{1}'.", sourceType,
-                                                    DestinationType);
+
+            if( SourceContexts.Any(its => its.SourceType == sourceType))
+                return;
+
+            throw new MappingConfigurationException("'{0}' has not been setup as a source for '{1}'.", sourceType,DestinationType);
         }
         public override string ToString()
         {
             return GetType() + " for '" + DestinationType+"'";
         }
+
+        public void Bind(params ICreateExecutableMapping[] configurations)
+        {
+            foreach (var sourceContext in SourceContexts)
+            {
+                sourceContext.Bind(configurations);
+            }
+            foreach (var sourcedConvention in SourcedConventions)
+            {
+                sourcedConvention.Bind(configurations);
+            }
+        }
+
 
         public void Accept(IVisitCacheable visitor)
         {
@@ -97,6 +93,13 @@ namespace Ditto.Internal
             {
                 cachedDestinationProp.Accept(visitor);
             }
+            visitor.Visit(this);
+            
+        }
+
+        public void SourceResolverContainer(Type sourceType, IContainResolvers sourcedResolverContainer)
+        {
+            sourceType2ResolverContainer[sourceType] = sourcedResolverContainer;
         }
     }
 }

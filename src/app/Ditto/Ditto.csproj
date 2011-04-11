@@ -153,6 +153,7 @@
     <Compile Include="Internal\NullValueConverterContainer.cs" />
     <Compile Include="Internal\PrioritizedComposedFirstMatchingResolverContainer.cs" />
     <Compile Include="Internal\ResolverContext.cs" />
+    <Compile Include="Internal\ResolverPrecedence.cs" />
     <Compile Include="Internal\Result.cs" />
     <Compile Include="Internal\SelfBinder.cs" />
     <Compile Include="Internal\SetValue.cs" />
