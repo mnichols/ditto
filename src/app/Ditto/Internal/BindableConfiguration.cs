@@ -13,6 +13,20 @@ namespace Ditto.Internal
             SourceContexts = snapshot.SourceContexts;
             SourcedConventions = snapshot.Conventions.SelectMany(cnv => snapshot.SourceContexts.Select(ctx => ctx.ApplyConvention(cnv))).ToArray();
             Logger = new NullLogFactory();
+            SourceResolverContainers();
+        }
+        private Dictionary<Type,IContainResolvers> sourceType2ResolverContainer=new Dictionary<Type, IContainResolvers>();
+        private void SourceResolverContainers()
+        {
+            foreach (var sourceContext in SourceContexts)
+            {
+                var copy = sourceContext;
+                var sourcedConventions = new PrioritizedComposedFirstMatchingResolverContainer(
+                        SourcedConventions.Where(its => its.SourceType == copy.SourceType).ToArray());
+                
+                var composed = new PrioritizedComposedFirstMatchingResolverContainer(new IContainResolvers[] { sourceContext, sourcedConventions });
+                sourceType2ResolverContainer.Add(sourceContext.SourceType,composed);
+            }
         }
 
         public IDescribeMappableProperty[] DestinationProperties { get; private set; }
@@ -34,12 +48,8 @@ namespace Ditto.Internal
         public IExecuteMapping CreateExecutableMapping(Type sourceType)
         {
             var sourceContext = DemandSourceContext(sourceType);
-            var sourcedConventions =
-                new PrioritizedComposedFirstMatchingResolverContainer(
-                    SourcedConventions.Where(its => its.SourceType == sourceType).ToArray());
-
-            var composed = new PrioritizedComposedFirstMatchingResolverContainer(new IContainResolvers[] { sourceContext, sourcedConventions });
-            return new ExecutableMapping(DestinationType, composed, DestinationProperties);
+            var resolversContainer = sourceType2ResolverContainer[sourceType];
+            return new ExecutableMapping(DestinationType, resolversContainer, DestinationProperties);
         }
         public IEnumerable<IExecuteMapping> CreateAllExecutableMappings()
         {
