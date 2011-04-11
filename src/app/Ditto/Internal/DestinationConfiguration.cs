@@ -100,7 +100,7 @@ namespace Ditto.Internal
             sourceConfig(sourced);
             inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty),
                 typeof (TSource),
-                new NestingConfigurationResolver(configurations.CreateBindableConfiguration(ToSnapshot())));
+                new NestingConfigurationResolver(configurations.CreateBindableConfiguration(nestedConfig.ToSnapshot())));
             return this;
         }
 

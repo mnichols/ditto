@@ -9,18 +9,18 @@ namespace Ditto.Tests
     public class conventional_mapping_tests
     {
         private TestContextualizer contextualizer;
-        private TestDestinationConfigurationFactory bindableFactory;
+        private TestConfigurationFactory bindableFactory;
 
         public conventional_mapping_tests()
         {
             contextualizer = new TestContextualizer();
-            bindableFactory = new TestDestinationConfigurationFactory();
+            bindableFactory = new TestConfigurationFactory();
         }
         [Fact]
         public void it_should_include_conventions_in_validation()
         {
 
-            var cfg = new DestinationConfiguration(typeof(SystemPerson), new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfiguration(typeof(SystemPerson), new TestConfigurationFactory());
             cfg.From(typeof (PersonalInfo), typeof (Parents))
                 .ApplyingConvention(new PropertyNameCriterion("SystemId"), new IgnoreResolver());
 
@@ -34,7 +34,7 @@ namespace Ditto.Tests
             var src1 = new PersonalInfo() { Age = 3, Name = "mikey" };
             var destination = new SystemPerson(){MothersName = "ignoremeplease"};
             Guid systemId=Guid.NewGuid();
-            var cfg = new DestinationConfiguration<SystemPerson>(new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfiguration<SystemPerson>(new TestConfigurationFactory());
             cfg.From(typeof(PersonalInfo), typeof(Parents))
                 .ApplyingConvention(new StaticValueResolver(systemId), m=>m.SystemId);
 
@@ -57,7 +57,7 @@ namespace Ditto.Tests
             var destination = new SystemPerson() { MothersName = "ignoremeplease" };
             Guid systemId = Guid.NewGuid();
             Guid myManualSystemId = new Guid("EE99B786-B3A2-426A-BA46-53B990383DA1");
-            var cfg = new DestinationConfiguration<SystemPerson>(new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfiguration<SystemPerson>(new TestConfigurationFactory());
             cfg.From(typeof(PersonalInfo), typeof(Parents));
             cfg.ApplyingConvention(new StaticValueResolver(systemId), m => m.SystemId);
             cfg.UsingValue<PersonalInfo>(myManualSystemId, on => on.SystemId);
@@ -73,7 +73,7 @@ namespace Ditto.Tests
         [Fact]
         public void it_should_support_other_property_specifications()
         {
-            var cfg = new DestinationConfiguration(typeof(SystemPerson), new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfiguration(typeof(SystemPerson), new TestConfigurationFactory());
             cfg.From(typeof(PersonalInfo), typeof(Parents))
                 .ApplyingConvention(new PrefixPropertyCriterion("System"), new IgnoreResolver());
             var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
@@ -86,7 +86,7 @@ namespace Ditto.Tests
             var src1 = new PersonalInfo() { Age = 3, Name = "mikey" };
             var destination = new ManyDates();
             var dateTime = new DateTime(2009, 8, 1, 0, 0, 0);
-            var cfg = new DestinationConfiguration(typeof(ManyDates), new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfiguration(typeof(ManyDates), new TestConfigurationFactory());
             cfg.From(typeof (PersonalInfo), typeof (Parents))
                 .ApplyingConvention(new TypePropertyCriterion(typeof (DateTime)), new StaticValueResolver(dateTime));
             var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());

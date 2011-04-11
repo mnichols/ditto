@@ -5,11 +5,11 @@ namespace Ditto.Tests
 {
     public class list_property_binder_tests
     {
-        private TestDestinationConfigurationFactory configFactory;
+        private TestConfigurationFactory configFactory;
 
         public list_property_binder_tests()
         {
-            configFactory = new TestDestinationConfigurationFactory();
+            configFactory = new TestConfigurationFactory();
         }
         [Fact]
         public void it_should_determine_candidate_properties()

@@ -1,17 +1,13 @@
 using System;
-using System.Linq;
 using Ditto.Internal;
-using log4net.Repository.Hierarchy;
 
 namespace Ditto.Tests
 {
-
-    public class TestDestinationConfigurationFactory:ICreateDestinationConfiguration,ICreateBindableConfiguration
+    public class TestConfigurationFactory : ICreateDestinationConfiguration
     {
         public IConfigureDestination Create(Type destinationType)
         {
             return new DestinationConfiguration(destinationType, this);
-
         }
 
         public IConfigureDestination<TDest> Create<TDest>()
@@ -22,11 +18,6 @@ namespace Ditto.Tests
         public BindableConfiguration CreateBindableConfiguration(DestinationConfigurationMemento snapshot)
         {
             return new BindableConfiguration(snapshot);
-        }
-
-        public BindableConfiguration CreateBindableConfiguration()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -10,11 +10,11 @@ namespace Ditto.Tests
     {
         private TestContextualizer contextualizer;
         private DestinationConfigurationContainer container;
-        private TestDestinationConfigurationFactory configFactory;
+        private TestConfigurationFactory configFactory;
         public complex_model_mapping_tests()
         {
             contextualizer = new TestContextualizer();
-            configFactory=new TestDestinationConfigurationFactory();
+            configFactory=new TestConfigurationFactory();
             container = new DestinationConfigurationContainer(null, configFactory);
         }
         [Fact]

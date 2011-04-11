@@ -8,11 +8,11 @@ namespace Ditto.Tests
 {
     public class mapping_configuration_tests
     {
-        private TestDestinationConfigurationFactory configFactory;
+        private TestConfigurationFactory configFactory;
 
         public mapping_configuration_tests()
         {
-            configFactory=new TestDestinationConfigurationFactory();
+            configFactory=new TestConfigurationFactory();
         }
         [Fact]
         public void missing_property_mapping_throws()
@@ -47,10 +47,10 @@ namespace Ditto.Tests
         [Fact]
         public void can_append_other_configuration_for_nested_props()
         {
-            var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent), new TestDestinationConfigurationFactory());
+            var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent), new TestConfigurationFactory());
             componentConfig.From(typeof (EventComponent));
 
-            var modelConfig = new DestinationConfiguration(typeof(ComplexViewModel), new TestDestinationConfigurationFactory());
+            var modelConfig = new DestinationConfiguration(typeof(ComplexViewModel), new TestConfigurationFactory());
             modelConfig.From(typeof (ComplexEvent));
 
             var bindable = configFactory.CreateBindableConfiguration(modelConfig.ToSnapshot());

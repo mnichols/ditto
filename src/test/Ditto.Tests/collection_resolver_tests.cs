@@ -12,7 +12,7 @@ namespace Ditto.Tests
 
         public collection_resolver_tests()
         {
-            var factory = new TestDestinationConfigurationFactory();
+            var factory = new TestConfigurationFactory();
             var cfg = new DestinationConfiguration(typeof (IntegerDest), factory);
             cfg.From(typeof (IntegerSource));
             integerComponentElementConfig = factory.CreateBindableConfiguration(cfg.ToSnapshot());

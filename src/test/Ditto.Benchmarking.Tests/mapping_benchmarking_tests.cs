@@ -106,7 +106,7 @@ namespace Ditto.Benchmarking.Tests
             try
             {
 
-                var container = new DestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
+                var container = new DestinationConfigurationContainer(null, new TestConfigurationFactory());
 
 
                 container.Map<BenchDestinationProps.Int1>().From<BenchSourceProps.Int1>();

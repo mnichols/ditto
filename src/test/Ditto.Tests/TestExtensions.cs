@@ -8,12 +8,12 @@ namespace Ditto.Tests
     {
         public static IExecuteMapping ToExecutable(this ITakeDestinationConfigurationSnapshot cfg,Type sourceType,params ITakeDestinationConfigurationSnapshot[] otherCfgs)
         {
-            var bindable = new TestDestinationConfigurationFactory().CreateBindableConfiguration(cfg.ToSnapshot());
+            var bindable = new TestConfigurationFactory().CreateBindableConfiguration(cfg.ToSnapshot());
             return bindable.CreateExecutableMapping(sourceType);    
         }
         public static BindingDestinationConfigurationContainer ToBindable(this DestinationConfigurationContainer cfg)
         {
-            return new BindingDestinationConfigurationContainer(new BinderFactory(new Fasterflection()),new TestContextualizer(),cfg);
+            return new BindingDestinationConfigurationContainer(new BinderFactory(new Fasterflection()),new TestContextualizer(),cfg,new TestConfigurationFactory());
         }
     }
 }
