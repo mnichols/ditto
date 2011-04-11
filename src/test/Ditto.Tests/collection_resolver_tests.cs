@@ -12,19 +12,17 @@ namespace Ditto.Tests
 
         public collection_resolver_tests()
         {
-            var cfg = new DestinationConfiguration(typeof (IntegerDest));
+            var factory = new TestConfigurationFactory();
+            var cfg = new DestinationConfiguration(typeof (IntegerDest), factory);
             cfg.From(typeof (IntegerSource));
-            var bindable=cfg.CreateBindableConfiguration();
-            bindable.Bind();
-            integerComponentElementConfig = bindable;
+            integerComponentElementConfig = factory.CreateBindableConfiguration(cfg.ToSnapshot());
             contextualizer = new TestContextualizer();
         }
        
         [Fact]
         public void it_should_resolve_to_list_from_list()
         {
-            var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ListOfIntegerComponents),
-                integerComponentElementConfig, new Fasterflection());
+            var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ListOfIntegerComponents),integerComponentElementConfig, new Fasterflection());
             var source = new SourceWithCollections()
             {
                 ListOfIntegerComponents =
@@ -42,8 +40,7 @@ namespace Ditto.Tests
         [Fact]
         public void it_should_resolve_to_array_from_array()
         {
-            var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ArrayOfIntegerComponents),
-                                         integerComponentElementConfig, new Fasterflection());
+            var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ArrayOfIntegerComponents),integerComponentElementConfig, new Fasterflection());
             var source = new SourceWithCollections()
                              {
                                  ArrayOfIntegerComponents = 
@@ -60,8 +57,7 @@ namespace Ditto.Tests
         [Fact]
         public void it_should_resolve_from_array_to_list()
         {
-            var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ArrayOfIntegerComponents),
-                                         integerComponentElementConfig, new Fasterflection());
+            var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ArrayOfIntegerComponents),integerComponentElementConfig, new Fasterflection());
             var source = new SourceWithCollections()
             {
                 ArrayOfIntegerComponents =
@@ -78,8 +74,7 @@ namespace Ditto.Tests
         [Fact]
         public void it_should_resolve_from_list_to_array()
         {
-            var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ListOfIntegerComponents),
-                                         integerComponentElementConfig, new Fasterflection());
+            var resolver = new ListResolver(MappableProperty.For<SourceWithCollections>(s => s.ListOfIntegerComponents),integerComponentElementConfig, new Fasterflection());
             var source = new SourceWithCollections()
             {
                 ListOfIntegerComponents =

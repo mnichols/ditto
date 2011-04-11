@@ -2,6 +2,6 @@ namespace Ditto.Internal
 {
     public interface ICreateBindableConfiguration
     {
-        BindableConfiguration CreateBindableConfiguration();
+        BindableConfiguration CreateBindableConfiguration(DestinationConfigurationMemento snapshot);
     }
 }

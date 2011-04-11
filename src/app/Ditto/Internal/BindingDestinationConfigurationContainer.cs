@@ -4,24 +4,32 @@ using System.Linq;
 
 namespace Ditto.Internal
 {
+
     public class BindingDestinationConfigurationContainer:IBindConfigurations,ICreateMappingCommand,IValidatable,ICacheable
     {
+
         private readonly IProvideBinders binders;
         private readonly IMapCommandFactory mapCommands;
-        private readonly ICollection<BindableConfiguration> configurations;
+        private readonly ICreateBindableConfiguration bindableConfigurationsFactory;
         private Dictionary<Type,BindableConfiguration> bindableConfigurations=new Dictionary<Type, BindableConfiguration>();
-        public BindingDestinationConfigurationContainer(IProvideBinders binders, IMapCommandFactory mapCommands, IProvideBindableConfigurations bindableConfigurations)
+        private ICollection<DestinationConfigurationMemento> snapshots;
+
+        public BindingDestinationConfigurationContainer(IProvideBinders binders, 
+            IMapCommandFactory mapCommands, 
+            IProvideDestinationConfigurationSnapshots destinationConfigurationSnapshots,
+            ICreateBindableConfiguration bindableConfigurationsFactory)
         {
             this.binders = binders;
             this.mapCommands = mapCommands;
-            this.configurations = bindableConfigurations.GetBindableConfigurations();
+            this.snapshots = destinationConfigurationSnapshots.TakeSnapshots();
+            this.bindableConfigurationsFactory = bindableConfigurationsFactory;
             Logger = new NullLogFactory();
         }
         public ILogFactory Logger { get; set; }
         public void Bind()
         {
+            bindableConfigurations = snapshots.ToDictionary(mem => mem.DestinationType,mem =>bindableConfigurationsFactory.CreateBindableConfiguration(mem));
             var allBinders = binders.Create();
-            bindableConfigurations = configurations.ToDictionary(k => k.DestinationType,v => v);
             var executable = bindableConfigurations.Values.OfType<ICreateExecutableMapping>().ToArray();
             Logger.Create(this).Debug("Binding {0} destination configurations to {1} extending configurations", bindableConfigurations.Count, executable.Length);
             foreach (var binder in allBinders)
@@ -41,7 +49,6 @@ namespace Ditto.Internal
             {
                 throw new MappingExecutionException("Could not find mapping configuration for '{0}'. Please check that a configuration exists for this type and that the mapping engine is initialized.", destinationType);
             }
-
             return mapCommands.Create(cfg.CreateExecutableMapping(sourceType));
         }
 
@@ -66,7 +73,7 @@ namespace Ditto.Internal
 
         public void Accept(IVisitCacheable visitor)
         {
-            foreach (var config in configurations)
+            foreach (var config in bindableConfigurations.Values)
             {
                 var cacheable = config as ICacheable;
                 if (cacheable == null)

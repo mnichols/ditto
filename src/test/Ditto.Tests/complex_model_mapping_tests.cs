@@ -10,11 +10,12 @@ namespace Ditto.Tests
     {
         private TestContextualizer contextualizer;
         private DestinationConfigurationContainer container;
-
+        private TestConfigurationFactory configFactory;
         public complex_model_mapping_tests()
         {
             contextualizer = new TestContextualizer();
-            container = new DestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
+            configFactory=new TestConfigurationFactory();
+            container = new DestinationConfigurationContainer(null, configFactory);
         }
         [Fact]
         public void it_should_map_nested_components()
@@ -36,17 +37,17 @@ namespace Ditto.Tests
         [Fact]
         public void it_should_map_nested_components_by_type()
         {
-            var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent));
+            var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent), configFactory);
             componentConfig.From(typeof(EventComponent));
-            
 
-            var modelConfig = new DestinationConfiguration(typeof(ComplexViewModel));
+
+            var modelConfig = new DestinationConfiguration(typeof(ComplexViewModel), configFactory);
             modelConfig.From(typeof (ComplexEventWithDifferentNamedComponent));
             modelConfig.SetPropertyResolver(
                 PropertyNameCriterion.From<ComplexViewModel>(m=>m.Component), typeof(ComplexEventWithDifferentNamedComponent),
-                new RedirectingConfigurationResolver(MappableProperty.For<ComplexEventWithDifferentNamedComponent>(s => s.DifferentName), componentConfig.CreateBindableConfiguration()));
+                new RedirectingConfigurationResolver(MappableProperty.For<ComplexEventWithDifferentNamedComponent>(s => s.DifferentName), configFactory.CreateBindableConfiguration(componentConfig.ToSnapshot())));
 
-            var bindable = modelConfig.CreateBindableConfiguration();
+            var bindable = configFactory.CreateBindableConfiguration(modelConfig.ToSnapshot());
             bindable.Bind();
             bindable.Assert();
             

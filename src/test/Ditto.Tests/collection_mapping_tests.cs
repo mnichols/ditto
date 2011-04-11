@@ -10,7 +10,7 @@ namespace Ditto.Tests
 
         public collection_mapping_tests()
         {
-            container = new DestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
+            container = new DestinationConfigurationContainer(null, new TestConfigurationFactory());
         }
         
         [Fact]

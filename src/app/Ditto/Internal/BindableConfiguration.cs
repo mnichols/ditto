@@ -1,18 +1,32 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Ditto.Internal
 {
     public class BindableConfiguration : ICreateExecutableMapping, IBindable, IValidatable,ICacheable
     {
-        public BindableConfiguration(Type destinationType, IDescribeMappableProperty[] destinationProperties,
-                                     SourceContext[] sourceContext, Convention[] conventions)
+        public BindableConfiguration(DestinationConfigurationMemento snapshot)
         {
-            DestinationType = destinationType;
-            DestinationProperties = destinationProperties;
-            SourceContexts = sourceContext;
-            SourcedConventions = conventions.SelectMany(cnv => sourceContext.Select(ctx => ctx.ApplyConvention(cnv))).ToArray();
+            DestinationType = snapshot.DestinationType;
+            DestinationProperties = snapshot.DestinationProperties;
+            SourceContexts = snapshot.SourceContexts;
+            SourcedConventions = snapshot.Conventions.SelectMany(cnv => snapshot.SourceContexts.Select(ctx => ctx.ApplyConvention(cnv))).ToArray();
             Logger = new NullLogFactory();
+            SourceResolverContainers();
+        }
+        private Dictionary<Type,IContainResolvers> sourceType2ResolverContainer=new Dictionary<Type, IContainResolvers>();
+        private void SourceResolverContainers()
+        {
+            foreach (var sourceContext in SourceContexts)
+            {
+                var copy = sourceContext;
+                var sourcedConventions = new PrioritizedComposedFirstMatchingResolverContainer(
+                        SourcedConventions.Where(its => its.SourceType == copy.SourceType).ToArray());
+                
+                var composed = new PrioritizedComposedFirstMatchingResolverContainer(new IContainResolvers[] { sourceContext, sourcedConventions });
+                sourceType2ResolverContainer.Add(sourceContext.SourceType,composed);
+            }
         }
 
         public IDescribeMappableProperty[] DestinationProperties { get; private set; }
@@ -21,6 +35,7 @@ namespace Ditto.Internal
         public ILogFactory Logger { get; set; }
         public void Bind(params ICreateExecutableMapping[] configurations)
         {
+            //TODO: primordial refactoring needs to be completed by removing this call
             var binders = new BinderFactory(new Fasterflection()){Logger = Logger};
             foreach (var binder in binders.Create())
             {
@@ -33,13 +48,12 @@ namespace Ditto.Internal
         public IExecuteMapping CreateExecutableMapping(Type sourceType)
         {
             var sourceContext = DemandSourceContext(sourceType);
-            var sourcedConventions =
-                new PrioritizedComposedFirstMatchingResolverContainer(
-                    SourcedConventions.Where(its => its.SourceType == sourceType).ToArray());
-
-            var composed =
-                new PrioritizedComposedFirstMatchingResolverContainer(new IContainResolvers[] { sourceContext, sourcedConventions });
-            return new ExecutableMapping(DestinationType, composed, DestinationProperties);
+            var resolversContainer = sourceType2ResolverContainer[sourceType];
+            return new ExecutableMapping(DestinationType, resolversContainer, DestinationProperties);
+        }
+        public IEnumerable<IExecuteMapping> CreateAllExecutableMappings()
+        {
+            return SourceContexts.Select(sourceContext => CreateExecutableMapping(sourceContext.SourceType));
         }
 
         public MissingProperties Validate()

@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace Ditto.Internal
 {
-    public class DestinationConfigurationContainer : IContainDestinationConfiguration,IProvideBindableConfigurations
+    public class DestinationConfigurationContainer : IContainDestinationConfiguration,IProvideDestinationConfigurationSnapshots
     {
-        private readonly Dictionary<Type, ICreateBindableConfiguration> registeredConfigurations = new Dictionary<Type, ICreateBindableConfiguration>();
+        private readonly Dictionary<Type, ITakeDestinationConfigurationSnapshot> registeredConfigurations = new Dictionary<Type, ITakeDestinationConfigurationSnapshot>();
         private readonly IProvideConventions conventions;
         private readonly ICreateDestinationConfiguration configurations;
         public ILogFactory Logger { get; set; }
@@ -24,7 +24,7 @@ namespace Ditto.Internal
         }
         public IConfigureDestination Map(Type destinationType)
         {
-            ICreateBindableConfiguration cfg;
+            ITakeDestinationConfigurationSnapshot cfg;
             if (registeredConfigurations.TryGetValue(destinationType, out cfg) == false)
             {
                 registeredConfigurations.Add(destinationType, cfg = configurations.Create(destinationType));
@@ -35,7 +35,7 @@ namespace Ditto.Internal
 
         public IConfigureDestination<TDest> Map<TDest>()
         {
-            ICreateBindableConfiguration cfg;
+            ITakeDestinationConfigurationSnapshot cfg;
             if (registeredConfigurations.TryGetValue(typeof(TDest), out cfg) == false)
             {
                 registeredConfigurations.Add(typeof(TDest), cfg = configurations.Create<TDest>());
@@ -49,9 +49,9 @@ namespace Ditto.Internal
             return registeredConfigurations.ContainsKey(destinationType);
         }
 
-        public ICollection<BindableConfiguration> GetBindableConfigurations()
+        public ICollection<DestinationConfigurationMemento> TakeSnapshots()
         {
-            return registeredConfigurations.Values.Select(into=>into.CreateBindableConfiguration()).ToArray();
+            return registeredConfigurations.Values.Select(into=>into.ToSnapshot()).ToArray();
         }
 
 

@@ -8,13 +8,18 @@ namespace Ditto.Tests
 {
     public class mapping_configuration_tests
     {
-        
+        private TestConfigurationFactory configFactory;
+
+        public mapping_configuration_tests()
+        {
+            configFactory=new TestConfigurationFactory();
+        }
         [Fact]
         public void missing_property_mapping_throws()
         {
-            var cfg = new DestinationConfiguration(typeof (Person));
+            var cfg = new DestinationConfiguration(typeof(Person), configFactory);
             cfg.From(typeof (PersonalInfo), typeof (Parents));
-            var bindable = cfg.CreateBindableConfiguration();
+            var bindable = configFactory.CreateBindableConfiguration(cfg.ToSnapshot());
             Action validation = bindable.Assert;
             validation.should_throw_an<MappingConfigurationException>();
             validation.should_throw_because<MappingConfigurationException>("The following properties are not mapped for '" + typeof(Person) + "':" + Environment.NewLine + "FathersName" + Environment.NewLine);
@@ -23,9 +28,9 @@ namespace Ditto.Tests
         [Fact]
         public void can_map_from_property_of_diff_name()
         {
-            var cfg = new DestinationConfiguration<TypicalViewModel>(new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfiguration<TypicalViewModel>(configFactory);
             cfg.From(typeof (TypicalEvent)).Redirecting<TypicalEvent>(its => its.Id, its => its.SomeId);
-            var bindable = cfg.CreateBindableConfiguration();
+            var bindable = configFactory.CreateBindableConfiguration(cfg.ToSnapshot());
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
@@ -33,24 +38,23 @@ namespace Ditto.Tests
         [Fact]
         public void can_map_static_value_to_property()
         {
-            var cfg = new DestinationConfiguration<TypicalViewModel>(new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfiguration<TypicalViewModel>(configFactory);
             cfg.From(typeof (TypicalEvent)).UsingValue<TypicalEvent>(Guid.NewGuid(), its => its.SomeId);
-            var bindable = cfg.CreateBindableConfiguration();
+            var bindable = configFactory.CreateBindableConfiguration(cfg.ToSnapshot());
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
         [Fact]
         public void can_append_other_configuration_for_nested_props()
         {
-            var componentConfig = new DestinationConfiguration(typeof (ViewModelComponent));
+            var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent), new TestConfigurationFactory());
             componentConfig.From(typeof (EventComponent));
-            
 
-            var modelConfig = new DestinationConfiguration(typeof (ComplexViewModel));
+            var modelConfig = new DestinationConfiguration(typeof(ComplexViewModel), new TestConfigurationFactory());
             modelConfig.From(typeof (ComplexEvent));
 
-            var bindable = modelConfig.CreateBindableConfiguration();
-            bindable.Bind(componentConfig.CreateBindableConfiguration());
+            var bindable = configFactory.CreateBindableConfiguration(modelConfig.ToSnapshot());
+            bindable.Bind(configFactory.CreateBindableConfiguration(componentConfig.ToSnapshot()));
             bindable.Assert();
 
         }
@@ -58,7 +62,7 @@ namespace Ditto.Tests
         [Fact]
         public void configurations_can_be_bound_to_one_another()
         {
-            var cfg = new DestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfigurationContainer(null, configFactory);
             cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
             cfg.Map(typeof (ComplexViewModel)).From(typeof (ComplexEvent));
             var bindable = cfg.ToBindable();
@@ -77,7 +81,7 @@ namespace Ditto.Tests
         [Fact]
         public void configurations_can_be_bound_to_one_another_using_binding_container()
         {
-            var cfg = new DestinationConfigurationContainer(null, new TestDestinationConfigurationFactory());
+            var cfg = new DestinationConfigurationContainer(null, configFactory);
             cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
             cfg.Map(typeof(ComplexViewModel)).From(typeof(ComplexEvent));
             var bindable = cfg.ToBindable();
@@ -97,7 +101,7 @@ namespace Ditto.Tests
         [Fact]
         public void manually_configuring_dest_property_with_more_than_one_resolver()
         {
-            var cfg=new DestinationConfiguration(typeof(TypicalViewModel));
+            var cfg = new DestinationConfiguration(typeof(TypicalViewModel), configFactory);
             cfg.From(typeof (TypicalEvent));
             cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"),typeof(TypicalEvent),new StaticValueResolver(new Guid("8CF7C50E-792D-4A28-AB74-81879BC233A8")));
             Action duplication=()=>cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"), typeof(TypicalEvent), new StaticValueResolver(new Guid("1B8CF33D-92B8-4E82-9E8F-5EEDE7BA14F0")));
@@ -107,11 +111,12 @@ namespace Ditto.Tests
         [Fact]
         public void manually_configuring_dest_property_is_not_overriden_by_convention()
         {
-            var cfg = new DestinationConfiguration(typeof(TypicalViewModel));
+            var cfg = new DestinationConfiguration(typeof(TypicalViewModel), configFactory);
             cfg.From(typeof(TypicalEvent));
             cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"), typeof(TypicalEvent), new StaticValueResolver(new Guid("8CF7C50E-792D-4A28-AB74-81879BC233A8")));
             cfg.ApplyingConvention(new PropertyNameCriterion("SomeId"), new StaticValueResolver(new Guid("1B8CF33D-92B8-4E82-9E8F-5EEDE7BA14F0")));
-            Action duplication = () => cfg.CreateBindableConfiguration().Bind();
+            var bindable = configFactory.CreateBindableConfiguration(cfg.ToSnapshot());
+            Action duplication = () => bindable.Bind();
             duplication.should_not_throw_an<MappingConfigurationException>();
         }
     }

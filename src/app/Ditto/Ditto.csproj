@@ -99,6 +99,7 @@
     <Compile Include="Internal\DefaultContextualizer.cs" />
     <Compile Include="Internal\DestinationConfigurationContainer.cs" />
     <Compile Include="Internal\DefaultMapCommand.cs" />
+    <Compile Include="Internal\DestinationConfigurationMemento.cs" />
     <Compile Include="Internal\DittoDoer.cs" />
     <Compile Include="Internal\DefaultReflection.cs" />
     <Compile Include="Internal\DefaultResolutionContext.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Internal\IContextualizeResolution.cs" />
     <Compile Include="Internal\ICreateBindableConfiguration.cs" />
     <Compile Include="Internal\ICreateDestinationConfiguration.cs" />
+    <Compile Include="Internal\ITakeDestinationConfigurationSnapshot.cs" />
     <Compile Include="Internal\ICreateExecutableMapping.cs" />
     <Compile Include="Internal\ICreateMappingCommand.cs" />
     <Compile Include="Internal\ICreateValueAssignment.cs" />
@@ -128,7 +130,7 @@
     <Compile Include="Internal\ILogFactory.cs" />
     <Compile Include="Internal\IMapCommand.cs" />
     <Compile Include="Internal\IMapCommandFactory.cs" />
-    <Compile Include="Internal\IProvideBindableConfigurations.cs" />
+    <Compile Include="Internal\IProvideDestinationConfigurationSnapshots.cs" />
     <Compile Include="Internal\IProvideBinders.cs" />
     <Compile Include="Internal\IProvideConventions.cs" />
     <Compile Include="Internal\IRedirected.cs" />
@@ -156,6 +158,7 @@
     <Compile Include="Internal\SetValue.cs" />
     <Compile Include="Internal\SourceContext.cs" />
     <Compile Include="Internal\SourcedConvention.cs" />
+    <Compile Include="Internal\SourcedExecutableMapping.cs" />
     <Compile Include="Internal\SourcedPropertyNameResolver.cs" />
     <Compile Include="Internal\SupportedCollectionTypeSpecification.cs" />
     <Compile Include="Internal\Toggler.cs" />
