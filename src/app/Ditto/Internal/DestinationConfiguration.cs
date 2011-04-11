@@ -173,7 +173,7 @@ namespace Ditto.Internal
         private void AssertPropertiesProvided(params Expression<Func<TDest, object>>[] destinationProperties)
         {
             if (destinationProperties == null || destinationProperties.Length == 0)
-                throw new MappingConfigurationException("At least one destination property must be specified");
+                throw new DittoConfigurationException("At least one destination property must be specified");
         }
     }
 
@@ -203,7 +203,7 @@ namespace Ditto.Internal
         public ISourcedDestinationConfiguration From(params Type[] sourceTypes)
         {
             if (sourceTypes == null || sourceTypes.Length == 0)
-                throw new MappingConfigurationException("At least one source type must be specified.");
+                throw new DittoConfigurationException("At least one source type must be specified.");
             sourceTypes.ForEach(src => Logger.Create(this).Debug("Mapping '{0}' from '{1}'", destinationType, src));
             foreach (var sourceType in sourceTypes)
             {
@@ -251,12 +251,12 @@ namespace Ditto.Internal
         private SourceContext DemandSourceContext(Type sourceType)
         {
             if (sourceContexts.Count == 0)
-                throw new MappingConfigurationException(
+                throw new DittoConfigurationException(
                     "Sources have not been setup for '{0}'. Did you forget to call 'From'?", destinationType);
             var ctx = sourceContexts.FirstOrDefault(its => its.SourceType == sourceType);
             if (ctx != null)
                 return ctx;
-            throw new MappingConfigurationException("'{0}' has not been setup as a source for '{1}'.", sourceType,
+            throw new DittoConfigurationException("'{0}' has not been setup as a source for '{1}'.", sourceType,
                                                     destinationType);
         }
     }

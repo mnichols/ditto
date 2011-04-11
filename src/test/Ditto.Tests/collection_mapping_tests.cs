@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Ditto.Internal;
 using Xunit;
@@ -12,7 +13,26 @@ namespace Ditto.Tests
         {
             container = new DestinationConfigurationContainer(null, new TestConfigurationFactory());
         }
-        
+        [Fact]
+        public void executing_mapping_on_collection_with_unmapped_elements_throws()
+        {
+//            container.Map(typeof(IntegerDest)).From(typeof(IntegerSource));
+            container.Map(typeof(DestinationWithComponentArray)).From(typeof(SourceWithComponentArray));
+            var bindable = container.ToBinding();
+            bindable.Bind();
+            bindable.Assert();
+            var source = new SourceWithComponentArray()
+            {
+                IntegerComponents =
+                    new[] { new IntegerSource() { AnInt = 1 }, new IntegerSource() { AnInt = 3 }, }
+            };
+            var dest = new DestinationWithComponentArray();
+            var executable = bindable.CreateCommand(typeof(SourceWithComponentArray), typeof(DestinationWithComponentArray));
+            Action executing=()=>executable.Map(source, dest);
+            executing.should_throw_because<DittoExecutionException>("'Ditto.Tests.DestinationWithComponentArray:IntegerComponents' requires a collection configuration which was not provided. " 
+                + Environment.NewLine 
+                +"Be sure you have either provided configuration for the element type ('Ditto.Tests.IntegerDest'), or the collection.");
+        }
         [Fact]
         public void collections_of_components_are_mapped()
         {

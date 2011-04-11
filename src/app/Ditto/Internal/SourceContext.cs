@@ -30,7 +30,8 @@ namespace Ditto.Internal
         {
             var resolver = destinationProperty2Resolver[prop];
             return prop.IsCustomType &&
-                   typeof (RequiresComponentMappingResolver).IsInstanceOfType(resolver) == false;
+                   typeof (RequiresComponentMappingResolver).IsInstanceOfType(resolver) == false &&
+                   typeof (RequiresCollectionMappingResolver).IsInstanceOfType(resolver) == false;
         }
 
         public IResolveValue GetResolver(IDescribeMappableProperty destinationProperty)
@@ -84,7 +85,7 @@ namespace Ditto.Internal
             IResolveValue resolver;
             if(destinationProperty2Resolver.TryGetValue(destinationProperty,out resolver)==false || resolver is IOverrideable)
                 return;
-            throw new MappingConfigurationException("Destination property '{0}' already has a manually, or conventioned, configured resolver from source type '{1}'",destinationProperty,SourceType);
+            throw new DittoConfigurationException("Destination property '{0}' already has a manually, or conventioned, configured resolver from source type '{1}'",destinationProperty,SourceType);
         }
 
         public void Accept(IVisitCacheable visitor)
@@ -108,7 +109,7 @@ namespace Ditto.Internal
             var srcPropName = redirected == null ? destinationProperty.Name : redirected.SourceProperty.Name;
             var sourceProperty = SourceType.GetProperty(srcPropName);
             if(sourceProperty==null)
-                throw new MappingConfigurationException("Cannot find property '{0}' for source '{1}'",destinationProperty,SourceType);
+                throw new DittoConfigurationException("Cannot find property '{0}' for source '{1}'",destinationProperty,SourceType);
             return new MappableProperty(sourceProperty);
         }
 
@@ -153,14 +154,16 @@ namespace Ditto.Internal
         {
             public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
             {
-                throw new MappingExecutionException("{0} requires a component configuration which was not provided.",destinationProperty);
+                throw new DittoExecutionException("{0} requires a component configuration which was not provided.",destinationProperty);
             }
         }
         private class RequiresCollectionMappingResolver : IResolveValue,IOverrideable
         {
             public Result TryResolve(IResolutionContext context, IDescribeMappableProperty destinationProperty)
             {
-                throw new MappingExecutionException("{0} requires a collection configuration which was not provided.", destinationProperty);
+                throw new DittoExecutionException("'{0}' requires a collection configuration which was not provided. "+Environment.NewLine+
+                    "Be sure you have either provided configuration for the element type ('{1}'), or the collection.", 
+                    destinationProperty,destinationProperty.ElementType.PropertyType);
             }
         }
 

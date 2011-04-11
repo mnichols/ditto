@@ -48,7 +48,7 @@ namespace Ditto.Internal
             BindableConfiguration cfg;
             if (destinationType2BindableConfig.TryGetValue(destinationType, out cfg) == false)
             {
-                throw new MappingExecutionException("Could not find mapping configuration for '{0}'. Please check that a configuration exists for this type and that the mapping engine is initialized.", destinationType);
+                throw new DittoExecutionException("Could not find mapping configuration for '{0}'. Please check that a configuration exists for this type and that the mapping engine is initialized.", destinationType);
             }
             return mapCommands.Create(cfg.CreateExecutableMapping(sourceType));
         }

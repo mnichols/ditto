@@ -13,7 +13,7 @@ namespace Ditto.Internal
                                       IContainResolvers[] resolverContainers)
         {
             if (destinationProperties.Length == 0)
-                throw new MappingConfigurationException("Destination properties have not been queried for {0}",destinationType);
+                throw new DittoConfigurationException("Destination properties have not been queried for {0}",destinationType);
             missingProperties = new MissingProperties();
             this.destinationProperties = destinationProperties;
             this.resolverContainers = resolverContainers;
