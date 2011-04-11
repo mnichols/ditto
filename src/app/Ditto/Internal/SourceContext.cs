@@ -24,8 +24,6 @@ namespace Ditto.Internal
 
             return prop.PropertyType.IsCustomType() == false ||
                    IsCustomTypeAndCustomResolverSet(prop);
-//            /*for now, we are just answering this question by the property's name*/
-//            return prop2Resolver.Keys.Select(its => its.Name).Contains(mappableProperty.Name);
         }
         private bool IsCustomTypeAndCustomResolverSet(IDescribeMappableProperty prop)
         {
@@ -41,6 +39,11 @@ namespace Ditto.Internal
             return destinationProperty2Resolver[key];
         }
 
+        /// <summary>
+        /// Sets the destination context for this source. This selects <paramref name="destinationProperties"/> which are pertinent to this instance's
+        /// <c>SourceType</c>. This selection is based upon matching property names. Use a Redirecting call in configuration to get around this.
+        /// </summary>
+        /// <param name="destinationProperties">The destination properties.</param>
         public void SetDestinationContext(IDescribeMappableProperty[] destinationProperties)
         {
             var sourcePropertyNames = SourceType.GetProperties().Select(its => its.Name);
@@ -94,10 +97,10 @@ namespace Ditto.Internal
             var resolver = destinationProperty2Resolver[destinationProperty];
             var redirected = resolver as IRedirected;
             var srcPropName = redirected == null ? destinationProperty.Name : redirected.SourceProperty.Name;
-            var propInfo = SourceType.GetProperty(srcPropName);
-            if(propInfo==null)
+            var sourceProperty = SourceType.GetProperty(srcPropName);
+            if(sourceProperty==null)
                 throw new MappingConfigurationException("Cannot find property '{0}' for source '{1}'",destinationProperty,SourceType);
-            return new MappableProperty(propInfo);
+            return new MappableProperty(sourceProperty);
         }
 
         public void Bind(params ICreateExecutableMapping[] configurations)
