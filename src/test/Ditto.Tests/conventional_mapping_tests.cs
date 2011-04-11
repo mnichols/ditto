@@ -39,9 +39,9 @@ namespace Ditto.Tests
                 .ApplyingConvention(new StaticValueResolver(systemId), m=>m.SystemId);
 
             var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
-            bindable.Bind();
-            Action validation = bindable.Assert;
-            validation.should_not_throw_an<MappingConfigurationException>();
+//            bindable.Bind();
+//            Action validation = bindable.Assert;
+//            validation.should_not_throw_an<MappingConfigurationException>();
             var executable = bindable.CreateExecutableMapping(typeof (PersonalInfo));
             
             executable.Execute(contextualizer.CreateContext(src1,destination));
@@ -62,9 +62,9 @@ namespace Ditto.Tests
             cfg.ApplyingConvention(new StaticValueResolver(systemId), m => m.SystemId);
             cfg.UsingValue<PersonalInfo>(myManualSystemId, on => on.SystemId);
             var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
-            bindable.Bind();
-            Action validation = bindable.Assert;
-            validation.should_not_throw_an<MappingConfigurationException>();
+//            bindable.Bind();
+//            Action validation = bindable.Assert;
+//            validation.should_not_throw_an<MappingConfigurationException>();
             var executable = bindable.CreateExecutableMapping(typeof(PersonalInfo));
 
             executable.Execute(contextualizer.CreateContext(src1, destination));
@@ -90,9 +90,7 @@ namespace Ditto.Tests
             cfg.From(typeof (PersonalInfo), typeof (Parents))
                 .ApplyingConvention(new TypePropertyCriterion(typeof (DateTime)), new StaticValueResolver(dateTime));
             var bindable = bindableFactory.CreateBindableConfiguration(cfg.ToSnapshot());
-            bindable.Bind();
-            Action validation = bindable.Assert;
-            validation.should_not_throw_an<MappingConfigurationException>();
+            
             var executable = bindable.CreateExecutableMapping(typeof (PersonalInfo));
             executable.Execute(contextualizer.CreateContext(src1, destination));
             destination.DateTime1.should_be_equal_to(dateTime);

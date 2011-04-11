@@ -10,31 +10,31 @@ namespace Ditto.Internal
 
         private readonly IProvideBinders binders;
         private readonly IMapCommandFactory mapCommands;
-        private readonly ICreateBindableConfiguration bindableConfigurationsFactory;
-        private Dictionary<Type,BindableConfiguration> bindableConfigurations=new Dictionary<Type, BindableConfiguration>();
-        private ICollection<DestinationConfigurationMemento> snapshots;
+        private readonly ICreateBindableConfiguration bindableConfigurations;
+        private Dictionary<Type,BindableConfiguration> destinationType2BindableConfig=new Dictionary<Type, BindableConfiguration>();
+        private readonly ICollection<DestinationConfigurationMemento> snapshots;
 
         public BindingDestinationConfigurationContainer(IProvideBinders binders, 
             IMapCommandFactory mapCommands, 
             IProvideDestinationConfigurationSnapshots destinationConfigurationSnapshots,
-            ICreateBindableConfiguration bindableConfigurationsFactory)
+            ICreateBindableConfiguration bindableConfigurations)
         {
             this.binders = binders;
             this.mapCommands = mapCommands;
             this.snapshots = destinationConfigurationSnapshots.TakeSnapshots();
-            this.bindableConfigurationsFactory = bindableConfigurationsFactory;
+            this.bindableConfigurations = bindableConfigurations;
             Logger = new NullLogFactory();
         }
         public ILogFactory Logger { get; set; }
         public void Bind()
         {
-            bindableConfigurations = snapshots.ToDictionary(mem => mem.DestinationType,mem =>bindableConfigurationsFactory.CreateBindableConfiguration(mem));
+            destinationType2BindableConfig = snapshots.ToDictionary(mem => mem.DestinationType,mem =>bindableConfigurations.CreateBindableConfiguration(mem));
             var allBinders = binders.Create();
-            var executable = bindableConfigurations.Values.OfType<ICreateExecutableMapping>().ToArray();
-            Logger.Create(this).Debug("Binding {0} destination configurations to {1} extending configurations", bindableConfigurations.Count, executable.Length);
+            var executable = destinationType2BindableConfig.Values.OfType<ICreateExecutableMapping>().ToArray();
+            Logger.Create(this).Debug("Binding {0} destination configurations to {1} extending configurations", destinationType2BindableConfig.Count, executable.Length);
             foreach (var binder in allBinders)
             {
-                foreach (var bindableConfiguration in bindableConfigurations)
+                foreach (var bindableConfiguration in destinationType2BindableConfig)
                 {
                     binder.Bind(bindableConfiguration.Value,executable);
                 }
@@ -45,7 +45,7 @@ namespace Ditto.Internal
         public IMapCommand CreateCommand(Type sourceType, Type destinationType)
         {
             BindableConfiguration cfg;
-            if (bindableConfigurations.TryGetValue(destinationType, out cfg) == false)
+            if (destinationType2BindableConfig.TryGetValue(destinationType, out cfg) == false)
             {
                 throw new MappingExecutionException("Could not find mapping configuration for '{0}'. Please check that a configuration exists for this type and that the mapping engine is initialized.", destinationType);
             }
@@ -55,7 +55,7 @@ namespace Ditto.Internal
         public MissingProperties Validate()
         {
             var missing = new MissingProperties();
-            foreach (var validatable in bindableConfigurations.Values.OfType<IValidatable>())
+            foreach (var validatable in destinationType2BindableConfig.Values.OfType<IValidatable>())
             {
                 var theseMissing = validatable.Validate();
                 missing = missing.Merge(theseMissing);
@@ -73,7 +73,7 @@ namespace Ditto.Internal
 
         public void Accept(IVisitCacheable visitor)
         {
-            foreach (var config in bindableConfigurations.Values)
+            foreach (var config in destinationType2BindableConfig.Values)
             {
                 var cacheable = config as ICacheable;
                 if (cacheable == null)

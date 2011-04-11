@@ -44,21 +44,7 @@ namespace Ditto.Tests
             Action validation = bindable.Assert;
             validation.should_not_throw_an<MappingConfigurationException>();
         }
-        [Fact]
-        public void can_append_other_configuration_for_nested_props()
-        {
-            var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent), new TestConfigurationFactory());
-            componentConfig.From(typeof (EventComponent));
-
-            var modelConfig = new DestinationConfiguration(typeof(ComplexViewModel), new TestConfigurationFactory());
-            modelConfig.From(typeof (ComplexEvent));
-
-            var bindable = configFactory.CreateBindableConfiguration(modelConfig.ToSnapshot());
-            bindable.Bind(configFactory.CreateBindableConfiguration(componentConfig.ToSnapshot()));
-            bindable.Assert();
-
-        }
-
+        
         [Fact]
         public void configurations_can_be_bound_to_one_another()
         {
@@ -114,9 +100,7 @@ namespace Ditto.Tests
             var cfg = new DestinationConfiguration(typeof(TypicalViewModel), configFactory);
             cfg.From(typeof(TypicalEvent));
             cfg.SetPropertyResolver(new PropertyNameCriterion("SomeId"), typeof(TypicalEvent), new StaticValueResolver(new Guid("8CF7C50E-792D-4A28-AB74-81879BC233A8")));
-            cfg.ApplyingConvention(new PropertyNameCriterion("SomeId"), new StaticValueResolver(new Guid("1B8CF33D-92B8-4E82-9E8F-5EEDE7BA14F0")));
-            var bindable = configFactory.CreateBindableConfiguration(cfg.ToSnapshot());
-            Action duplication = () => bindable.Bind();
+            Action duplication = () => cfg.ApplyingConvention(new PropertyNameCriterion("SomeId"), new StaticValueResolver(new Guid("1B8CF33D-92B8-4E82-9E8F-5EEDE7BA14F0")));
             duplication.should_not_throw_an<MappingConfigurationException>();
         }
     }

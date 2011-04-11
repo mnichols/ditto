@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Ditto.Internal
 {
-    public class BindableConfiguration : ICreateExecutableMapping, IBindable, IValidatable,ICacheable
+    public class BindableConfiguration : ICreateExecutableMapping, IValidatable,ICacheable
     {
         public BindableConfiguration(DestinationConfigurationMemento snapshot)
         {
@@ -33,27 +33,13 @@ namespace Ditto.Internal
         public SourceContext[] SourceContexts { get; private set; }
         public SourcedConvention[] SourcedConventions { get; private set; }
         public ILogFactory Logger { get; set; }
-        public void Bind(params ICreateExecutableMapping[] configurations)
-        {
-            //TODO: primordial refactoring needs to be completed by removing this call
-            var binders = new BinderFactory(new Fasterflection()){Logger = Logger};
-            foreach (var binder in binders.Create())
-            {
-                binder.Bind(this, configurations);
-            }
-        }
-
         public Type DestinationType { get; private set; }
 
         public IExecuteMapping CreateExecutableMapping(Type sourceType)
         {
-            var sourceContext = DemandSourceContext(sourceType);
+            AssertSourceContext(sourceType);
             var resolversContainer = sourceType2ResolverContainer[sourceType];
             return new ExecutableMapping(DestinationType, resolversContainer, DestinationProperties);
-        }
-        public IEnumerable<IExecuteMapping> CreateAllExecutableMappings()
-        {
-            return SourceContexts.Select(sourceContext => CreateExecutableMapping(sourceContext.SourceType));
         }
 
         public MissingProperties Validate()
@@ -71,16 +57,16 @@ namespace Ditto.Internal
             missing.TryThrow();
         }
 
-        private SourceContext DemandSourceContext(Type sourceType)
+        private void AssertSourceContext(Type sourceType)
         {
             if (SourceContexts.Length == 0)
                 throw new MappingConfigurationException(
                     "Sources have not been setup for '{0}'. Did you forget to call 'From'?", DestinationType);
-            var ctx = SourceContexts.FirstOrDefault(its => its.SourceType == sourceType);
-            if (ctx != null)
-                return ctx;
-            throw new MappingConfigurationException("'{0}' has not been setup as a source for '{1}'.", sourceType,
-                                                    DestinationType);
+
+            if( SourceContexts.Any(its => its.SourceType == sourceType))
+                return;
+
+            throw new MappingConfigurationException("'{0}' has not been setup as a source for '{1}'.", sourceType,DestinationType);
         }
         public override string ToString()
         {
