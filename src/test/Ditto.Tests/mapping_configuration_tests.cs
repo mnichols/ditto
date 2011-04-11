@@ -120,12 +120,12 @@ namespace Ditto.Tests
         {
             var cfg = new DestinationConfigurationContainer(null, configFactory);
 //            cfg.Map(typeof(ViewModelComponent)).From(typeof(EventComponent));
-            cfg.Map(typeof(ComplexViewModel)).From(typeof(ComplexEvent));
+            cfg.Map(typeof(ComplexViewModel)).From(typeof(ComplexEvent));//both have property named 'Component', but this would require a custom mapping
 
             var binding = cfg.ToBinding();
             binding.Bind();
             Action propertyNameMappingOnCustomType = binding.Assert;
-            propertyNameMappingOnCustomType.should_throw_an<MappingConfigurationException>();
+            propertyNameMappingOnCustomType.should_throw_because<MappingConfigurationException>("The following properties are not mapped for 'Ditto.Tests.ComplexViewModel':"+Environment.NewLine+"Component"+Environment.NewLine);
         }
     }
 
