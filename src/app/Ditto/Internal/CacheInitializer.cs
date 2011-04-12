@@ -1,3 +1,5 @@
+using System;
+
 namespace Ditto.Internal
 {
     public class CacheInitializer : IVisitCacheable
@@ -11,8 +13,18 @@ namespace Ditto.Internal
 
         public void Visit(SourcedPropertyNameResolver propertyNameResolver)
         {
-            propertyNameResolver.GetValue = cache.CacheGet(propertyNameResolver.SourceType,
-                                                           propertyNameResolver.PropertyName);
+            try
+            {
+                propertyNameResolver.GetValue = cache.CacheGet(propertyNameResolver.SourceType,
+                                                               propertyNameResolver.PropertyName);    
+            }
+            catch(Exception ex)
+            {
+                throw new DittoConfigurationException("There was a problem caching property {0} for SourceType {1} :{2}{3}",
+                                                      propertyNameResolver.PropertyName, propertyNameResolver.SourceType,Environment.NewLine,ex);
+            }
+
+            
         }
 
         public void Visit(IDescribeMappableProperty mappableProperty)

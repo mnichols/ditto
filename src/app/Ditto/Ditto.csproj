@@ -158,6 +158,7 @@
     <Compile Include="Internal\SelfBinder.cs" />
     <Compile Include="Internal\SetValue.cs" />
     <Compile Include="Internal\SourceContext.cs" />
+    <Compile Include="Internal\SourceContextDiscovery.cs" />
     <Compile Include="Internal\SourcedConvention.cs" />
     <Compile Include="Internal\SourcedExecutableMapping.cs" />
     <Compile Include="Internal\SourcedPropertyNameResolver.cs" />

@@ -25,6 +25,7 @@ namespace Ditto.Resolvers
             return UsingReflection(context.SourceType, context.Source);
         }
 
+        internal string SourcePropertyName { get { return sourcePropertyName; } }
 
         private Result UsingReflection(Type sourceType, object target)
         {
@@ -35,10 +36,10 @@ namespace Ditto.Resolvers
                                                     sourceType);
             return new Result(true, prop.GetValue(target, null));
         }
-
+        
         internal SourcedPropertyNameResolver SourcedBy(Type sourceType)
         {
-            sourced = new SourcedPropertyNameResolver(sourceType, sourcePropertyName);
+            sourced = new SourcedPropertyNameResolver(sourceType,this);
             return sourced;
         }
     }
