@@ -16,7 +16,7 @@ namespace Ditto.Internal
             this.type = type;
             this.name = name;
         }
-
+        
         public bool Equals(CacheKey other)
         {
             if (ReferenceEquals(null, other)) return false;

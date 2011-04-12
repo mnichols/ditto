@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Fasterflect;
 
 namespace Ditto.Internal
 {
     public class Fasterflection : IInvoke, ICacheInvocation,IActivate
     {
-        private static Dictionary<CacheKey, MemberSetter> setters = new Dictionary<CacheKey, MemberSetter>();
-        private static Dictionary<CacheKey, MemberGetter> getters = new Dictionary<CacheKey, MemberGetter>();
-
+        private Dictionary<CacheKey, MemberSetter> setters = new Dictionary<CacheKey, MemberSetter>();
+        private Dictionary<CacheKey, MemberGetter> getters = new Dictionary<CacheKey, MemberGetter>();
+        private readonly ReaderWriterLockSlim locker=new ReaderWriterLockSlim();
         public Fasterflection()
         {
             Logger = new NullLogFactory();
@@ -20,7 +21,10 @@ namespace Ditto.Internal
         {
             return new GetValue(TryCacheGet(targetType, propertyName));
         }
-
+        private bool IsCacheable(Type type)
+        {
+            return type.IsClass;
+        }
         public SetValue CacheSet(Type targetType, string propertyName)
         {
             return new SetValue(TryCacheSet(targetType, propertyName));
@@ -58,14 +62,31 @@ namespace Ditto.Internal
         {
             var key = new CacheKey(targetType, propertyName);
             MemberGetter getter;
-            if (getters.TryGetValue(key, out getter) == false)
+            if(IsCacheable(targetType))
             {
-                getters[key] =
-                    getter = targetType.DelegateForGetPropertyValue(propertyName, Flags.InstanceAnyVisibility);
+                //there should only be few writers to this bit at execution time
+                // note that this could be locked inside the MemberGetter delegate (below) 
+                // todo: cache all these during initialization
+                locker.EnterWriteLock();
+                if (getters.TryGetValue(key, out getter) == false)
+                {
+                    getters[key] = getter = targetType.DelegateForGetPropertyValue(propertyName, Flags.InstanceAnyVisibility);
+                }
+                locker.ExitWriteLock();
+                return getter;
+            }
+
+            if(getters.TryGetValue(key,out getter)==false)
+            {
+                getters[key] = getter = new MemberGetter(impl =>
+                {
+                    var implementationGetter = TryCacheGet(impl.GetType(), propertyName);
+                    return implementationGetter(impl);
+                });    
             }
             return getter;
         }
-
+        
         private MemberSetter TryCacheSet(Type targetType, string propertyName)
         {
             var key = new CacheKey(targetType, propertyName);
@@ -87,6 +108,12 @@ namespace Ditto.Internal
         public object CreateCollectionInstance(Type collectionType, int length)
         {
             return collectionType.CreateInstance(length);
+        }
+
+        public bool HasCachedGetterFor(Type type, string name)
+        {
+            var key = new CacheKey(type, name);
+            return getters.ContainsKey(key);
         }
     }
 }

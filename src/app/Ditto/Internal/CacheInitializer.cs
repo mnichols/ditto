@@ -15,6 +15,7 @@ namespace Ditto.Internal
         {
             try
             {
+
                 propertyNameResolver.GetValue = cache.CacheGet(propertyNameResolver.SourceType,
                                                                propertyNameResolver.PropertyName);    
             }
