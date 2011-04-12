@@ -94,6 +94,11 @@ namespace Ditto.Internal
                 throw new DittoConfigurationException(
                     "Sources have not been setup for '{0}'. Did you forget to call 'From'?", DestinationType);
 
+            if (SourceContexts.Any(its => its.SourceType == sourceType)) //this gives a little perf boost
+                return sourceType;
+            Type discovered;
+            if (source2AlternateTypes.TryGetValue(sourceType, out discovered))
+                return discovered;
             var deepThots = new SourceContextDiscovery(sourceType);
             var context = SourceContexts.FirstOrDefault(deepThots.IsSatisfiedBy);
             if(context!=null)

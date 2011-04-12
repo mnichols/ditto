@@ -1,2 +1,2 @@
-.\build\Ditto.Benchmarking.Tests.exe > .\build\benchmark_results.txt
+.\build\Ditto.Benchmarking.Tests.exe > .\build\benchmark_results.txt --runtwice
 pause
