@@ -88,6 +88,19 @@ namespace Ditto.Tests
             container.Release(mapper);
             container.Release(configurations);
 
+        
+        }
+        [Fact]
+        public void system_converters_are_applied()
+        {
+            WithConfiguration<HistoryConfiguration>();
+            var configurations = container.Resolve<IInitializeDitto>();
+            configurations.Initialize();
+            var mapper = container.Resolve<IMap>();
+            var output = mapper.Map<History>(new HistoryForm() {YearsOfService = "3"});
+            output.YearsOfService.should_be_equal_to(3);
+            container.Release(mapper);
+            container.Release(configurations);
         }
         [Fact]
         public void global_ignore_resolvers_are_applied()
@@ -173,7 +186,13 @@ namespace Ditto.Tests
                 }
             }
         }
-        
+        public class HistoryConfiguration : AbstractMappingConfiguration
+        {
+            public override void Configure()
+            {
+                Cfg.Map<History>().From(typeof (HistoryForm));
+            }
+        }
         public class PeopleConfiguration:AbstractMappingConfiguration
         {
             public override void Configure()

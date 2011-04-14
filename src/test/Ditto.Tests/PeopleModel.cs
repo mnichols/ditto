@@ -32,4 +32,12 @@ namespace Ditto.Tests
         public string MothersName { get; set; }
         public string Name { get; set; }
     }
+    public class History
+    {
+        public double? YearsOfService { get; set; }
+    }
+    public class HistoryForm
+    {
+        public string YearsOfService { get; set; }
+    }
 }

@@ -8,9 +8,15 @@ namespace Ditto.Converters
     {
         public bool IsConvertible(ConversionContext conversion)
         {
-            return conversion.HasValue &&
+            var convertible= conversion.HasValue &&
                 conversion.ValueType.IsNullableType() &&
                    (conversion.DestinationPropertyType.IsNullableType() == false);
+            if (convertible)
+            {
+                var cnv = new NullableConverter(conversion.ValueType);
+                return conversion.DestinationPropertyType == cnv.UnderlyingType;
+            }
+            return false;
         }
 
         public ConversionResult Convert(ConversionContext conversion)

@@ -83,6 +83,7 @@ namespace Ditto.Tests
             assignment.SetValue(new Result(true,unsigned));
             dest.Int.should_be_equal_to(42);
         }
+        
         public class Destination
         {
             public DateTime AnDateTime { get; set; }

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using Ditto.Internal;
 
 namespace Ditto.Converters
@@ -16,7 +17,13 @@ namespace Ditto.Converters
         {
             try
             {
-                return conversion.Result(System.Convert.ChangeType(conversion.Value, conversion.DestinationPropertyType));
+                if (IsConvertible(conversion))
+                    return conversion.Unconverted();
+                var destPropType = conversion.DestinationPropertyType;
+                if (destPropType.IsNullableType() && conversion.HasValue)
+                    destPropType = new NullableConverter(destPropType).UnderlyingType;
+
+                return conversion.Result(System.Convert.ChangeType(conversion.Value, destPropType));
             }
             catch(InvalidCastException)
             {

@@ -100,9 +100,13 @@ namespace Ditto.Tests
             output.MyDoubles[1].should_be_equal_to(0);
             output.MyDoubles[2].should_be_equal_to(3.2);
         }
+        
     }
 
-
+    public class StringNumeric
+    {
+        public string AnInt { get; set; }
+    }
     public class CollectionSource
     {
         public List<string> List { get; set; }
