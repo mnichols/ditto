@@ -53,7 +53,7 @@ namespace Ditto.WindsorIntegration
             }
         }
         /// <summary>
-        /// Resolves component but will throw if any of <paramref name="T"/> cannot be resolved
+        /// Resolves component but will throw if any of <typeparamref name="T"/>cannot be resolved
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>

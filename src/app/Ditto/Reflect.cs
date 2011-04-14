@@ -6,7 +6,7 @@ namespace Ditto
 {
 	/// <summary>
 	/// Helper for simplifying lamba access to members
-	/// <see cref="http://blog.andreloker.de/post/2008/06/Getting-rid-of-strings-(2)-use-lambda-expressions.aspx"/>
+    /// http://blog.andreloker.de/post/2008/06/Getting-rid-of-strings-(2)-use-lambda-expressions.aspx
 	/// </summary>
 	public static class Reflect
 	{
@@ -88,6 +88,7 @@ namespace Ditto
         /// </code>
         /// </example> 
         /// <typeparam name="TClass">The type of the class.</typeparam>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="expression">The expression.</param>
         /// <returns></returns>
         public static PropertyInfo GetProperty<TClass,TProperty>(Expression<Func<TClass, TProperty>> expression)
