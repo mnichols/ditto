@@ -143,7 +143,8 @@
         </member>
         <member name="P:Ditto.Internal.IResolutionContext.Source">
             <summary>
-            Gets the source object. Note this the whole source object, not just its property value.
+            Gets the declaring source object (not the property value).
+            This can be <c>null</c>. Be aware of this when implementing <see cref="T:Ditto.IResolveValue"/>.
             </summary>
             <value>The source.</value>
         </member>

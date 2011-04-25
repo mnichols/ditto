@@ -9,7 +9,7 @@ namespace Ditto.Internal
     {
         private IContainResolvers[] containers;
 
-        private Dictionary<IDescribeMappableProperty, IResolveValue> cachedResolvers =new Dictionary<IDescribeMappableProperty, IResolveValue>();
+        private Dictionary<IDescribeMappableProperty,IResolveValue> cachedResolvers =new Dictionary<IDescribeMappableProperty, IResolveValue>();
         public PrioritizedComposedFirstMatchingResolverContainer(IContainResolvers[] containers)
         {
             if(containers==null || containers.Length==0)
@@ -55,17 +55,20 @@ namespace Ditto.Internal
         private IResolveValue TryGetCandidate(IDescribeMappableProperty mappableProperty)
         {
             IResolveValue candidate=null;
+            
             foreach (var container in containers)
             {
                 if (container.WillResolve(mappableProperty) == false)
                     continue;
-                candidate = container.GetResolver(mappableProperty);
+                IContainResolvers copy = container;
+                candidate = copy.GetResolver(mappableProperty);
                 if (typeof(IOverrideable).IsInstanceOfType(candidate) == false) 
                     return candidate;
                 /*default resolver...keep trying but remember it in case none else be found*/
             }
             return candidate;
         }
+        
         public void Source(IDescribeMappableProperty[] destinationProperties)
         {
             var cacheable = destinationProperties.Where(WillResolve).ToArray();

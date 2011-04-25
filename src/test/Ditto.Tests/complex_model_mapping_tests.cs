@@ -42,7 +42,7 @@ namespace Ditto.Tests
             var bindable = container.ToBinding();
             bindable.Bind();
             bindable.Assert();
-
+            bindable.Accept(new CacheInitializer(new Fasterflection()));
             var source = new ComplexViewModel() {Component = new ViewModelComponent() {Name = "mikey"}, Name = "tasha"};
             var dest = new ComplexViewModel();
             var executable = bindable.CreateCommand(typeof(ComplexViewModel), typeof(ComplexViewModel));
@@ -148,6 +148,7 @@ namespace Ditto.Tests
             bindable.Bind();
             bindable.Assert();
 
+            bindable.Accept(new CacheInitializer(new Fasterflection()));
             var mapper = bindable.CreateCommand(typeof(NestedPropsSource), typeof(NestedPropsDestination));
             var src = new NestedPropsSource();
             src.i1 = null;
