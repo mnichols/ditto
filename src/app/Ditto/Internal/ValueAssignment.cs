@@ -25,6 +25,7 @@ namespace Ditto.Internal
             if (value.IsResolved == false)
                 return;
             var assignable = new AssignableValue(value.Value, destinationProperty, valueConverters);
+
             invoke.SetValue(assignable, destination);
         }
     }

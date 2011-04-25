@@ -22,7 +22,13 @@ namespace Ditto.Internal
 
         public IResolutionContext CreateContext(object source, Type destinationType)
         {
-            return new DefaultResolutionContext(source, activate.CreateInstance(destinationType), activate, this, valueAssignments, invoke);
+            var destination = activate.CreateInstance(destinationType);
+            return new DefaultResolutionContext(source, destination, activate, this, valueAssignments, invoke);
+        }
+
+        public IResolutionContext CreateContext(IDescribeMappableProperty sourceProperty)
+        {
+            return new NullSourceContext(sourceProperty, valueAssignments, invoke,activate);
         }
     }
 }

@@ -6,23 +6,27 @@ namespace Ditto.Tests
     public class TestContextualizer : IContextualizeResolution,IMapCommandFactory,ICacheInvocation
     {
         private Fasterflection reflection;
-
+        private IContextualizeResolution inner;
         public TestContextualizer()
         {
             reflection = new Fasterflection();
+            inner = new DefaultContextualizer(reflection,
+                                              new ValueAssignments(new DefaultValueConverterContainer(reflection),
+                                                                   reflection), reflection);
         }
         public IResolutionContext CreateContext(object source, object destination)
         {
-
-            return new DefaultResolutionContext(source, destination, reflection, this,
-                                                new ValueAssignments(new DefaultValueConverterContainer(reflection),
-                                                                     reflection),reflection);
+            return inner.CreateContext(source, destination);
         }
 
         public IResolutionContext CreateContext(object source, Type destinationType)
         {
-            return new DefaultResolutionContext(source, reflection.CreateInstance(destinationType), reflection, this,
-                                                new ValueAssignments(new DefaultValueConverterContainer(reflection),reflection),reflection);
+            return inner.CreateContext(source, destinationType);
+        }
+
+        public IResolutionContext CreateContext(IDescribeMappableProperty sourceProperty)
+        {
+            return inner.CreateContext(sourceProperty);
         }
 
         public IMapCommand Create(IExecuteMapping executableMapping)

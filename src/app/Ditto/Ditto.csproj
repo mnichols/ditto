@@ -152,6 +152,8 @@
     <Compile Include="Internal\NullLogger.cs" />
     <Compile Include="Internal\NullResolver.cs" />
     <Compile Include="Internal\NullResolverContainer.cs" />
+    <Compile Include="Internal\NullSourceContext.cs" />
+    <Compile Include="Internal\NullValueAssignment.cs" />
     <Compile Include="Internal\NullValueConverterContainer.cs" />
     <Compile Include="Internal\PrioritizedComposedFirstMatchingResolverContainer.cs" />
     <Compile Include="Internal\ResolverContext.cs" />

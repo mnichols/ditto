@@ -32,14 +32,16 @@ namespace Ditto.Internal
 
         public object GetValue(string propertyName, object source)
         {
+            if (source == null)
+                return null;
             var getter = TryCacheGet(source.GetType(), propertyName);
             return getter(source);
         }
 
         public void SetValue(AssignableValue assignableValue, object destination)
         {
-            Logger.Create(this).Debug("Setting value on '{0}' using assignable value:{1}{2}", destination,
-                                      Environment.NewLine, assignableValue);
+            Logger.Create(this).Debug("Setting value on '{0}' using assignable value:{1}{2}", destination,Environment.NewLine, assignableValue);
+            
             MemberSetter setter = TryCacheSet(destination.GetType(), assignableValue.PropertyName);
 
             try

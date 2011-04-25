@@ -71,10 +71,12 @@ namespace Ditto.Internal
             return invoke.GetValue(propertyName, destination);
         }
 
-        public IResolutionContext Nested(IDescribeMappableProperty destinationProperty, IDescribeMappableProperty sourceProperty)
+        public IResolutionContext Nested(IDescribeMappableProperty sourceProperty, IDescribeMappableProperty destinationProperty)
         {
             var src = GetSourceValue(Source, sourceProperty);
             var dest = GetDestValue(src, destinationProperty);
+            if (src == null && destinationProperty.IsCustomType)
+                return contextualizer.CreateContext(sourceProperty);
             return contextualizer.CreateContext(src, dest);
         }
         private object GetSourceValue(object src,IDescribeMappableProperty sourceProperty)

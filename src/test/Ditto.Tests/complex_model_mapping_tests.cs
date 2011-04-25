@@ -61,7 +61,6 @@ namespace Ditto.Tests
         [Fact]
         public void it_should_map_nested_components_by_type_with_generic_sugar()
         {
-            var container = new DestinationConfigurationContainer(null, configFactory);
             container.Map<ComplexViewModel>()
                 .From<ComplexEventWithDifferentNamedComponent>()
                 .Redirecting<ComplexEventWithDifferentNamedComponent,ViewModelComponent>(from => from.DifferentName, to => to.Component,nested=>{});
@@ -120,6 +119,31 @@ namespace Ditto.Tests
             var src = new NestedPropsSource();
             var dest = new NestedPropsDestination();
             mapper.Map(src, dest);
+        }
+
+        [Fact]
+        public void it_should_map_nested_models_that_are_null()
+        {
+            container.Map(typeof(NestedPropsDestination.Int1)).From(typeof(NestedPropsSource.Int1));
+            container.Map(typeof(NestedPropsDestination.Int2)).From(typeof(NestedPropsSource.Int2));
+            container.Map(typeof(NestedPropsDestination)).From(typeof(NestedPropsSource));
+            var bindable = container.ToBinding();
+            bindable.Bind();
+            bindable.Assert();
+
+            var mapper = bindable.CreateCommand(typeof(NestedPropsSource), typeof(NestedPropsDestination));
+            var src = new NestedPropsSource();
+            src.i1 = null;
+            var dest = new NestedPropsDestination();
+            mapper.Map(src, dest);
+            dest.i1.should_be_null();
+            dest.i2.should_not_be_null();
+            dest.i3.should_not_be_null();
+            dest.i4.should_not_be_null();
+            dest.i5.should_not_be_null();
+            dest.i6.should_not_be_null();
+            dest.i7.should_not_be_null();
+            dest.i8.should_not_be_null();
         }
     }
 }

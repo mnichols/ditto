@@ -42,10 +42,10 @@ namespace Ditto.Internal
         /// <summary>
         /// Nests this context on both the destination and source properties. 
         /// </summary>
-        /// <param name="destinationProperty">The destination property.</param>
         /// <param name="sourceProperty">The source property.</param>
+        /// <param name="destinationProperty">The destination property.</param>
         /// <returns></returns>
-        IResolutionContext Nested(IDescribeMappableProperty destinationProperty, IDescribeMappableProperty sourceProperty);
+        IResolutionContext Nested(IDescribeMappableProperty sourceProperty, IDescribeMappableProperty destinationProperty);
     }
 
 }
