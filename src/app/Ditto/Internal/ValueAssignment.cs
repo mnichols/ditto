@@ -9,8 +9,7 @@ namespace Ditto.Internal
         private readonly IInvoke invoke;
         private readonly IValueConverterContainer valueConverters;
 
-        public ValueAssignment(object destination, IDescribeMappableProperty destinationProperty,
-                               IValueConverterContainer valueConverters, IInvoke invoke)
+        public ValueAssignment(object destination, IDescribeMappableProperty destinationProperty,IValueConverterContainer valueConverters, IInvoke invoke)
         {
             if (destinationProperty == null)
                 throw new ArgumentNullException("destinationProperty");

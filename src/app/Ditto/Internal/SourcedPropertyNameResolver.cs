@@ -36,6 +36,8 @@ namespace Ditto.Internal
         {
             if(GetValue==null)
                 throw new InvalidOperationException("GetValue was not assigned to this resolver.");
+            if (context.Source == null)
+                return Result.Unresolved;
             return new Result(true,GetValue(context.Source));
         }
     }

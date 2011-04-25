@@ -33,7 +33,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-	<DocumentationFile>Ditto.xml</DocumentationFile>
+    <DocumentationFile>Ditto.xml</DocumentationFile>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>

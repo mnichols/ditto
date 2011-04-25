@@ -14,7 +14,8 @@ namespace Ditto.Internal
         /// <value>The type of the source.</value>
         Type SourceType { get; }
         /// <summary>
-        /// Gets the source object. Note this the whole source object, not just its property value.
+        /// Gets the declaring source object (not the property value).
+        /// This can be <c>null</c>. Be aware of this when implementing <see cref="IResolveValue"/>.
         /// </summary>
         /// <value>The source.</value>
         object Source { get; }
