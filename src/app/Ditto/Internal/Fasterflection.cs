@@ -32,8 +32,6 @@ namespace Ditto.Internal
 
         public object GetValue(string propertyName, object source)
         {
-            if (source == null)
-                return null;
             var getter = TryCacheGet(source.GetType(), propertyName);
             return getter(source);
         }

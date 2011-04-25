@@ -328,6 +328,23 @@
             </summary>
             <value>The destination.</value>
         </member>
+        <member name="M:Ditto.Internal.IContextualizeResolution.CreateNestedParallelContext(Ditto.Internal.IDescribeMappableProperty,Ditto.Internal.IDescribeMappableProperty,Ditto.Internal.IResolutionContext)">
+            <summary>
+            Creates a nested context from current context, nesting both Source and Destination properties in parallel.
+            </summary>
+            <param name="sourceProperty">The source property.</param>
+            <param name="destinationProperty">The destination property.</param>
+            <param name="parentContext">The parent context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Ditto.Internal.IContextualizeResolution.CreateNestedContext(Ditto.Internal.IDescribeMappableProperty,Ditto.Internal.IResolutionContext)">
+            <summary>
+            Creates a nested context from current context, but using the current Source.
+            </summary>
+            <param name="destinationProperty">The destination property.</param>
+            <param name="parentContext">The parent context.</param>
+            <returns></returns>
+        </member>
         <member name="T:Ditto.Internal.BindableConfiguration">
             <summary>
               Intermediate representation of configuration which provide the executable mapping, as well as validation and caching hooks.

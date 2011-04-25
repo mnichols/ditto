@@ -24,9 +24,14 @@ namespace Ditto.Tests
             return inner.CreateContext(source, destinationType);
         }
 
-        public IResolutionContext CreateContext(IDescribeMappableProperty sourceProperty)
+        public IResolutionContext CreateNestedParallelContext(IDescribeMappableProperty sourceProperty, IDescribeMappableProperty destinationProperty, IResolutionContext parentContext)
         {
-            return inner.CreateContext(sourceProperty);
+            return inner.CreateNestedParallelContext(sourceProperty, destinationProperty, parentContext);
+        }
+
+        public IResolutionContext CreateNestedContext(IDescribeMappableProperty destinationProperty, IResolutionContext parentContext)
+        {
+            return inner.CreateNestedContext(destinationProperty, parentContext);
         }
 
         public IMapCommand Create(IExecuteMapping executableMapping)

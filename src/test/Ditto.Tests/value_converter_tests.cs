@@ -18,7 +18,7 @@ namespace Ditto.Tests
             {
                 converters.AddConverter(testConverter);
             }
-            return new DefaultResolutionContext(src, dest, new Fasterflection(), null, new ValueAssignments(converters, reflection ),reflection);
+            return new DefaultResolutionContext(src, dest, null, new ValueAssignments(converters, reflection ),reflection);
         }   
         public value_converter_tests()
         {
