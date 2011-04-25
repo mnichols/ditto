@@ -26,12 +26,12 @@ namespace Ditto.Internal
 
         public IDescribeMappableProperty[] DestinationProperties { get; private set; }
         public ILogFactory Logger { get; set; }
-        public SourceContext[] SourceContexts { get; private set; }
+        public ISourceContext[] SourceContexts { get; private set; }
         public SourcedConvention[] SourcedConventions { get; private set; }
         
         public void Bind(params ICreateExecutableMapping[] configurations)
         {
-            foreach (var sourceContext in SourceContexts)
+            foreach (var sourceContext in SourceContexts.OfType<IBindable>())
             {
                 sourceContext.Bind(configurations);
             }
@@ -44,7 +44,7 @@ namespace Ditto.Internal
 
         public void Accept(IVisitCacheable visitor)
         {
-            foreach (var sourceContext in SourceContexts)
+            foreach (var sourceContext in SourceContexts.OfType<ICacheable>())
             {
                 sourceContext.Accept(visitor);
             }
@@ -68,8 +68,7 @@ namespace Ditto.Internal
         {
             var validator = new ConfigurationValidator(DestinationType,
                                                        DestinationProperties,
-                                                       SourceContexts.Concat<IContainResolvers>(SourcedConventions).
-                                                           ToArray());
+                                                       SourceContexts.Concat<IContainResolvers>(SourcedConventions).ToArray());
             return validator.Validate();
         }
 

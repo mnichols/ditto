@@ -5,7 +5,7 @@ using Ditto.Resolvers;
 
 namespace Ditto.Internal
 {
-    public class SourceContext : IContainResolvers,ICacheable,IValidatable,IBindable
+    public class SourceContext : ICacheable,IValidatable,IBindable,ISourceContext,IValidateResolvers
     {
         private readonly Dictionary<IDescribeMappableProperty, IResolveValue> destinationProperty2Resolver = new Dictionary<IDescribeMappableProperty, IResolveValue>();
         private IDescribeMappableProperty[] sourceProperties;
@@ -39,6 +39,11 @@ namespace Ditto.Internal
             /*for now, we are just answering this question by the property's name*/
             var key = destinationProperty2Resolver.Keys.First(its => string.Equals(its.Name,destinationProperty.Name));
             return destinationProperty2Resolver[key];
+        }
+
+        public bool HasResolverFromOtherSource(Type destinationType, IDescribeMappableProperty destinationProperty)
+        {
+            return destinationType != SourceType && WillResolve(destinationProperty);
         }
 
         /// <summary>

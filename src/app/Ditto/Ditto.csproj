@@ -24,7 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>Ditto.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Ditto.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -33,6 +33,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
+	<DocumentationFile>Ditto.xml</DocumentationFile>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
@@ -93,6 +94,7 @@
     <Compile Include="Internal\CacheKey.cs" />
     <Compile Include="Internal\CachingPropertyNameResolver.cs" />
     <Compile Include="Internal\CloningMapCommand.cs" />
+    <Compile Include="Internal\CloningSourceContext.cs" />
     <Compile Include="Internal\ConfigurationPropertyCriterion.cs" />
     <Compile Include="Internal\ConfigurationValidator.cs" />
     <Compile Include="Internal\Convention.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Internal\IContextualizeResolution.cs" />
     <Compile Include="Internal\ICreateBindableConfiguration.cs" />
     <Compile Include="Internal\ICreateDestinationConfiguration.cs" />
+    <Compile Include="Internal\ISourceContext.cs" />
     <Compile Include="Internal\ITakeDestinationConfigurationSnapshot.cs" />
     <Compile Include="Internal\ICreateExecutableMapping.cs" />
     <Compile Include="Internal\ICreateMappingCommand.cs" />
@@ -141,6 +144,7 @@
     <Compile Include="Internal\IContainResolvers.cs" />
     <Compile Include="Internal\IToggle.cs" />
     <Compile Include="Internal\IValidatable.cs" />
+    <Compile Include="Internal\IValidateResolvers.cs" />
     <Compile Include="Internal\IValueConverterContainer.cs" />
     <Compile Include="Internal\IVisitCacheable.cs" />
     <Compile Include="Internal\ListPropertyBinder.cs" />

@@ -18,6 +18,12 @@ namespace Ditto.Tests
             contextualizer=new TestContextualizer();
         }
         [Fact]
+        public void destination_type_is_automatically_configured_as_source()
+        {
+            var cfg = new DestinationConfiguration(typeof(Person));
+            cfg.IsSourcedBy(typeof(Person)).should_be_true();
+        }
+        [Fact]
         public void missing_property_mapping_throws()
         {
             var cfg = new DestinationConfiguration(typeof(Person));
