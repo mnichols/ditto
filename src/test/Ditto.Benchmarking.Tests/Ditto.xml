@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ditto.Benchmarking.Tests</name>
+    </assembly>
+    <members>
+        <member name="T:Ditto.Benchmarking.Tests.BenchmarkAttribute">
+            <summary>
+            The attribute to use to mark methods as being
+            the targets of benchmarking.
+            </summary>
+        </member>
+        <member name="T:Ditto.Benchmarking.Tests.Benchmark">
+            <summary>
+            Very simple benchmarking framework. Looks for all types
+            in the current assembly which have public static parameterless
+            methods marked with the Benchmark attribute. In addition, if 
+            there are public static Init, Reset and Check methods with
+            appropriate parameters (a string array for Init, nothing for
+            Reset or Check) these are called at appropriate times.
+            </summary>
+        </member>
+        <member name="F:Ditto.Benchmarking.Tests.Benchmark.runIterations">
+            <summary>
+            Number of times to run the methods in each type.
+            </summary>
+        </member>
+        <member name="M:Ditto.Benchmarking.Tests.Benchmark.ParseCommandLine(System.String[])">
+            <summary>
+            Parses the command line, returning an array of strings
+            which are the arguments the tasks should receive. This
+            array will definitely be non-null, even if null is
+            passed in originally.
+            </summary>
+        </member>
+        <member name="M:Ditto.Benchmarking.Tests.Benchmark.PrintEnvironment">
+            <summary>
+            Prints out information about the operating environment.
+            </summary>
+        </member>
+    </members>
+</doc>

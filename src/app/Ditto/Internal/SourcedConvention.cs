@@ -2,7 +2,7 @@ using System;
 
 namespace Ditto.Internal
 {
-    public class SourcedConvention:IContainResolvers,ICacheable,IBindable
+    public class SourcedConvention:IContainResolvers,ICacheable,IBindable,IValidateResolvers
     {
         private Type sourceType;
         private readonly Convention inner;
@@ -25,6 +25,11 @@ namespace Ditto.Internal
         public IResolveValue GetResolver(IDescribeMappableProperty destinationProperty)
         {
             return inner.GetResolver(destinationProperty);
+        }
+
+        public bool HasResolverFromOtherSource(Type destinationType, IDescribeMappableProperty destinationProperty)
+        {
+            return destinationType != SourceType && WillResolve(destinationProperty);
         }
 
         public void Accept(IVisitCacheable visitor)

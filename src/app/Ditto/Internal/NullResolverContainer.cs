@@ -1,3 +1,5 @@
+using System;
+
 namespace Ditto.Internal
 {
     public class NullResolverContainer : IContainResolvers
@@ -11,5 +13,6 @@ namespace Ditto.Internal
         {
             return NullResolver.Instance;
         }
+
     }
 }

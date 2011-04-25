@@ -11,7 +11,7 @@ namespace Ditto.Internal
 
         public Type TypeToUse { get; private set; }
         public Type RequestedType { get; private set; }
-        public bool IsSatisfiedBy(SourceContext context)
+        public bool IsSatisfiedBy(ISourceContext context)
         {
             if(RequestedType==context.SourceType)
             {

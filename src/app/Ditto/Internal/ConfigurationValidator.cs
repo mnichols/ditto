@@ -5,6 +5,7 @@ namespace Ditto.Internal
 {
     public class ConfigurationValidator : IValidatable
     {
+        private readonly Type destinationType;
         private readonly IDescribeMappableProperty[] destinationProperties;
         private readonly IContainResolvers[] resolverContainers;
         private MissingProperties missingProperties;
@@ -15,18 +16,23 @@ namespace Ditto.Internal
             if (destinationProperties.Length == 0)
                 throw new DittoConfigurationException("Destination properties have not been queried for {0}",destinationType);
             missingProperties = new MissingProperties();
+            this.destinationType = destinationType;
             this.destinationProperties = destinationProperties;
             this.resolverContainers = resolverContainers;
         }
 
         public MissingProperties Validate()
         {
-            foreach (var destinationProperty in destinationProperties)
+            var resolverValidatable = resolverContainers.OfType<IValidateResolvers>().ToArray();
+            if(resolverValidatable.Length>0)
             {
-                var property = destinationProperty;
-                if (resolverContainers.Any(it => it.WillResolve(property)))
-                    continue;
-                missingProperties.Add(destinationProperty);
+                foreach (var destinationProperty in destinationProperties)
+                {
+                    var property = destinationProperty;
+                    if (resolverValidatable.Any(it => it.HasResolverFromOtherSource(destinationType,property)))
+                        continue;
+                    missingProperties.Add(destinationProperty);
+                }
             }
             foreach (var validatable in resolverContainers.OfType<IValidatable>())
             {

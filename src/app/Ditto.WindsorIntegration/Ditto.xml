@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ditto.WindsorIntegration</name>
+    </assembly>
+    <members>
+        <member name="T:Ditto.WindsorIntegration.DittoFacility.MapCommandResolver">
+            <summary>
+              This resolver makes up for the TypedFactoryFacility failure in forwarding parameters into child components for IMapCommand
+            </summary>
+        </member>
+        <member name="M:Ditto.WindsorIntegration.WindsorMappingInitializer.ResolveAssert``1">
+            <summary>
+            Resolves component but will throw if any of <typeparamref name="T"/>cannot be resolved
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

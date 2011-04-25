@@ -28,6 +28,13 @@ namespace Ditto
         /// <param name="resolver">The resolver.</param>
         void ApplyingConvention(IPropertyCriterion propertyCriterion, IResolveValue resolver);
 
+        /// <summary>
+        /// This explicitly states this destination may be its own source type without other sources. 
+        /// Only necessary to use if sources <i>other</i> than the destination type are not going to be mapped.
+        /// Failure to call this without mapping other sources will result in validation exceptions.
+        /// </summary>
+        /// <returns></returns>
+        ISourcedDestinationConfiguration ForCloningOnly();
     }
 
     /// <summary>
@@ -46,5 +53,12 @@ namespace Ditto
         ISourcedDestinationConfiguration<TDest> From<TSource>();
         ISourcedDestinationConfiguration<TDest> From<TSource1, TSource2>();
         ISourcedDestinationConfiguration<TDest> From<TSource1, TSource2, TSource3>();
+        /// <summary>
+        /// This explicitly states this destination may be its own source type without other sources. 
+        /// Only necessary to use if sources <i>other</i> than the destination type are not going to be mapped.
+        /// Failure to call this without mapping other sources will result in validation exceptions.
+        /// </summary>
+        /// <returns></returns>
+        ISourcedDestinationConfiguration<TDest> ForCloningOnly();
     }
 }

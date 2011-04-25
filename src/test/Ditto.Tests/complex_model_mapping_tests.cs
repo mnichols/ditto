@@ -35,6 +35,23 @@ namespace Ditto.Tests
             dest.Component.Name.should_be_equal_to("ComponentName");
         }
         [Fact]
+        public void complex_model_should_map_to_itself_okay()
+        {
+            container.Map(typeof (ViewModelComponent)).ForCloningOnly();
+            container.Map(typeof (ComplexViewModel)).ForCloningOnly();
+            var bindable = container.ToBinding();
+            bindable.Bind();
+            bindable.Assert();
+
+            var source = new ComplexViewModel() {Component = new ViewModelComponent() {Name = "mikey"}, Name = "tasha"};
+            var dest = new ComplexViewModel();
+            var executable = bindable.CreateCommand(typeof(ComplexViewModel), typeof(ComplexViewModel));
+            executable.Map(source, dest);
+            dest.Name.should_be_equal_to("tasha");
+            dest.Component.should_not_be_null();
+            dest.Component.Name.should_be_equal_to("mikey");
+        }
+        [Fact]
         public void it_should_map_nested_components_by_type()
         {
             var componentConfig = new DestinationConfiguration(typeof(ViewModelComponent));

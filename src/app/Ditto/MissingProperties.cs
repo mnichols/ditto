@@ -8,15 +8,16 @@ namespace Ditto
 {
     public class MissingProperties:IEnumerable<IDescribeMappableProperty>
     {
+        public static MissingProperties None=new MissingProperties();
         private List<IDescribeMappableProperty> missing=new List<IDescribeMappableProperty>();
 
         public MissingProperties()
         {
         }
 
-        internal void Add(IDescribeMappableProperty missing)
+        internal void Add(IDescribeMappableProperty missingProperty)
         {
-            this.missing.Add(missing);
+            this.missing.Add(missingProperty);
         }
         public IEnumerator<IDescribeMappableProperty> GetEnumerator()
         {

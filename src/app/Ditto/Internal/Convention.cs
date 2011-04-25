@@ -25,6 +25,13 @@ namespace Ditto.Internal
                 throw new InvalidOperationException("Resolver not configured for " + destinationProperty);
             return resolver;
         }
+
+        public bool HasResolverFromOtherSource(Type destinationType, IDescribeMappableProperty destinationProperty)
+        {
+            //really this shouldn't matter
+            return false;
+        }
+
         public SourcedConvention Apply(Type sourceType)
         {
             if(sourceType==null)

@@ -23,7 +23,11 @@ namespace Ditto.Internal
         {
             inner.ApplyingConvention(propertyCriterion, resolver);
         }
-
+        public ISourcedDestinationConfiguration<TDest> ForCloningOnly()
+        {
+            inner.ForCloningOnly();
+            return this;
+        }
         public ISourcedDestinationConfiguration<TDest> From(params Type[] sourceTypes)
         {
             inner.From(sourceTypes);
@@ -182,14 +186,19 @@ namespace Ditto.Internal
         private readonly IDescribeMappableProperty[] destinationProperties;
         private readonly List<Convention> conventions = new List<Convention>();
         private readonly Type destinationType;
-        private readonly List<SourceContext> sourceContexts = new List<SourceContext>();
+        private readonly List<ISourceContext> sourceContexts = new List<ISourceContext>();
 
         public DestinationConfiguration(Type destinationType)
         {
             this.destinationType = destinationType;
-            destinationProperties =
-                destinationType.GetProperties().Select(into => new MappableProperty(into)).ToArray();
+            destinationProperties =destinationType.GetProperties().Select(into => new MappableProperty(into)).ToArray();
             Logger = new NullLogFactory();
+            MakeSelfAware();
+        }
+
+        private void MakeSelfAware()
+        {
+            From(destinationType);
         }
 
 
@@ -199,7 +208,18 @@ namespace Ditto.Internal
         {
             ApplyingConvention(propertyCriterion, resolver);
         }
-
+        public bool IsSourcedBy(Type sourceType)
+        {
+            return sourceContexts.Any(its => its.SourceType == sourceType);
+        }
+        public ISourcedDestinationConfiguration ForCloningOnly()
+        {
+            Logger.Create(this).Debug("Mapping '{0}' for cloning.");
+            var toWrap = sourceContexts.First(its => its.SourceType == destinationType);
+            sourceContexts.RemoveAll(its => its.SourceType == destinationType);
+            sourceContexts.Add(new CloningSourceContext(toWrap));
+            return this;
+        }
         public ISourcedDestinationConfiguration From(params Type[] sourceTypes)
         {
             if (sourceTypes == null || sourceTypes.Length == 0)
@@ -248,7 +268,7 @@ namespace Ditto.Internal
             throw new InvalidOperationException(propertyCriterion + " is not valid for " + destinationType);
         }
 
-        private SourceContext DemandSourceContext(Type sourceType)
+        private ISourceContext DemandSourceContext(Type sourceType)
         {
             if (sourceContexts.Count == 0)
                 throw new DittoConfigurationException(

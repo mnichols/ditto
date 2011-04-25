@@ -6,10 +6,10 @@ namespace Ditto.Internal
     {
         public Type DestinationType { get; private set; }
         public IDescribeMappableProperty[] DestinationProperties { get; private set; }
-        public SourceContext[] SourceContexts { get; private set; }
+        public ISourceContext[] SourceContexts { get; private set; }
         public Convention[] Conventions { get; private set; }
 
-        public DestinationConfigurationMemento(Type destinationType, IDescribeMappableProperty[] destinationProperties, SourceContext[] sourceContexts, Convention[] conventions)
+        public DestinationConfigurationMemento(Type destinationType, IDescribeMappableProperty[] destinationProperties, ISourceContext[] sourceContexts, Convention[] conventions)
         {
             DestinationType = destinationType;
             DestinationProperties = destinationProperties;

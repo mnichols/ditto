@@ -50,6 +50,8 @@ namespace Ditto.Internal
             }
             throw new InvalidOperationException("This container does not having any matching resolvers for '" + destinationProperty + "'");
         }
+
+        
         private IResolveValue TryGetCandidate(IDescribeMappableProperty mappableProperty)
         {
             IResolveValue candidate=null;
