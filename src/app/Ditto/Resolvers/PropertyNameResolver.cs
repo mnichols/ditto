@@ -34,7 +34,8 @@ namespace Ditto.Resolvers
             if (prop == null)
                 throw new DittoExecutionException("Cannot find property '{0}' on '{1}'", sourcePropertyName,
                                                     sourceType);
-            return new Result(true, prop.GetValue(target, null));
+            var value = target == null ? null : prop.GetValue(target, null);
+            return new Result(true, value);
         }
         
         internal SourcedPropertyNameResolver SourcedBy(Type sourceType)

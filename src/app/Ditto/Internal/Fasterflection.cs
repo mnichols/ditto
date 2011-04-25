@@ -38,8 +38,8 @@ namespace Ditto.Internal
 
         public void SetValue(AssignableValue assignableValue, object destination)
         {
-            Logger.Create(this).Debug("Setting value on '{0}' using assignable value:{1}{2}", destination,
-                                      Environment.NewLine, assignableValue);
+            Logger.Create(this).Debug("Setting value on '{0}' using assignable value:{1}{2}", destination,Environment.NewLine, assignableValue);
+            
             MemberSetter setter = TryCacheSet(destination.GetType(), assignableValue.PropertyName);
 
             try
