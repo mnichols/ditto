@@ -25,7 +25,7 @@ namespace Ditto
         {
             foreach (var destinationProperty in destinationProperties)
             {
-                return cfg.ApplyingConvention(new ImmutableDestinationResolver(new PropertyNameResolver(Reflect.GetProperty(destinationProperty).Name)), destinationProperties);    
+                cfg.ApplyingConvention(new ImmutableDestinationResolver(new PropertyNameResolver(Reflect.GetProperty(destinationProperty).Name)), destinationProperty);
             }
 
             return cfg;
