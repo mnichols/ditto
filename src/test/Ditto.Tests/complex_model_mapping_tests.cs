@@ -121,6 +121,25 @@ namespace Ditto.Tests
             dest.Component.should_not_be_null();
             dest.Component.Name.should_be_equal_to("RedirectingName");
         }
+        [Fact]
+        public void it_should_unflatten_components_into_property()
+        {
+            container.Map<ComplexViewModel>()
+                .From<FlattenedComponentEvent>()
+                .UsingValue<FlattenedComponentEvent>("blah",to=>to.Name)
+                .Unflattening<FlattenedComponentEvent>(to=>to.Component);
+            var bindable = container.ToBinding();
+            bindable.Bind();
+            bindable.Assert();
+
+            var source = new FlattenedComponentEvent() { Name = "FlattenedName", };
+            var dest = new ComplexViewModel();
+            var executable = bindable.CreateCommand(typeof(FlattenedComponentEvent), typeof(ComplexViewModel));
+            executable.Map(source, dest);
+            dest.Component.should_not_be_null();
+            dest.Component.Name.should_be_equal_to("FlattenedName");
+        }
+
         
         [Fact]
         public void it_should_map_nested_models()

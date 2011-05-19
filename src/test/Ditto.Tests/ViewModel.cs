@@ -41,5 +41,8 @@ namespace Ditto.Tests
         public EventComponent Component { get; set; }
         public string Name { get; set; }
     }
-
+    public class FlattenedComponentEvent
+    {
+        public string Name { get; set; }
+    }
 }

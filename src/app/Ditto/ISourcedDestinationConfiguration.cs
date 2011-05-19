@@ -99,5 +99,7 @@ namespace Ditto
         /// <param name="sourceConfig">The source config.</param>
         /// <returns></returns>
         ISourcedDestinationConfiguration<TDest> Nesting<TSource, TNest>(Expression<Func<TDest, object>> destinationProperty, Action<ISourcedDestinationConfiguration<TNest>> sourceConfig);
+
+        ISourcedDestinationConfiguration<TDest> Unflattening<TSource>(Expression<Func<TDest,object>> destinationProperty);
     }
 }
