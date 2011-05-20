@@ -124,6 +124,8 @@ namespace Ditto.Tests
         [Fact]
         public void it_should_unflatten_components_into_property()
         {
+            container.Map<ViewModelComponent>().From<FlattenedComponentEvent>().Redirecting<FlattenedComponentEvent>(
+                from => from.DifferentName, to => to.Name);
             container.Map<ComplexViewModel>()
                 .From<FlattenedComponentEvent>()
                 .UsingValue<FlattenedComponentEvent>("blah",to=>to.Name)
@@ -132,7 +134,7 @@ namespace Ditto.Tests
             bindable.Bind();
             bindable.Assert();
 
-            var source = new FlattenedComponentEvent() { Name = "FlattenedName", };
+            var source = new FlattenedComponentEvent() { DifferentName = "FlattenedName", };
             var dest = new ComplexViewModel();
             var executable = bindable.CreateCommand(typeof(FlattenedComponentEvent), typeof(ComplexViewModel));
             executable.Map(source, dest);

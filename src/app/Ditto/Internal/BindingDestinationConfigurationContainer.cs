@@ -45,12 +45,9 @@ namespace Ditto.Internal
 
         public IMapCommand CreateCommand(Type sourceType, Type destinationType)
         {
-            BindableConfiguration cfg;
-            if (destinationType2BindableConfig.TryGetValue(destinationType, out cfg) == false)
-            {
-                throw new DittoExecutionException("Could not find mapping configuration for '{0}'. Please check that a configuration exists for this type and that the mapping engine is initialized.", destinationType);
-            }
-            return mapCommands.Create(cfg.CreateExecutableMapping(sourceType));
+            var executables = GetExecutableMappingCreator(destinationType);
+            
+            return mapCommands.Create(executables.CreateExecutableMapping(sourceType));
         }
 
         public MissingProperties Validate()
@@ -81,6 +78,16 @@ namespace Ditto.Internal
                     continue;
                 cacheable.Accept(visitor);
             }
+        }
+
+        public ICreateExecutableMapping GetExecutableMappingCreator(Type destinationType)
+        {
+            BindableConfiguration cfg;
+            if (destinationType2BindableConfig.TryGetValue(destinationType, out cfg) == false)
+            {
+                throw new DittoExecutionException("Could not find mapping configuration for '{0}'. Please check that a configuration exists for this type and that the mapping engine is initialized.", destinationType);
+            }
+            return cfg;
         }
     }
 }
