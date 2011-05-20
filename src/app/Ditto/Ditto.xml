@@ -10,36 +10,51 @@
             </summary>
             <value>The conventions.</value>
         </member>
-        <member name="M:Ditto.Internal.IValidateResolvers.HasResolverFromOtherSource(System.Type,Ditto.Internal.IDescribeMappableProperty)">
+        <member name="T:Ditto.AbstractMappingConfiguration">
             <summary>
-            Determines whether this container has resolvers from a source <i>other</i> than the destination type.
+            
             </summary>
-            <param name="destinationType">Type of the destination.</param>
-            <param name="destinationProperty">The destination property.</param>
-            <returns>
-            	<c>true</c> if it has resolver from other source type than the destination type; otherwise, <c>false</c>.
-            </returns>
         </member>
-        <member name="M:Ditto.Internal.SourceContext.SetDestinationContext(Ditto.Internal.IDescribeMappableProperty[])">
+        <member name="P:Ditto.AbstractMappingConfiguration.Cfg">
             <summary>
-            Sets the destination context for this source. This selects <paramref name="destinationProperties"/> which are pertinent to this instance's
-            <c>SourceType</c>. This selection is based upon matching property names. Use a Redirecting call in configuration to get around this.
+            Injected cfg
             </summary>
-            <param name="destinationProperties">The destination properties.</param>
+            <value>The CFG.</value>
         </member>
-        <member name="M:Ditto.InternalTypeExtensions.IsFrameworkType(System.Type)">
+        <member name="T:Ditto.IConfigureDestination">
             <summary>
-            Shamelessly stolen from http://stackoverflow.com/questions/3642806/how-to-determine-and-check-whether-a-type-in-assembly-is-custom-type-or-primitive
+            The primary interface for starting configuration on a destination type
             </summary>
-            <param name="type">The type.</param>
-            <returns>
-            	<c>true</c> if [is framework type] [the specified type]; otherwise, <c>false</c>.
-            </returns>
         </member>
-        <member name="T:Ditto.Internal.ListPropertyBinder">
+        <member name="M:Ditto.IConfigureDestination.From(System.Type[])">
             <summary>
-            Binds properties of <c>IList</c> with appropraite element mappings
+            Provide all the types which will provide data for this <c>destination</c> type.
             </summary>
+            <param name="sourceTypes">The source types.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Ditto.IConfigureDestination.SetPropertyResolver(Ditto.IPropertyCriterion,System.Type,Ditto.IResolveValue)">
+            <summary>
+            Sets the property resolver based on the <paramref name="sourceType"/> being resolved from.
+            </summary>
+            <param name="destinationPropertyCriterion">The destination property criterion.</param>
+            <param name="sourceType">Type of the source.</param>
+            <param name="resolver">The resolver.</param>
+        </member>
+        <member name="M:Ditto.IConfigureDestination.ApplyingConvention(Ditto.IPropertyCriterion,Ditto.IResolveValue)">
+            <summary>
+            Apply the resolver according to the <paramref name="propertyCriterion"/> convention.
+            </summary>
+            <param name="propertyCriterion">The property criterion.</param>
+            <param name="resolver">The resolver.</param>
+        </member>
+        <member name="M:Ditto.IConfigureDestination.ForCloningOnly">
+            <summary>
+            This explicitly states this destination may be its own source type without other sources. 
+            Only necessary to use if sources <i>other</i> than the destination type are not going to be mapped.
+            Failure to call this without mapping other sources will result in validation exceptions.
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Ditto.IConfigureDestination`1">
             <summary>
@@ -61,6 +76,83 @@
             Failure to call this without mapping other sources will result in validation exceptions.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:Ditto.InternalTypeExtensions.IsFrameworkType(System.Type)">
+            <summary>
+            Shamelessly stolen from http://stackoverflow.com/questions/3642806/how-to-determine-and-check-whether-a-type-in-assembly-is-custom-type-or-primitive
+            </summary>
+            <param name="type">The type.</param>
+            <returns>
+            	<c>true</c> if [is framework type] [the specified type]; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:Ditto.Internal.BindableConfiguration">
+            <summary>
+              Intermediate representation of configuration which provide the executable mapping, as well as validation and caching hooks.
+            </summary>
+        </member>
+        <member name="M:Ditto.Internal.IContextualizeResolution.CreateNestedParallelContext(Ditto.Internal.IDescribeMappableProperty,Ditto.Internal.IDescribeMappableProperty,Ditto.Internal.IResolutionContext)">
+            <summary>
+            Creates a nested context from current context, nesting both Source and Destination properties in parallel.
+            </summary>
+            <param name="sourceProperty">The source property.</param>
+            <param name="destinationProperty">The destination property.</param>
+            <param name="parentContext">The parent context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Ditto.Internal.IContextualizeResolution.CreateNestedContext(Ditto.Internal.IDescribeMappableProperty,Ditto.Internal.IResolutionContext)">
+            <summary>
+            Creates a nested context from current context, but using the current Source.
+            </summary>
+            <param name="destinationProperty">The destination property.</param>
+            <param name="parentContext">The parent context.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Ditto.Internal.IResolutionContext">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Ditto.Internal.IResolutionContext.BuildValueAssignment(Ditto.Internal.IDescribeMappableProperty)">
+            <summary>
+            Used by <c>ditto </c> to prepare the destination property for value assignment during execution.
+            </summary>
+            <param name="destinationProperty">The destination property.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Ditto.Internal.IResolutionContext.Nested(Ditto.Internal.IDescribeMappableProperty)">
+            <summary>
+            Nests this context only on the provided <paramref name="destinationProperty"/>. The source declaring object remains the same in the resulting context.
+            </summary>
+            <param name="destinationProperty">The destination property.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Ditto.Internal.IResolutionContext.Nested(Ditto.Internal.IDescribeMappableProperty,Ditto.Internal.IDescribeMappableProperty)">
+            <summary>
+            Nests this context on both the destination and source properties. 
+            </summary>
+            <param name="sourceProperty">The source property.</param>
+            <param name="destinationProperty">The destination property.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Ditto.Internal.IResolutionContext.SourceType">
+            <summary>
+            Gets the type of the source for current resolution.
+            </summary>
+            <value>The type of the source.</value>
+        </member>
+        <member name="P:Ditto.Internal.IResolutionContext.Source">
+            <summary>
+            Gets the declaring source object (not the property value).
+            This can be <c>null</c>. Be aware of this when implementing <see cref="T:Ditto.IResolveValue"/>.
+            </summary>
+            <value>The source.</value>
+        </member>
+        <member name="P:Ditto.Internal.IResolutionContext.Destination">
+            <summary>
+            Gets the destination. This is the declaring object for the resulting value, not the destination property itself.
+            </summary>
+            <value>The destination.</value>
         </member>
         <member name="T:Ditto.ISourcedDestinationConfiguration`1">
             <summary>
@@ -144,41 +236,6 @@
             <param name="sourceConfig">The source config.</param>
             <returns></returns>
         </member>
-        <member name="T:Ditto.IConfigureDestination">
-            <summary>
-            The primary interface for starting configuration on a destination type
-            </summary>
-        </member>
-        <member name="M:Ditto.IConfigureDestination.From(System.Type[])">
-            <summary>
-            Provide all the types which will provide data for this <c>destination</c> type.
-            </summary>
-            <param name="sourceTypes">The source types.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Ditto.IConfigureDestination.SetPropertyResolver(Ditto.IPropertyCriterion,System.Type,Ditto.IResolveValue)">
-            <summary>
-            Sets the property resolver based on the <paramref name="sourceType"/> being resolved from.
-            </summary>
-            <param name="destinationPropertyCriterion">The destination property criterion.</param>
-            <param name="sourceType">Type of the source.</param>
-            <param name="resolver">The resolver.</param>
-        </member>
-        <member name="M:Ditto.IConfigureDestination.ApplyingConvention(Ditto.IPropertyCriterion,Ditto.IResolveValue)">
-            <summary>
-            Apply the resolver according to the <paramref name="propertyCriterion"/> convention.
-            </summary>
-            <param name="propertyCriterion">The property criterion.</param>
-            <param name="resolver">The resolver.</param>
-        </member>
-        <member name="M:Ditto.IConfigureDestination.ForCloningOnly">
-            <summary>
-            This explicitly states this destination may be its own source type without other sources. 
-            Only necessary to use if sources <i>other</i> than the destination type are not going to be mapped.
-            Failure to call this without mapping other sources will result in validation exceptions.
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:Ditto.ISourcedDestinationConfiguration">
             <summary>
             Configuration based on a specific source type
@@ -191,24 +248,48 @@
             <param name="destinationPropertyCriterion">The destination property criterion.</param>
             <param name="resolver">The resolver.</param>
         </member>
+        <member name="M:Ditto.Internal.IValidateResolvers.HasResolverFromOtherSource(System.Type,Ditto.Internal.IDescribeMappableProperty)">
+            <summary>
+            Determines whether this container has resolvers from a source <i>other</i> than the destination type.
+            </summary>
+            <param name="destinationType">Type of the destination.</param>
+            <param name="destinationProperty">The destination property.</param>
+            <returns>
+            	<c>true</c> if it has resolver from other source type than the destination type; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:Ditto.Internal.ListPropertyBinder">
+            <summary>
+            Binds properties of <c>IList</c> with appropraite element mappings
+            </summary>
+        </member>
+        <member name="T:Ditto.Internal.SelfBinder">
+            <summary>
+            Ensures bindable configuration is bound
+            </summary>
+        </member>
+        <member name="M:Ditto.Internal.SourceContext.SetDestinationContext(Ditto.Internal.IDescribeMappableProperty[])">
+            <summary>
+            Sets the destination context for this source. This selects <paramref name="destinationProperties"/> which are pertinent to this instance's
+            <c>SourceType</c>. This selection is based upon matching property names. Use a Redirecting call in configuration to get around this.
+            </summary>
+            <param name="destinationProperties">The destination properties.</param>
+        </member>
         <member name="T:Ditto.Internal.SourcedPropertyNameResolver">
             <summary>
             Same as <c>PropertyNameResolver</c> only allows reachability for caching.
             </summary>
         </member>
-        <member name="T:Ditto.Resolvers.StaticValueResolver">
+        <member name="M:Ditto.MissingProperties.Merge(System.Collections.Generic.IEnumerable{Ditto.Internal.IDescribeMappableProperty})">
             <summary>
-            Always resolve using the provided <para>value</para>.
+            Be certain to replace the reference when calling this method (see Example).
+            Merges the specified other, returning a new instance.
             </summary>
-        </member>
-        <member name="T:Ditto.Resolvers.ImmutableDestinationResolver">
-            <summary>
-              This resolver won't overwrite a destination value if one exists. It first checks for the default value by the field's Type to determine
-              if it should resolve. If it <i>is</i> resolvable (destination has a default value), then it uses the wrapped (<b>inner</b>) resolver for resolution; otherwise, 
-              it gets <c>Result.Unresolved</c>.
-              <seealso cref="F:Ditto.Internal.Result.Unresolved">Result.Unresolved</seealso>
-              <seealso cref="M:Ditto.InternalTypeExtensions.DefaultValue(System.Type)">DefaultValue extension</seealso>
-            </summary>
+            <example>
+            var missing = missing.Merge(otherMissing);
+            </example>
+            <param name="other">The other.</param>
+            <returns></returns>
         </member>
         <member name="T:Ditto.Reflect">
             <summary>
@@ -281,20 +362,23 @@
             <param name="fieldName">Name of the field.</param>
             <returns></returns>
         </member>
-        <member name="T:Ditto.AbstractMappingConfiguration">
+        <member name="T:Ditto.Resolvers.DefaultValueResolver">
             <summary>
-            
+            Set destination property to its default value, based on the <c>PropertyType</c>
             </summary>
         </member>
-        <member name="P:Ditto.AbstractMappingConfiguration.Cfg">
+        <member name="T:Ditto.Resolvers.IgnoreResolver">
             <summary>
-            Injected cfg
+            Does nothing. It is important to note that the resolution is considered to be <c>Result.Unresolved</c>.
             </summary>
-            <value>The CFG.</value>
         </member>
-        <member name="T:Ditto.Resolvers.PropertyNameResolver">
+        <member name="T:Ditto.Resolvers.ImmutableDestinationResolver">
             <summary>
-            Resolved based on the provided source property name. 
+              This resolver won't overwrite a destination value if one exists. It first checks for the default value by the field's Type to determine
+              if it should resolve. If it <i>is</i> resolvable (destination has a default value), then it uses the wrapped (<b>inner</b>) resolver for resolution; otherwise, 
+              it gets <c>Result.Unresolved</c>.
+              <seealso cref="F:Ditto.Internal.Result.Unresolved">Result.Unresolved</seealso>
+              <seealso cref="M:Ditto.InternalTypeExtensions.DefaultValue(System.Type)">DefaultValue extension</seealso>
             </summary>
         </member>
         <member name="T:Ditto.Resolvers.LambdaResolver`1">
@@ -303,99 +387,15 @@
             </summary>
             <typeparam name="TSource">The type of the source.</typeparam>
         </member>
-        <member name="T:Ditto.Resolvers.DefaultValueResolver">
+        <member name="T:Ditto.Resolvers.PropertyNameResolver">
             <summary>
-            Set destination property to its default value, based on the <c>PropertyType</c>
+            Resolved based on the provided source property name. 
             </summary>
         </member>
-        <member name="T:Ditto.Internal.IResolutionContext">
+        <member name="T:Ditto.Resolvers.StaticValueResolver">
             <summary>
-            
+            Always resolve using the provided <para>value</para>.
             </summary>
-        </member>
-        <member name="M:Ditto.Internal.IResolutionContext.BuildValueAssignment(Ditto.Internal.IDescribeMappableProperty)">
-            <summary>
-            Used by <c>ditto </c> to prepare the destination property for value assignment during execution.
-            </summary>
-            <param name="destinationProperty">The destination property.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Ditto.Internal.IResolutionContext.Nested(Ditto.Internal.IDescribeMappableProperty)">
-            <summary>
-            Nests this context only on the provided <paramref name="destinationProperty"/>. The source declaring object remains the same in the resulting context.
-            </summary>
-            <param name="destinationProperty">The destination property.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Ditto.Internal.IResolutionContext.Nested(Ditto.Internal.IDescribeMappableProperty,Ditto.Internal.IDescribeMappableProperty)">
-            <summary>
-            Nests this context on both the destination and source properties. 
-            </summary>
-            <param name="sourceProperty">The source property.</param>
-            <param name="destinationProperty">The destination property.</param>
-            <returns></returns>
-        </member>
-        <member name="P:Ditto.Internal.IResolutionContext.SourceType">
-            <summary>
-            Gets the type of the source for current resolution.
-            </summary>
-            <value>The type of the source.</value>
-        </member>
-        <member name="P:Ditto.Internal.IResolutionContext.Source">
-            <summary>
-            Gets the declaring source object (not the property value).
-            This can be <c>null</c>. Be aware of this when implementing <see cref="T:Ditto.IResolveValue"/>.
-            </summary>
-            <value>The source.</value>
-        </member>
-        <member name="P:Ditto.Internal.IResolutionContext.Destination">
-            <summary>
-            Gets the destination. This is the declaring object for the resulting value, not the destination property itself.
-            </summary>
-            <value>The destination.</value>
-        </member>
-        <member name="M:Ditto.Internal.IContextualizeResolution.CreateNestedParallelContext(Ditto.Internal.IDescribeMappableProperty,Ditto.Internal.IDescribeMappableProperty,Ditto.Internal.IResolutionContext)">
-            <summary>
-            Creates a nested context from current context, nesting both Source and Destination properties in parallel.
-            </summary>
-            <param name="sourceProperty">The source property.</param>
-            <param name="destinationProperty">The destination property.</param>
-            <param name="parentContext">The parent context.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Ditto.Internal.IContextualizeResolution.CreateNestedContext(Ditto.Internal.IDescribeMappableProperty,Ditto.Internal.IResolutionContext)">
-            <summary>
-            Creates a nested context from current context, but using the current Source.
-            </summary>
-            <param name="destinationProperty">The destination property.</param>
-            <param name="parentContext">The parent context.</param>
-            <returns></returns>
-        </member>
-        <member name="T:Ditto.Internal.BindableConfiguration">
-            <summary>
-              Intermediate representation of configuration which provide the executable mapping, as well as validation and caching hooks.
-            </summary>
-        </member>
-        <member name="T:Ditto.Internal.SelfBinder">
-            <summary>
-            Ensures bindable configuration is bound
-            </summary>
-        </member>
-        <member name="T:Ditto.Resolvers.IgnoreResolver">
-            <summary>
-            Does nothing. It is important to note that the resolution is considered to be <c>Result.Unresolved</c>.
-            </summary>
-        </member>
-        <member name="M:Ditto.MissingProperties.Merge(System.Collections.Generic.IEnumerable{Ditto.Internal.IDescribeMappableProperty})">
-            <summary>
-            Be certain to replace the reference when calling this method (see Example).
-            Merges the specified other, returning a new instance.
-            </summary>
-            <example>
-            var missing = missing.Merge(otherMissing);
-            </example>
-            <param name="other">The other.</param>
-            <returns></returns>
         </member>
     </members>
 </doc>

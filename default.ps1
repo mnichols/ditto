@@ -4,7 +4,7 @@ properties {
   $build_dir = "$base_dir\build" 
   $buildartifacts_dir = "$build_dir\" 
   $sln_file = "$base_dir\Ditto.sln" 
-  $version = "0.1.0.0"
+  $version = "0.5.0.0"
   $tools_dir = "$base_dir\lib\tools"
   $release_dir = "$base_dir\Release"
   $config = "Debug"
