@@ -5,7 +5,7 @@ using System.Linq;
 namespace Ditto.Internal
 {
 
-    public class BindingDestinationConfigurationContainer:IBindConfigurations,ICreateMappingCommand,IValidatable,ICacheable,IProvideExecutableMappingCreator
+    public class BindingDestinationConfigurationContainer:IBindConfigurations,ICreateMappingCommand,IValidatable,ICacheable
     {
 
         private readonly IProvideBinders binders;

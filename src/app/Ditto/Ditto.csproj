@@ -124,7 +124,6 @@
     <Compile Include="Internal\IContextualizeResolution.cs" />
     <Compile Include="Internal\ICreateBindableConfiguration.cs" />
     <Compile Include="Internal\ICreateDestinationConfiguration.cs" />
-    <Compile Include="Internal\IProvideExecutableMappingCreator.cs" />
     <Compile Include="Internal\ISourceContext.cs" />
     <Compile Include="Internal\ITakeDestinationConfigurationSnapshot.cs" />
     <Compile Include="Internal\ICreateExecutableMapping.cs" />

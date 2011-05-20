@@ -18,7 +18,9 @@ namespace Ditto.Resolvers
         {
             if (executor == null)
             {
-                throw new DittoConfigurationException("UnflatteningResolver never got an executable mapping on destination type '{0}'",destinationType);
+                throw new DittoConfigurationException("UnflatteningResolver never bound an executable mapping on component type '{0}' for destination '{1}'. " +
+                    Environment.NewLine+
+                    "Be sure the type '{0}' is configured as a destination with source '{2}'",destinationType,context.Destination,context.SourceType);
             }
             //we need to keep the SOURCE the same, but change the destination
             var nested = context.Nested(destinationProperty);
