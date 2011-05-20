@@ -185,6 +185,7 @@
     <Compile Include="Reflect.cs" />
     <Compile Include="Resolvers\DefaultResolverFactory.cs" />
     <Compile Include="Resolvers\DefaultValueResolver.cs" />
+    <Compile Include="Resolvers\DeferredConfigurationResolver.cs" />
     <Compile Include="Resolvers\ICreateResolver.cs" />
     <Compile Include="Resolvers\IgnoreResolver.cs" />
     <Compile Include="Resolvers\ImmutableDestinationResolver.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="Resolvers\PropertyNameResolver.cs" />
     <Compile Include="Resolvers\RedirectingConfigurationResolver.cs" />
     <Compile Include="Resolvers\StaticValueResolver.cs" />
+    <Compile Include="Resolvers\UnflatteningConfigurationResolver.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
