@@ -132,7 +132,7 @@ namespace Ditto.Tests
             bindable.Bind();
             bindable.Assert();
 
-            var source = new FlattenedComponentEvent() { Name = "FlattenedName", };
+            var source = new FlattenedComponentEvent() { DifferentName = "FlattenedName", };
             var dest = new ComplexViewModel();
             var executable = bindable.CreateCommand(typeof(FlattenedComponentEvent), typeof(ComplexViewModel));
             executable.Map(source, dest);
