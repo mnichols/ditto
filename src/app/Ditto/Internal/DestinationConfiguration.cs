@@ -84,12 +84,9 @@ namespace Ditto.Internal
         public ISourcedDestinationConfiguration<TDest> Unflattening<TSource>(Expression<Func<TDest,object>> destinationProperty)
         {
             var mappableDestinationProperty = MappableProperty.For(destinationProperty);
-            
-            var nestedConfig = configurations.Create(mappableDestinationProperty.PropertyType);
-            nestedConfig.From(typeof(TSource));
             inner.SetPropertyResolver(PropertyNameCriterion.From(destinationProperty),
                                   typeof(TSource),
-                                  new NestingConfigurationResolver(configurations.CreateBindableConfiguration(nestedConfig.TakeSnapshot())));
+                                  new UnflatteningConfigurationResolver(mappableDestinationProperty.PropertyType));
             return this;
         }
         public ISourcedDestinationConfiguration<TDest> Redirecting<TSource>(

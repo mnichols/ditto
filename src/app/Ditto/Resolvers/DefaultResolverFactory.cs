@@ -11,12 +11,12 @@ namespace Ditto.Resolvers
             this.activate = activate;
         }
 
-        public ListResolver CreateListResolver(ResolverContext resolverContext)
+        public IResolveValue CreateListResolver(ResolverContext resolverContext)
         {
             return new ListResolver(resolverContext.SourceProperty,resolverContext.Configuration,activate);
         }
 
-        public RedirectingConfigurationResolver CreateRedirectingConfigurationResolver(ResolverContext resolverContext)
+        public IResolveValue CreateRedirectingConfigurationResolver(ResolverContext resolverContext)
         {
             return new RedirectingConfigurationResolver(resolverContext.SourceProperty,resolverContext.Configuration);
         }

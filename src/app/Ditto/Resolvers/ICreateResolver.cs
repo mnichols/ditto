@@ -4,7 +4,7 @@ namespace Ditto.Resolvers
 {
     public interface ICreateResolver
     {
-        ListResolver CreateListResolver(ResolverContext resolverContext);
-        RedirectingConfigurationResolver CreateRedirectingConfigurationResolver(ResolverContext resolverContext);
+        IResolveValue CreateListResolver(ResolverContext resolverContext);
+        IResolveValue CreateRedirectingConfigurationResolver(ResolverContext resolverContext);
     }
 }

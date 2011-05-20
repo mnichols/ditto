@@ -4,6 +4,6 @@ namespace Ditto.Internal
 {
     public interface IProvideExecutableMappingCreator
     {
-        ICreateExecutableMapping GetExecutableMapping(Type destinationType);
+        ICreateExecutableMapping GetExecutableMappingCreator(Type destinationType);
     }
 }
